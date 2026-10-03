@@ -1,18 +1,19 @@
 import Footerpage from '@/shared/footer';
-import Navbar from '@/shared/navbar';
-import React, { ReactNode } from 'react';
+import { Navbar } from '@/shared/navbar';
+
+import { ReactNode } from 'react';
 
 const Layout = (
-  {children}: 
-  {children: ReactNode}
+  { children }:
+    { children: ReactNode }
 ) => {
   return (
     <div className='min-h-screen flex flex-col'>
-      <Navbar/>
+      <Navbar />
       <main className='flex-1'>
         {children}
       </main>
-      <Footerpage/>
+      <Footerpage />
     </div>
   );
 };
