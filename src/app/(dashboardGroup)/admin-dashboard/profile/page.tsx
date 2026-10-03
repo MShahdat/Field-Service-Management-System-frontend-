@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const AdminProfile = () => {
-  return (
-    <div>
-      admin profile
-    </div>
-  );
+  return <div>admin profile</div>;
 };
 
 export default AdminProfile;

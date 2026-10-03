@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Button } from '../ui/button';
-import { useOAuthLogin } from '@/hooks';
+import { Button } from "../ui/button";
+import { useOAuthLogin } from "@/hooks";
 
 const FacebookIcon = () => (
   <svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true">
@@ -24,7 +24,7 @@ const FacebookAuth = ({ disabled }: { disabled?: boolean }) => {
       variant="outline"
       type="button"
       disabled={disabled}
-      onClick={() => startOAuth('facebook')}
+      onClick={() => startOAuth("facebook")}
       aria-label="Continue with Facebook"
       className="w-full"
     >

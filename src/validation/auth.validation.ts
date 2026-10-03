@@ -1,6 +1,5 @@
 import z from "zod";
 
-
 export const loginZodSchema = z.object({
   email: z.email(),
   password: z
@@ -38,10 +37,9 @@ export const registerZodSchema = z
         message: "Password must contain at least one special character.",
       }),
     confirmPassword: z.string(),
-    role: z.string()
+    role: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
     path: ["confirmPassword"],
   });
-

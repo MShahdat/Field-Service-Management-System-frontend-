@@ -1,2 +1,1 @@
-
-export * from './time.format'
+export * from "./time.format";

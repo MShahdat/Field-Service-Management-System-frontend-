@@ -5,7 +5,9 @@ export default function Home() {
     <>
       Field service management system
       <p className="text-primary">ok</p>
-      <Button variant={"default"} size={"sm"}>click me</Button>
+      <Button variant={"default"} size={"sm"}>
+        click me
+      </Button>
     </>
   );
 }

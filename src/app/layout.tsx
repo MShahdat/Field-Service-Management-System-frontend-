@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/provider/theme.provider";
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,21 +29,26 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+      )}
     >
       <body className="min-h-full flex flex-col">
-      <ThemeProvider
-      attribute={"class"}
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-      >
-        <Providers>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
-        </Providers>
-      </ThemeProvider>
+        <ThemeProvider
+          attribute={"class"}
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <TooltipProvider>{children}</TooltipProvider>
+          </Providers>
+        </ThemeProvider>
         <Toaster position="top-right" richColors />
       </body>
     </html>

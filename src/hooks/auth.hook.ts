@@ -1,38 +1,44 @@
-import { getFacebookAuthUrl, getGoogleAuthUrl, getMe, logout, userEmailVerify, userLogin, userRegister } from "@/api"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-
+import {
+  getFacebookAuthUrl,
+  getGoogleAuthUrl,
+  getMe,
+  logout,
+  userEmailVerify,
+  userLogin,
+  userRegister,
+} from "@/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRegister = () => {
   return useMutation({
     mutationFn: userRegister,
-  })
-}
+  });
+};
 
 export const useLogin = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: userLogin,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] })
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
-  })
-}
+  });
+};
 
 export const useOAuthLogin = () => {
   const startOAuth = (p: "google" | "facebook") => {
-    window.location.href = p === 'google' ? getGoogleAuthUrl() : getFacebookAuthUrl();
-  }
-  return { startOAuth }
-}
-
-
+    window.location.href =
+      p === "google" ? getGoogleAuthUrl() : getFacebookAuthUrl();
+  };
+  return { startOAuth };
+};
 
 export const useGetMe = () => {
   return useQuery({
-    queryKey: ['user'],
+    queryKey: ["user"],
     queryFn: getMe,
-  })
-}
+  });
+};
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
@@ -46,16 +52,14 @@ export const useLogout = () => {
   });
 };
 
-
-
 export const useEmailVerify = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: userEmailVerify,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['user']
-      })
-    }
-  })
-}
+        queryKey: ["user"],
+      });
+    },
+  });
+};

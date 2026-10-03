@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const CustomerProfile = () => {
-  return (
-    <div>
-      customer profile
-    </div>
-  );
+  return <div>customer profile</div>;
 };
 
 export default CustomerProfile;

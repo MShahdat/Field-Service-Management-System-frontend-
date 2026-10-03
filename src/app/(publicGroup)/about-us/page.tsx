@@ -1,10 +1,5 @@
-
 const AboutUsPage = () => {
-  return (
-    <div>
-      about us page
-    </div>
-  );
+  return <div>about us page</div>;
 };
 
 export default AboutUsPage;

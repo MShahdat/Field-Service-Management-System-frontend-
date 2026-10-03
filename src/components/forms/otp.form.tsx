@@ -22,20 +22,16 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useEmailVerify } from "@/hooks";
+import { useEmailVerify, useManagerApply, useMangerEmailVerify } from "@/hooks";
 import { formatMinutesSecond } from "@/utils";
 
-type Mode = "customer" | "technician" | 'manager';
+type Role = "customer" | "technician" | "manager";
 
-type Props = {
-  mode: Mode;
-  resendTime: number;
-};
-
-const OtpPage = (props: Props) => {
+const OtpPage = () => {
   const params = useSearchParams();
   console.log(params);
   const email = params.get("email");
+  const role = params.get("role") as Role | "user";
 
   if (!email) {
     redirect("/register");
@@ -45,12 +41,16 @@ const OtpPage = (props: Props) => {
   const [isInvalid, setIsInvalid] = useState(false);
   const [resendOtpCount, setResendOtpCount] = useState(0);
 
-  const { mutate, isPending } =
-    useEmailVerify();
+  const { mutate: userVerify, isPending: isUserPending } = useEmailVerify();
+  const { mutate: managerVerify, isPending: isManagerPending } =
+    useMangerEmailVerify();
 
+  const verify = role === "manager" ? managerVerify : userVerify;
+
+  const resendTime = role === "manager" ? 10 * 60 : 5 * 60;
 
   useEffect(() => {
-    const storageKey = `otp-expiry-${props.mode}-${email}`;
+    const storageKey = `otp-expiry-${role}-${email}`;
     const savedExpiry = localStorage.getItem(storageKey);
 
     const now = Date.now();
@@ -60,11 +60,11 @@ const OtpPage = (props: Props) => {
       expiryTime = parseInt(savedExpiry, 10);
 
       if (expiryTime < now) {
-        expiryTime = now + props.resendTime * 1000;
+        expiryTime = now + resendTime * 1000;
         localStorage.setItem(storageKey, expiryTime.toString());
       }
     } else {
-      expiryTime = now + props.resendTime * 1000;
+      expiryTime = now + resendTime * 1000;
       localStorage.setItem(storageKey, expiryTime.toString());
     }
 
@@ -86,7 +86,7 @@ const OtpPage = (props: Props) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [email, props.mode, props.resendTime]);
+  }, [email, role, resendTime]);
 
   const handleSubmit = () => {
     if (otp.length !== 6) {
@@ -100,11 +100,16 @@ const OtpPage = (props: Props) => {
 
     console.log(data);
 
-    mutate(data, {
+    verify(data, {
       onSuccess: (res) => {
-        localStorage.removeItem(`otp-expiry-${props.mode}-${email}`);
-        toast.success(res.message);
+        localStorage.removeItem(`otp-expiry-${role}-${email}`);
+        if (role === "manager") {
+          toast.success(res.message);
+          redirect(`/`);
+        } else {
+          toast.success(res.message);
           redirect(`/login`);
+        }
       },
       onError: (err) => {
         console.log(err);
@@ -192,7 +197,7 @@ const OtpPage = (props: Props) => {
             form="otp-form"
             className="w-full"
           >
-            {isPending ? (
+            {isManagerPending || isUserPending ? (
               <>
                 <Spinner /> Verify
               </>

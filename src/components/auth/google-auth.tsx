@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Button } from '../ui/button';
-import { useOAuthLogin } from '@/hooks';
+import { Button } from "../ui/button";
+import { useOAuthLogin } from "@/hooks";
 
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
@@ -34,7 +34,7 @@ const GoogleAuth = ({ disabled }: { disabled?: boolean }) => {
       variant="outline"
       type="button"
       disabled={disabled}
-      onClick={() => startOAuth('google')}
+      onClick={() => startOAuth("google")}
       aria-label="Continue with Google"
       className="w-full"
     >

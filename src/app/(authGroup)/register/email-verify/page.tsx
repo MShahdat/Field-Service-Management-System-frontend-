@@ -16,11 +16,11 @@ export default function EmailVerifyPage() {
         />
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
-        <Logo/>
+        <Logo />
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <Suspense fallback={<p>loading...</p>}>
-              <OtpPage mode="customer" resendTime={300} />
+              <OtpPage />
             </Suspense>
           </div>
         </div>
