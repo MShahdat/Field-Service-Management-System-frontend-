@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import GoogleAuth from "../auth/google-auth";
 import FacebookAuth from "../auth/facebook-auth";
 import { loginZodSchema } from "@/validation";
-import { Card, CardContent } from "../ui/card";
 
 const LoginForm = () => {
   const [showPass, setShowPass] = useState(false);
@@ -69,9 +68,9 @@ const LoginForm = () => {
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
-          {/* <p className="text-sm text-balance text-muted-foreground">
-                Enter your email below to login to your account
-              </p> */}
+          <p className="text-sm text-balance text-muted-foreground">
+            Enter your email below to login to your account
+          </p>
         </div>
         <form.Field name="email">
           {(field) => {

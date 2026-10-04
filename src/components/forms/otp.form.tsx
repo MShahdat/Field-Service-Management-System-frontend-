@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useEmailVerify, useManagerApply, useMangerEmailVerify } from "@/hooks";
+import { useEmailVerify, useMangerEmailVerify } from "@/hooks";
 import { formatMinutesSecond } from "@/utils";
 
 type Role = "customer" | "technician" | "manager";

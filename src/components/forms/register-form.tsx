@@ -57,7 +57,9 @@ export function RegisterForm() {
         onSuccess: (res) => {
           toast.success(res.message);
           const params = new URLSearchParams({ email: value.email });
-          redirect(`/register/email-verify?${params.toString()}`);
+          redirect(
+            `/register/email-verify?${params.toString()}&role=${value.role.toLowerCase()}`,
+          );
         },
         onError: (err) => {
           console.log(err);

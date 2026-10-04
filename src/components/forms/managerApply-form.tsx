@@ -42,10 +42,12 @@ export function ManagerApplyForm() {
   console.log("regions ", data);
 
   const regionOptions: ISelectOption[] = data?.data
-    ? data.data.map((region: IRegion) => ({
-        value: region.id,
-        label: region.area,
-      }))
+    ? data.data
+        .filter((region: IRegion) => region.area !== "All")
+        .map((region: IRegion) => ({
+          value: region.id,
+          label: region.area,
+        }))
     : [];
 
   console.log("select options", regionOptions);
