@@ -19,7 +19,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "User",
+    title: "User Management",
     url: "#",
     icon: Bot,
     items: [
@@ -34,7 +34,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "Service",
+    title: "Service Management",
     url: "#",
     icon: BookOpen,
     items: [
@@ -53,6 +53,28 @@ export const adminRoutes = [
       {
         title: "Changelog",
         url: "#",
+      },
+    ],
+  },
+  {
+    title: "Category Management",
+    url: "#",
+    icon: Bot,
+    items: [
+      {
+        title: "All Categories",
+        url: `${prefix}/category/all-categories`,
+      },
+    ],
+  },
+  {
+    title: "Region Management",
+    url: "#",
+    icon: Bot,
+    items: [
+      {
+        title: "All Regions",
+        url: `${prefix}/region/all-regions`,
       },
     ],
   },

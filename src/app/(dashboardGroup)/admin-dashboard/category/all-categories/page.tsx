@@ -1,8 +1,10 @@
 "use client";
 
-import ManagerTable from "@/components/module/manager/manager-approval/manager-table";
+import { CategoryModal } from "@/components/module/cetegory/create-category/category-modal";
+import CategoryTable from "@/components/module/cetegory/create-category/category-table";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSuspenseGetAllManagers } from "@/hooks";
+import { useGetAllCategories } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { ItemShow } from "@/shared/items-show";
@@ -11,29 +13,22 @@ import SearchBar from "@/shared/search-bar";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-const ApproveManagerContent = () => {
+const AllCategoryPage = () => {
   const searchParams = useSearchParams();
+  const params = Object.fromEntries(searchParams.entries());
 
-  const params = {
-    ...Object.fromEntries(searchParams.entries()),
-    verificationStatus: "PENDING",
-    emailVerified: "true",
-  };
+  const { data, isPending } = useGetAllCategories(params);
 
-  const { data } = useSuspenseGetAllManagers(params);
+  console.log("category ", data);
 
-  console.log("manager data", data);
-
-  if (!data?.success || !data.meta || data.data.length === 0) {
-    return (
-      <DataNotFoundCard
-        message="Pending Manger Not Found"
-        description="There was no new incomming request as a manager role"
-      />
-    );
+  if (isPending) {
+    return <p>loading...</p>;
   }
 
-  const allManagers = data.data || [];
+  if (!data?.success) {
+    return <DataNotFoundCard />;
+  }
+
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flxe flex-col space-y-6">
@@ -42,41 +37,32 @@ const ApproveManagerContent = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  Pending Managers
+                  Category Management
                 </p>
-                <Suspense fallback={<Skeleton className="h-9 w-48" />}>
-                  <SearchBar />
-                </Suspense>
+                <SearchBar />
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span className="whitespace-nowrap">Show</span>
-                <Suspense fallback={<Skeleton className="h-9 w-32" />}>
-                  <ItemShow />
-                </Suspense>
+                <ItemShow />
               </div>
+              <div>{/* <CategoryModal /> */}</div>
             </div>
           </div>
         </div>
+
         <Suspense
-          fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}
+          fallback={<GenericTableSkeleton rowCount={6} columnCount={8} />}
         >
-          <ManagerTable managers={allManagers} />
+          <CategoryTable categories={data?.data} />
         </Suspense>
+
+        <Paginations meta={data?.meta} />
       </div>
-      <Paginations meta={data?.meta} />
     </div>
   );
 };
 
-const ApproveManagerPage = () => {
-  return (
-    <Suspense fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}>
-      <ApproveManagerContent />
-    </Suspense>
-  );
-};
-
-export default ApproveManagerPage;
+export default AllCategoryPage;

@@ -38,18 +38,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute={"class"}
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <ThemeProvider>
           <Providers>
             <TooltipProvider>{children}</TooltipProvider>
+            <Toaster position="top-right" richColors />
           </Providers>
         </ThemeProvider>
-        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

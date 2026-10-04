@@ -8,31 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useSuspenseGetAllManagers } from "@/hooks";
 import { IManager } from "@/types";
-import { useSearchParams } from "next/navigation";
 import { ApprovalModal } from "./approval-modal";
-import Paginations from "@/shared/pagination";
 
-const DoctorApprovalTable = () => {
-  const searchParams = useSearchParams();
+type Props = {
+  managers: IManager[];
+};
 
-  const params = {
-    ...Object.fromEntries(searchParams.entries()),
-    verificationStatus: "PENDING",
-    // emailVerified: "true"
-  };
-
-  const { data } = useSuspenseGetAllManagers(params);
-
-  console.log("manager data", data);
-
-  if (!data?.success || !data.meta || data.data.length === 0) {
-    return <p className="text-center text-red-600">no pending manager found</p>;
-  }
-
-  const allManagers = data.data || [];
-
+const DoctorApprovalTable = ({ managers }: Props) => {
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -49,7 +32,7 @@ const DoctorApprovalTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {allManagers.map((manager: IManager, idx: number) => {
+            {managers.map((manager: IManager, idx: number) => {
               const address =
                 manager.address.street +
                 " " +
@@ -76,7 +59,6 @@ const DoctorApprovalTable = () => {
           </TableBody>
         </Table>
       </div>
-      <Paginations meta={data.meta} />
     </div>
   );
 };
