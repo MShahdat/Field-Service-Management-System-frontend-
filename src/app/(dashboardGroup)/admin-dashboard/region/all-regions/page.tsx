@@ -1,24 +1,24 @@
 "use client";
 
-import { CategoryModal } from "@/components/module/cetegory/create-category/category-modal";
-import CategoryTable from "@/components/module/cetegory/create-category/category-table";
-import { Button } from "@/components/ui/button";
-import { useGetAllCategories } from "@/hooks";
+import { RegionModal } from "@/components/module/region/region-modal";
+import RegionTable from "@/components/module/region/region-table";
+import { useGetAllRegions } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { ItemShow } from "@/shared/items-show";
 import Paginations from "@/shared/pagination";
 import SearchBar from "@/shared/search-bar";
+import { IRegion } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-const AllCategoryPage = () => {
+const AllRegionsPage = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
 
-  const { data, isPending } = useGetAllCategories(params);
+  const { data, isPending } = useGetAllRegions(params);
 
-  console.log("category ", data);
+  console.log("region ", data);
 
   if (isPending) {
     return <p>loading...</p>;
@@ -28,6 +28,10 @@ const AllCategoryPage = () => {
     return <DataNotFoundCard />;
   }
 
+  const allRegions = data?.data
+    ? data.data.filter((region: IRegion) => region.area !== "All")
+    : [];
+
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flxe flex-col space-y-6">
@@ -36,7 +40,7 @@ const AllCategoryPage = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  Category Management
+                  Region Management
                 </p>
                 <SearchBar />
               </div>
@@ -48,7 +52,7 @@ const AllCategoryPage = () => {
                 <ItemShow />
               </div>
               <div>
-                <CategoryModal mode="create" />
+                <RegionModal mode="create" />
               </div>
             </div>
           </div>
@@ -57,7 +61,7 @@ const AllCategoryPage = () => {
         <Suspense
           fallback={<GenericTableSkeleton rowCount={6} columnCount={8} />}
         >
-          <CategoryTable categories={data?.data} />
+          <RegionTable regions={allRegions} />
         </Suspense>
 
         <Paginations meta={data?.meta} />
@@ -66,4 +70,4 @@ const AllCategoryPage = () => {
   );
 };
 
-export default AllCategoryPage;
+export default AllRegionsPage;

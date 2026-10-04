@@ -10,22 +10,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataNotFoundCard from "@/shared/data-not-found";
-import { ICategory, IManager } from "@/types";
-import { CategoryModal } from "./category-modal";
+import { IRegion } from "@/types";
+import { RegionModal } from "./region-modal";
 import { StatusUpdateModal } from "./status-update";
 
 type Props = {
-  categories: ICategory[];
+  regions: IRegion[];
 };
 
-const CategoryTable = ({ categories }: Props) => {
-  console.log("categories from table", categories);
+const RegionTable = ({ regions }: Props) => {
+  console.log("regions from table", regions);
 
-  if (categories.length === 0) {
+  if (regions.length === 0) {
     return (
       <DataNotFoundCard
-        message="No Category Found"
-        description="There was no categoy have been created yet!"
+        message="No Region Found"
+        description="There was no region have been created yet!"
       />
     );
   }
@@ -37,32 +37,30 @@ const CategoryTable = ({ categories }: Props) => {
           <TableHeader>
             <TableRow>
               <TableHead className="">No</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Duration</TableHead>
+              <TableHead>Area Name</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Active Status</TableHead>
               <TableHead className="">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.map((category: ICategory, idx: number) => {
-              const status = category.isActive ? "True" : "False";
+            {regions.map((region: IRegion, idx: number) => {
+              const status = region.isActive ? "True" : "False";
               return (
-                <TableRow key={category.id}>
+                <TableRow key={region.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
-                  <TableCell>{category.name}</TableCell>
-                  <TableCell>{category.duration}</TableCell>
-                  <TableCell>{category.description}</TableCell>
+                  <TableCell>{region.area}</TableCell>
+                  <TableCell>{region.description}</TableCell>
                   <TableCell>
                     <Badge variant={"secondary"}>{status}</Badge>
                   </TableCell>
                   <TableCell className="flex items-center gap-2">
                     <StatusUpdateModal
-                      id={category.id}
-                      name={category.name}
-                      status={category.isActive}
+                      id={region.id}
+                      area={region.area}
+                      status={region.isActive}
                     />
-                    <CategoryModal category={category} mode="edit" />
+                    <RegionModal region={region} mode="edit" />
                   </TableCell>
                 </TableRow>
               );
@@ -74,4 +72,4 @@ const CategoryTable = ({ categories }: Props) => {
   );
 };
 
-export default CategoryTable;
+export default RegionTable;

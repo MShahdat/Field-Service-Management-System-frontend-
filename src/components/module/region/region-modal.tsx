@@ -26,44 +26,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
-import { ICategory } from "@/types";
-import { useCategoryCreate, useUpdateCategory } from "@/hooks";
-import { categorySchema, MAX_DESCRIPTION } from "@/validation";
+import { IRegion } from "@/types";
+import { useRegionCreate, useUpdateRegion } from "@/hooks";
+import { MAX_DESCRIPTION } from "@/validation";
 
 type Props = {
-  category?: ICategory;
+  region?: IRegion;
   mode?: "edit" | "create";
 };
 
-export function CategoryModal({ category, mode = "create" }: Props) {
-  const isEdit = mode === "edit" && !!category;
+export function RegionModal({ region, mode = "create" }: Props) {
+  const isEdit = mode === "edit" && !!region;
   const [open, setOpen] = useState(false);
 
-  const { mutate: createCategory, isPending: createPending } =
-    useCategoryCreate();
-  const { mutate: updateCategory, isPending: updatePending } =
-    useUpdateCategory();
+  const { mutate: createRegion, isPending: createPending } = useRegionCreate();
+  const { mutate: updateRegion, isPending: updatePending } = useUpdateRegion();
 
   const isPending = isEdit ? updatePending : createPending;
 
   const getDefaults = () => ({
-    name: category?.name ?? "",
-    description: category?.description ?? "",
-    duration: category?.duration ?? 0,
-    icon: category?.icon ?? "",
+    area: region?.area ?? "",
+    description: region?.description ?? "",
   });
 
   const form = useForm({
     defaultValues: getDefaults(),
     validators: {
-      onChange: categorySchema,
+      // onChange: categorySchema,
     },
     onSubmit: ({ value }) => {
       const data = {
-        name: value.name.trim(),
+        area: value.area.trim(),
         description: value.description.trim(),
-        duration: value.duration,
-        icon: value.icon.trim(),
       };
 
       const callbacks = {
@@ -77,9 +71,12 @@ export function CategoryModal({ category, mode = "create" }: Props) {
       };
 
       if (isEdit) {
-        updateCategory({ payload: data, id: category.id }, callbacks);
+        updateRegion(
+          { payload: { ...data, id: region.id }, id: region.id },
+          callbacks,
+        );
       } else {
-        createCategory(data, callbacks);
+        createRegion(data, callbacks);
       }
     },
   });
@@ -93,13 +90,13 @@ export function CategoryModal({ category, mode = "create" }: Props) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {isEdit ? (
-          <Button size="sm" variant="outline" aria-label="Edit category">
+          <Button size="sm" variant="outline" aria-label="Edit region">
             <Edit className="size-4" />
           </Button>
         ) : (
           <Button>
             <Plus className="size-4" />
-            Create Category
+            Create Region
           </Button>
         )}
       </DialogTrigger>
@@ -107,12 +104,12 @@ export function CategoryModal({ category, mode = "create" }: Props) {
       <DialogContent className="max-h-[calc(100dvh-2rem)] min-w-0 overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? "Update Category" : "Create Category"}
+            {isEdit ? "Update Region" : "Create Region"}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Edit the details of this service category."
-              : "Add a new service category to your marketplace."}
+              ? "Edit the details of this region."
+              : "Add a new region to your marketplace."}
           </DialogDescription>
         </DialogHeader>
 
@@ -125,14 +122,14 @@ export function CategoryModal({ category, mode = "create" }: Props) {
           className="space-y-6"
         >
           <FieldGroup>
-            <form.Field name="name">
+            <form.Field name="area">
               {(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      Category Name<span className="text-red-500">*</span>
+                      Area<span className="text-red-500">*</span>
                     </FieldLabel>
                     <Input
                       id={field.name}
@@ -142,7 +139,7 @@ export function CategoryModal({ category, mode = "create" }: Props) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       autoComplete="off"
-                      placeholder="e.g. Plumbing"
+                      placeholder="e.g. Dhaka North"
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -151,59 +148,6 @@ export function CategoryModal({ category, mode = "create" }: Props) {
                 );
               }}
             </form.Field>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <form.Field name="duration">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        Duration (Minute)<span className="text-red-500">*</span>
-                      </FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type="number"
-                        min={1}
-                        inputMode="numeric"
-                        value={field.state.value || ""}
-                        onBlur={field.handleBlur}
-                        onChange={(e) =>
-                          field.handleChange(
-                            e.target.value === "" ? 0 : Number(e.target.value),
-                          )
-                        }
-                        aria-invalid={isInvalid}
-                        autoComplete="off"
-                        placeholder="8"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  );
-                }}
-              </form.Field>
-
-              <form.Field name="icon">
-                {(field) => (
-                  <Field>
-                    <FieldLabel htmlFor={field.name}>Category Icon</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      autoComplete="off"
-                      placeholder="e.g. wrench"
-                    />
-                  </Field>
-                )}
-              </form.Field>
-            </div>
 
             <form.Field name="description">
               {(field) => {
@@ -221,7 +165,7 @@ export function CategoryModal({ category, mode = "create" }: Props) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       autoComplete="off"
-                      placeholder="Briefly describe this category..."
+                      placeholder="Briefly describe this region..."
                     />
                     <div className="flex items-start justify-between gap-2">
                       {isInvalid ? (
@@ -263,9 +207,9 @@ export function CategoryModal({ category, mode = "create" }: Props) {
                       <Spinner /> {isEdit ? "Updating" : "Creating"}
                     </>
                   ) : isEdit ? (
-                    "Update Category"
+                    "Update Region"
                   ) : (
-                    "Create Category"
+                    "Create Region"
                   )}
                 </Button>
               )}

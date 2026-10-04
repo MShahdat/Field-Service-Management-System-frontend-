@@ -1,15 +1,28 @@
 import apiClient from "@/lib/apiClient";
-import { QueryParams } from "@/types";
+import { ICategoryCreate, ICategoryUpdate, QueryParams } from "@/types";
 
-// export const createCategory = (payload: ICategoryPayload) => {
-//   return apiClient(`/category`, {
-//     method: 'POST',
-//     body: payload
-//   })
-// }
+export const createCategory = (payload: ICategoryCreate) => {
+  return apiClient(`/category`, {
+    method: "POST",
+    body: payload,
+  });
+};
 
 export const getAllCategories = (params?: QueryParams) => {
   return apiClient("/category/all-category", {
     params,
+  });
+};
+
+export const updateCategory = (payload: ICategoryUpdate, id: string) => {
+  return apiClient(`/category/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
+export const deactiveCategory = (id: string) => {
+  return apiClient(`/category/${id}`, {
+    method: "PATCH",
   });
 };
