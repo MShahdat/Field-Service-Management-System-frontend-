@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useGetMe } from "@/hooks";
 import { getFallbackText } from "@/utils";
+import ProfileAvater from "@/shared/avater";
 
 export function NavUser({ user }: { user: any }) {
   const { isMobile } = useSidebar();
@@ -61,12 +62,13 @@ export function NavUser({ user }: { user: any }) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-9 w-9 rounded-lg">
+                {/* <Avatar className="h-9 w-9 rounded-lg">
                   <AvatarImage src={user.prifileImg} alt={user.name} />
                   <AvatarFallback className="rounded-full text-black font-bold">
                     {getFallbackText(user.name)}
                   </AvatarFallback>
-                </Avatar>
+                </Avatar> */}
+                <ProfileAvater name={user.name} imageUrl={user.profileImg} />
                 <div className="grid flex-1 text-left text-[16px] leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>

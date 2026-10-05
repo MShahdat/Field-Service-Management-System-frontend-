@@ -20,17 +20,17 @@ export const customerRoutes = [
     ],
   },
   {
-    title: "Service",
+    title: "Service Management",
     url: "#",
     icon: BookOpen,
     items: [
       {
         title: "My Services",
-        url: `${prefix}/service/all-services`,
+        url: `${prefix}/service/my-services`,
       },
       {
         title: "Todays Services",
-        url: `${prefix}/service/today`,
+        url: `${prefix}/service/todays-service`,
       },
     ],
   },

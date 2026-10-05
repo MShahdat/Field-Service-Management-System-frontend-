@@ -1,7 +1,7 @@
 export interface ICategory {
   id: string;
   name: string;
-  icon?: string;
+  icon: string | null;
   description?: string;
   duration: number;
   isActive: boolean;

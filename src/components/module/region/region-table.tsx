@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import DataNotFoundCard from "@/shared/data-not-found";
 import { IRegion } from "@/types";
 import { RegionModal } from "./region-modal";
 import { StatusUpdateModal } from "./status-update";
@@ -19,16 +18,7 @@ type Props = {
 };
 
 const RegionTable = ({ regions }: Props) => {
-  console.log("regions from table", regions);
-
-  if (regions.length === 0) {
-    return (
-      <DataNotFoundCard
-        message="No Region Found"
-        description="There was no region have been created yet!"
-      />
-    );
-  }
+  console.log("regions ", regions);
 
   return (
     <div className="space-y-4">

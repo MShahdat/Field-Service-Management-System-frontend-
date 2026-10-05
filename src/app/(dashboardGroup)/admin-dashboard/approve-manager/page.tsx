@@ -1,46 +1,8 @@
-"use client";
-
-import ManagerTable from "@/components/module/manager/manager-approval/manager-table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useSuspenseGetAllManagers } from "@/hooks";
-import GenericTableSkeleton from "@/loading/table-loading";
-import DataNotFoundCard from "@/shared/data-not-found";
+import PendingManagerLists from "@/components/module/manager/manager-approval/manager-lists";
 import { ItemShow } from "@/shared/items-show";
-import Paginations from "@/shared/pagination";
 import SearchBar from "@/shared/search-bar";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
-const ApproveManagerContent = () => {
-  const searchParams = useSearchParams();
-
-  const params = {
-    ...Object.fromEntries(searchParams.entries()),
-    verificationStatus: "PENDING",
-    emailVerified: "true",
-  };
-
-  const { data, isPending } = useSuspenseGetAllManagers(params);
-
-  if (isPending) {
-    return <p>loading...</p>;
-  }
-
-  if (!data?.success) {
-    return;
-  }
-  // console.log("manager data", data);
-
-  if (data.data.length === 0) {
-    return (
-      <DataNotFoundCard
-        message="Pending Manger Not Found"
-        description="There was no new incomming request as a manager role"
-      />
-    );
-  }
-
-  const allManagers = data.data || [];
+const ApproveManagerPage = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flex flex-col space-y-6">
@@ -63,22 +25,9 @@ const ApproveManagerContent = () => {
             </div>
           </div>
         </div>
-        <Suspense
-          fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}
-        >
-          <ManagerTable managers={allManagers} />
-        </Suspense>
+        <PendingManagerLists />
       </div>
-      <Paginations meta={data?.meta} />
     </div>
-  );
-};
-
-const ApproveManagerPage = () => {
-  return (
-    <Suspense fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}>
-      <ApproveManagerContent />
-    </Suspense>
   );
 };
 

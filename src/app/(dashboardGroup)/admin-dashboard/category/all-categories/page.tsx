@@ -1,33 +1,9 @@
-"use client";
-
+import CategoryLists from "@/components/module/cetegory/create-category/category-lists";
 import { CategoryModal } from "@/components/module/cetegory/create-category/category-modal";
-import CategoryTable from "@/components/module/cetegory/create-category/category-table";
-import { Button } from "@/components/ui/button";
-import { useGetAllCategories } from "@/hooks";
-import GenericTableSkeleton from "@/loading/table-loading";
-import DataNotFoundCard from "@/shared/data-not-found";
 import { ItemShow } from "@/shared/items-show";
-import Paginations from "@/shared/pagination";
 import SearchBar from "@/shared/search-bar";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 const AllCategoryPage = () => {
-  const searchParams = useSearchParams();
-  const params = Object.fromEntries(searchParams.entries());
-
-  const { data, isPending } = useGetAllCategories(params);
-
-  console.log("category ", data);
-
-  if (isPending) {
-    return <p>loading...</p>;
-  }
-
-  if (!data?.success) {
-    return <DataNotFoundCard />;
-  }
-
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flxe flex-col space-y-6">
@@ -54,13 +30,7 @@ const AllCategoryPage = () => {
           </div>
         </div>
 
-        <Suspense
-          fallback={<GenericTableSkeleton rowCount={6} columnCount={8} />}
-        >
-          <CategoryTable categories={data?.data} />
-        </Suspense>
-
-        <Paginations meta={data?.meta} />
+        <CategoryLists />
       </div>
     </div>
   );

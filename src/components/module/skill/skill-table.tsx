@@ -20,8 +20,6 @@ type Props = {
 };
 
 const SkillsTable = ({ skills }: Props) => {
-  // console.log("skills from table", skills);
-
   if (skills.length === 0) {
     return (
       <DataNotFoundCard

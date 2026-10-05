@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataNotFoundCard from "@/shared/data-not-found";
-import { ICategory, IManager } from "@/types";
+import { ICategory } from "@/types";
 import { CategoryModal } from "./category-modal";
 import { StatusUpdateModal } from "./status-update";
 

@@ -3,3 +3,4 @@ export * from "./region.hook";
 export * from "./manager.hook";
 export * from "./category.hooks";
 export * from "./skill.hook";
+export * from "./service.hook";

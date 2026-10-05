@@ -1,11 +1,9 @@
-"use client";
-
-import RegionLists from "@/components/module/region/region-lists";
-import { RegionModal } from "@/components/module/region/region-modal";
+import MyServiceLists from "@/components/module/customer-service/service-lists";
+import { MyServiceModal } from "@/components/module/customer-service/service-modal";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
 
-const AllRegionsPage = () => {
+const MyServicesPage = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flxe flex-col space-y-6">
@@ -14,7 +12,7 @@ const AllRegionsPage = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  Region Management
+                  Service Management
                 </p>
                 <SearchBar />
               </div>
@@ -26,16 +24,16 @@ const AllRegionsPage = () => {
                 <ItemShow />
               </div>
               <div>
-                <RegionModal mode="create" />
+                <MyServiceModal mode="create" />
               </div>
             </div>
           </div>
         </div>
 
-        <RegionLists />
+        <MyServiceLists />
       </div>
     </div>
   );
 };
 
-export default AllRegionsPage;
+export default MyServicesPage;
