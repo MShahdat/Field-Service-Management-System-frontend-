@@ -1,8 +1,10 @@
 "use client";
 
-import ManagerTable from "@/components/module/manager/manager-approval/manager-table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useSuspenseGetAllManagers } from "@/hooks";
+import { RegionModal } from "@/components/module/region/region-modal";
+import RegionTable from "@/components/module/region/region-table";
+import { SkillModal } from "@/components/module/skill/skill-modal";
+import SkillsTable from "@/components/module/skill/skill-table";
+import { useGetAllRegions, useGetAllSkills, useGetCategories } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { ItemShow } from "@/shared/items-show";
@@ -11,45 +13,34 @@ import SearchBar from "@/shared/search-bar";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-const ApproveManagerContent = () => {
+const AllSkillPage = () => {
   const searchParams = useSearchParams();
+  const params = Object.fromEntries(searchParams.entries());
 
-  const params = {
-    ...Object.fromEntries(searchParams.entries()),
-    verificationStatus: "PENDING",
-    emailVerified: "true",
-  };
+  const { data, isPending } = useGetAllSkills(params);
 
-  const { data, isPending } = useSuspenseGetAllManagers(params);
+  const { data: categoriesData, isPending: categoriesPending } =
+    useGetCategories();
 
-  if (isPending) {
+  console.log("skills ", data);
+
+  if (isPending || categoriesPending) {
     return <p>loading...</p>;
   }
 
-  if (!data?.success) {
-    return;
-  }
-  // console.log("manager data", data);
-
-  if (data.data.length === 0) {
-    return (
-      <DataNotFoundCard
-        message="Pending Manger Not Found"
-        description="There was no new incomming request as a manager role"
-      />
-    );
+  if (!data?.success || !categoriesData?.success) {
+    return <DataNotFoundCard />;
   }
 
-  const allManagers = data.data || [];
   return (
     <div className="max-w-11/12 px-4 py-4">
-      <div className="flex flex-col space-y-6">
+      <div className="flxe flex-col space-y-6">
         <div className="rounded-2xl border border-border bg-card px-4 sm:px-5 py-4 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  Pending Managers
+                  Skill Management
                 </p>
                 <SearchBar />
               </div>
@@ -60,26 +51,23 @@ const ApproveManagerContent = () => {
                 <span className="whitespace-nowrap">Show</span>
                 <ItemShow />
               </div>
+              <div>
+                <SkillModal mode="create" categories={categoriesData?.data} />
+              </div>
             </div>
           </div>
         </div>
+
         <Suspense
-          fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}
+          fallback={<GenericTableSkeleton rowCount={6} columnCount={8} />}
         >
-          <ManagerTable managers={allManagers} />
+          <SkillsTable skills={data?.data} />
         </Suspense>
+
+        <Paginations meta={data?.meta} />
       </div>
-      <Paginations meta={data?.meta} />
     </div>
   );
 };
 
-const ApproveManagerPage = () => {
-  return (
-    <Suspense fallback={<GenericTableSkeleton rowCount={6} columnCount={6} />}>
-      <ApproveManagerContent />
-    </Suspense>
-  );
-};
-
-export default ApproveManagerPage;
+export default AllSkillPage;

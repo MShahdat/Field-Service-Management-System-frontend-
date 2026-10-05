@@ -15,7 +15,7 @@ type Props = {
   managers: IManager[];
 };
 
-const DoctorApprovalTable = ({ managers }: Props) => {
+const ManagerTable = ({ managers }: Props) => {
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -34,11 +34,11 @@ const DoctorApprovalTable = ({ managers }: Props) => {
           <TableBody>
             {managers.map((manager: IManager, idx: number) => {
               const address =
-                manager.address.street +
+                manager?.address?.street +
                 " " +
-                manager.address.city +
+                manager?.address?.city +
                 " " +
-                manager.address.postalCode;
+                manager?.address?.postalCode;
 
               const regions = manager.region.map((region) => region.area);
 
@@ -63,4 +63,4 @@ const DoctorApprovalTable = ({ managers }: Props) => {
   );
 };
 
-export default DoctorApprovalTable;
+export default ManagerTable;

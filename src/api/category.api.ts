@@ -8,6 +8,14 @@ export const createCategory = (payload: ICategoryCreate) => {
   });
 };
 
+//& public
+export const getCategories = (params?: QueryParams) => {
+  return apiClient("/category/all", {
+    params,
+  });
+};
+
+//& admin
 export const getAllCategories = (params?: QueryParams) => {
   return apiClient("/category/all-category", {
     params,

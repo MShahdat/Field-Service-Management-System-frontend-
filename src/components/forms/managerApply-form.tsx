@@ -30,7 +30,7 @@ import {
 } from "../ui/select";
 import { managerApplyZodSchema } from "@/validation";
 
-interface ISelectOption {
+export interface ISelectOption {
   value: string;
   label: string;
 }

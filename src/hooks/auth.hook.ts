@@ -37,6 +37,8 @@ export const useGetMe = () => {
   return useQuery({
     queryKey: ["user"],
     queryFn: getMe,
+    // enabled: typeof window !== "undefined",
+    retry: false,
   });
 };
 

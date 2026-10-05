@@ -2,11 +2,21 @@ import {
   createCategory,
   deactiveCategory,
   getAllCategories,
+  getCategories,
   updateCategory,
 } from "@/api";
 import { QueryParams } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+//& public
+export const useGetCategories = (params?: QueryParams) => {
+  return useQuery({
+    queryKey: ["categories", params],
+    queryFn: () => getCategories(params),
+  });
+};
+
+//& admin
 export const useGetAllCategories = (params?: QueryParams) => {
   return useQuery({
     queryKey: ["all-categories", params],
@@ -21,6 +31,9 @@ export const useCategoryCreate = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["all-categories"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
       });
     },
   });
@@ -40,6 +53,9 @@ export const useUpdateCategory = () => {
       queryClient.invalidateQueries({
         queryKey: ["all-categories"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+      });
     },
   });
 };
@@ -52,6 +68,9 @@ export const useDeactiveCategory = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["all-categories"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
       });
     },
   });

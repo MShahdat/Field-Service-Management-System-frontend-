@@ -78,4 +78,15 @@ export const adminRoutes = [
       },
     ],
   },
+  {
+    title: "Skill Management",
+    url: "#",
+    icon: Bot,
+    items: [
+      {
+        title: "All Skills",
+        url: `${prefix}/skill/all-skills`,
+      },
+    ],
+  },
 ];

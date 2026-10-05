@@ -43,7 +43,7 @@ export function ApprovalModal({ manager }: { manager: IManager }) {
       verificationStatus: status,
       rejectionReason,
     };
-    console.log(reviewData);
+    // console.log(reviewData);
     mutate(reviewData, {
       onSuccess: (res) => {
         toast.success(res.message);
@@ -96,9 +96,7 @@ export function ApprovalModal({ manager }: { manager: IManager }) {
                     {manager.user.name}
                     <span>
                       {manager.user.emailVerified ? (
-                        <>
-                          <VerifiedIcon className="fill-green-600 size-4 lg:size-5 text-white" />
-                        </>
+                        <VerifiedIcon className="fill-green-600 size-4 lg:size-5 text-white" />
                       ) : (
                         ""
                       )}

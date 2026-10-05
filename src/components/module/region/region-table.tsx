@@ -40,7 +40,7 @@ const RegionTable = ({ regions }: Props) => {
               <TableHead>Area Name</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Active Status</TableHead>
-              <TableHead className="">Action</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -54,7 +54,7 @@ const RegionTable = ({ regions }: Props) => {
                   <TableCell>
                     <Badge variant={"secondary"}>{status}</Badge>
                   </TableCell>
-                  <TableCell className="flex items-center gap-2">
+                  <TableCell className="flex items-center justify-end gap-2">
                     <StatusUpdateModal
                       id={region.id}
                       area={region.area}

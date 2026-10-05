@@ -41,7 +41,7 @@ const CategoryTable = ({ categories }: Props) => {
               <TableHead>Duration</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Active Status</TableHead>
-              <TableHead className="">Action</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -56,7 +56,7 @@ const CategoryTable = ({ categories }: Props) => {
                   <TableCell>
                     <Badge variant={"secondary"}>{status}</Badge>
                   </TableCell>
-                  <TableCell className="flex items-center gap-2">
+                  <TableCell className="flex items-center justify-end gap-2">
                     <StatusUpdateModal
                       id={category.id}
                       name={category.name}
