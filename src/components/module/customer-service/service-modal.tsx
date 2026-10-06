@@ -120,11 +120,14 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
       street: service?.address.street ?? "",
       city: service?.address.city ?? "",
       postalCode: service?.address.postalCode ?? "",
-      latitude: service?.address.coordinates?.latitude ?? "",
-      longitude: service?.address.coordinates?.longtude ?? "",
-      categoryId: service?.categoryId ?? "",
+      latitude: String(service?.address.coordinates?.latitude ?? ""),
+      longitude: String(service?.address.coordinates?.longtude ?? ""),
+      categoryId: service?.category?.id ?? "",
       priority: service?.priority as Priority,
-      regionId: service?.regionId ?? "",
+      regionId: "",
+    },
+    validators: {
+      onSubmit: serviceZodSchema,
     },
     onSubmit: ({ value }) => {
       const data = {
@@ -164,6 +167,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
           onSuccess: (res) => {
             toast.success(res.message);
             setOpen(false);
+            form.reset();
           },
           onError: (err) => {
             toast.error(err.message);
@@ -288,7 +292,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
               </form.Field>
             </div>
 
-            <div className="gird grid-cols-2 gap-2">
+            <div className="flex gap-2">
               <form.Field name="priority">
                 {(field) => {
                   const isInvalid =
@@ -427,7 +431,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
               </form.Field>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex gap-2">
               <form.Field name="city">
                 {(field) => {
                   const isInvalid =

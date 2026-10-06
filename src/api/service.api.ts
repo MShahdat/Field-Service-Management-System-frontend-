@@ -20,3 +20,13 @@ export const updateService = (payload: IServiceUpdate, id: string) => {
     body: payload,
   });
 };
+
+export const deleteService = (id: string) => {
+  return apiClient(`/service/delete/${id}`, {
+    method: "PATCH",
+  });
+};
+
+export const singleService = (id: string) => {
+  return apiClient(`/service/${id}`);
+};

@@ -27,3 +27,22 @@ export type ServiceStatus =
   | "IN_PROGRESS"
   | "COMPLETED"
   | "CANCELLED";
+
+export type PaymentStatus =
+  | "UNPAID"
+  | "PAID"
+  | "FAILED"
+  | "CANCELLED"
+  | "REFUNDED";
+
+export type FileAttachmentType =
+  | "BEFORE_PHOTO"
+  | "AFTER_PHOTO"
+  | "SIGNATURE"
+  | "DOCUMENT";
+
+export type ScheduleStatus =
+  | "SCHEDULED"
+  | "CONFIRMED"
+  | "COMPLETED"
+  | "CANCELLED";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,17 +7,16 @@ import ProfileAvater from "@/shared/avater";
 import { ServiceRequest } from "@/types";
 import { Clock, Hourglass, Pencil, Trash2, XCircle } from "lucide-react";
 import { MyServiceModal } from "./service-modal";
+import DeleteModal from "./delete-modal";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 type Props = {
   service: ServiceRequest;
 };
 
 const MyServiceCard = ({ service }: Props) => {
-  const isDelete =
-    service.status === "APPROVED" ||
-    service.status === "IN_PROGRESS" ||
-    service.status === "ASSIGMED";
-
+  const router = useRouter();
+  const pathname = usePathname();
   return (
     <Card className="">
       <CardContent className="flex h-full flex-col gap-5">
@@ -80,21 +81,19 @@ const MyServiceCard = ({ service }: Props) => {
         )}
 
         <div className="mt-auto flex items-center justify-between gap-2">
-          <Button type="button" variant="secondary">
+          <Button
+            onClick={() => {
+              router.push(`${pathname}/${service.id}`);
+            }}
+            type="button"
+            variant="secondary"
+          >
             View details
           </Button>
 
           <div className="flex gap-1.5">
             <MyServiceModal service={service} mode="edit" />
-            <Button
-              type="button"
-              size="sm"
-              variant="destructive"
-              disabled={isDelete}
-            >
-              <Trash2 aria-hidden />
-              Delete
-            </Button>
+            <DeleteModal service={service} />
           </div>
         </div>
       </CardContent>

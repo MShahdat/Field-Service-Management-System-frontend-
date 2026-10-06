@@ -1,4 +1,10 @@
-import { createService, customerMyServices, updateService } from "@/api";
+import {
+  createService,
+  customerMyServices,
+  deleteService,
+  singleService,
+  updateService,
+} from "@/api";
 import { QueryParams } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -16,6 +22,9 @@ export const useCreateService = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["my-service-customer"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
       });
     },
   });
@@ -35,6 +44,31 @@ export const useUpdateService = () => {
       queryClient.invalidateQueries({
         queryKey: ["my-service-customer"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
+      });
     },
+  });
+};
+
+export const useDeleteService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteService(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["my-service-customer"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
+      });
+    },
+  });
+};
+
+export const useSingleService = (id: string) => {
+  return useQuery({
+    queryKey: ["single-service", id],
+    queryFn: () => singleService(id),
   });
 };

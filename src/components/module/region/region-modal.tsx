@@ -51,9 +51,7 @@ export function RegionModal({ region, mode = "create" }: Props) {
 
   const form = useForm({
     defaultValues: getDefaults(),
-    validators: {
-      // onChange: categorySchema,
-    },
+    validators: {},
     onSubmit: ({ value }) => {
       const data = {
         area: value.area.trim(),
