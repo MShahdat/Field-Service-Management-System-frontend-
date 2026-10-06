@@ -1,5 +1,10 @@
 import apiClient from "@/lib/apiClient";
-import { IServiceCreate, IServiceUpdate, QueryParams } from "@/types";
+import {
+  IReviewService,
+  IServiceCreate,
+  IServiceUpdate,
+  QueryParams,
+} from "@/types";
 
 export const customerMyServices = (params: QueryParams) => {
   return apiClient("/service/my-services", {
@@ -29,4 +34,17 @@ export const deleteService = (id: string) => {
 
 export const singleService = (id: string) => {
   return apiClient(`/service/${id}`);
+};
+
+export const reviewService = (payload: IReviewService) => {
+  return apiClient("/service/review", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const getMyRegionService = (params?: QueryParams) => {
+  return apiClient(`/service/my-region`, {
+    params,
+  });
 };

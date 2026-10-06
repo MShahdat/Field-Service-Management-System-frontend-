@@ -2,6 +2,8 @@ import {
   createService,
   customerMyServices,
   deleteService,
+  getMyRegionService,
+  reviewService,
   singleService,
   updateService,
 } from "@/api";
@@ -70,5 +72,27 @@ export const useSingleService = (id: string) => {
   return useQuery({
     queryKey: ["single-service", id],
     queryFn: () => singleService(id),
+  });
+};
+
+export const useGetMyRegionService = (params?: QueryParams) => {
+  return useQuery({
+    queryKey: ["my-region-service", params],
+    queryFn: () => getMyRegionService(params),
+  });
+};
+
+export const useReviewService = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reviewService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["my-service-customer"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
+      });
+    },
   });
 };

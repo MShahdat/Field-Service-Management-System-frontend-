@@ -28,15 +28,7 @@ import { redirect } from "next/navigation";
 import { useGetMe, useLogout } from "@/hooks";
 import { Logo } from "@/assets/logo";
 import { LoggedUser } from "@/types/auth.types";
-import { useQueryClient } from "@tanstack/react-query";
 import { ModeToggle } from "./theme";
-
-const navLinks = [
-  { label: "Home", href: "/", icon: LayoutDashboard },
-  { label: "Technicians", href: "/technicians", icon: BarChart3 },
-  { label: "About", href: "/about", icon: FolderKanban },
-  { label: "Contact", href: "/contact", icon: Contact },
-] as const;
 
 export function Navbar() {
   const { data } = useGetMe();
@@ -45,35 +37,42 @@ export function Navbar() {
   const user = data?.data as LoggedUser | undefined;
   const role = user?.role;
 
+  const dashboardUrl = role
+    ? {
+        SUPER_ADMIN: "/admin-dashboard",
+        ADMIN: "/admin-dashboard",
+        TECHNICIAN: "/technician-dashboard",
+        CUSTOMER: "/customer-dashboard",
+        MANAGER: "/manager-dashboard",
+      }[role]
+    : undefined;
+
+  const navLinks = [
+    { label: "Home", href: "/", icon: LayoutDashboard },
+    { label: "Technicians", href: "/technicians", icon: BarChart3 },
+    ...(dashboardUrl
+      ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
+      : []),
+    { label: "About", href: "/about", icon: FolderKanban },
+    { label: "Contact", href: "/contact", icon: Contact },
+  ] as const;
+
   let userMenuItems: { label: string; href: string; icon: typeof User }[] = [];
 
   if (user) {
-    const roleHref: Record<string, string> = {
-      ADMIN: "/admin-dashboard",
-      TECHNICIAN: "/technician-dashboard",
-      CUSTOMER: "/customer-dashboard",
-      MANAGER: "/manager-dashboard",
-    };
-
-    const dashboardHref = role ? (roleHref[role] ?? "/") : "/";
-
     userMenuItems = [
-      { label: "Profile", href: `${dashboardHref}/profile`, icon: User },
-      { label: "Dashboard", href: dashboardHref, icon: LayoutDashboard },
+      { label: "Profile", href: `${dashboardUrl}/profile`, icon: User },
+      { label: "Dashboard", href: `${dashboardUrl}`, icon: LayoutDashboard },
       { label: "Support", href: "/support", icon: LifeBuoy },
     ];
   }
 
   const { mutate } = useLogout();
-  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     mutate(undefined, {
       onSuccess: (res) => {
         toast.success(res.message);
-        queryClient.removeQueries({
-          queryKey: ["user"],
-        });
         redirect("/login");
       },
       onError: (err) => {

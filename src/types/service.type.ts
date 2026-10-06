@@ -207,5 +207,13 @@ export interface IService {
   workOrders: IWorkOrder | null;
   category: ICategory;
   region: IRegion;
-  customer: ICustomer
+  customer: ICustomer;
+}
+
+type Status = "REJECTED" | "APPROVED";
+
+export interface IReviewService {
+  serviceId: string;
+  status: Status;
+  rejectionReason?: string;
 }

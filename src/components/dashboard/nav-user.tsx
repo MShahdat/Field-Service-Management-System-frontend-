@@ -25,12 +25,29 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useGetMe } from "@/hooks";
+
 import { getFallbackText } from "@/utils";
 import ProfileAvater from "@/shared/avater";
+import { useLogout } from "@/hooks";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 export function NavUser({ user }: { user: any }) {
   const { isMobile } = useSidebar();
+
+  const { mutate } = useLogout();
+
+  const handleLogout = () => {
+    mutate(undefined, {
+      onSuccess: (res) => {
+        toast.success(res.message);
+        redirect("/login");
+      },
+      onError: (err) => {
+        toast.error(err.message);
+      },
+    });
+  };
 
   return (
     <SidebarMenu>
@@ -87,7 +104,10 @@ export function NavUser({ user }: { user: any }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-700 font-semibold">
+            <DropdownMenuItem
+              onClick={() => handleLogout()}
+              className="text-red-700 font-semibold"
+            >
               <LogOut />
               <p>Log out</p>
             </DropdownMenuItem>

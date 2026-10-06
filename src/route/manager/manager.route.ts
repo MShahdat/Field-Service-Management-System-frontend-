@@ -1,4 +1,4 @@
-import { BookOpen, Bot, SquareTerminal } from "lucide-react";
+import { BookOpen, SquareTerminal } from "lucide-react";
 
 const prefix = `/manager-dashboard`;
 
@@ -29,8 +29,12 @@ export const managerRoutes = [
         url: `${prefix}/service/my-region-services`,
       },
       {
+        title: "Incoming Services",
+        url: `${prefix}/service/incoming-services`,
+      },
+      {
         title: "Todays Services",
-        url: `${prefix}/service/today`,
+        url: `${prefix}/service/todays-services`,
       },
     ],
   },

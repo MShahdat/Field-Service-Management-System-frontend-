@@ -50,7 +50,6 @@ import { badgeText, statusVarient } from "@/utils";
 
 const backHref = "/customer-dashboard/service/my-services";
 
-
 type Photo = { url: string; type: string };
 
 const ServiceDetailsView = ({ service }: { service: IService }) => {
@@ -61,14 +60,13 @@ const ServiceDetailsView = ({ service }: { service: IService }) => {
   const manager = wo?.manager ?? null;
   const feedback = wo?.feedback ?? null;
   const serviceReport = wo?.serviceReport ?? null;
-  const region = service?.region ?? null
-  const customer = service?.customer ?? null
+  const region = service?.region ?? null;
+  const customer = service?.customer ?? null;
 
   const [tab, setTab] = useState<
     "ALL" | "BEFORE_PHOTO" | "AFTER_PHOTO" | "SIGNATURE" | "DOCUMENT"
   >("ALL");
 
-  
   const [galleryOpen, setGalleryOpen] = useState(false);
 
   const photos: Photo[] = useMemo(() => {
@@ -418,38 +416,45 @@ const ServiceDetailsView = ({ service }: { service: IService }) => {
 
         {/* RIGHT */}
         <div className="flex min-w-0 flex-col gap-4">
-          {
-            payment && 
+          {payment && (
             <Section title="Payment">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-2xl font-bold">
-                {formatMoney(payment?.amount)}
-              </p>
-              {payment && (
-                <Badge
-                  variant={payment.status === "PAID" ? "accepted" : "requested"}
-                >
-                  {badgeText(payment.status)}
-                </Badge>
-              )}
-            </div>
-            <InfoRow label="Method" value={payment?.method ?? "-"} />
-            <InfoRow
-              label="Transaction"
-              value={
-                <span className="font-mono text-[13px]">
-                  {payment?.transectionId ?? "-"}
-                </span>
-              }
-            />
-            <InfoRow label="Paid at" value={formatDateTime(payment?.paidAt)} />
-          </Section>
-          }
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-2xl font-bold">
+                  {formatMoney(payment?.amount)}
+                </p>
+                {payment && (
+                  <Badge
+                    variant={
+                      payment.status === "PAID" ? "accepted" : "requested"
+                    }
+                  >
+                    {badgeText(payment.status)}
+                  </Badge>
+                )}
+              </div>
+              <InfoRow label="Method" value={payment?.method ?? "-"} />
+              <InfoRow
+                label="Transaction"
+                value={
+                  <span className="font-mono text-[13px]">
+                    {payment?.transectionId ?? "-"}
+                  </span>
+                }
+              />
+              <InfoRow
+                label="Paid at"
+                value={formatDateTime(payment?.paidAt)}
+              />
+            </Section>
+          )}
 
           <Section title="People">
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <ProfileAvater name={customer.user.name} imageUrl={customer.user.profileImg}/>
+                <ProfileAvater
+                  name={customer.user.name}
+                  imageUrl={customer.user.profileImg}
+                />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">
                     {customer.user.name}
@@ -459,7 +464,10 @@ const ServiceDetailsView = ({ service }: { service: IService }) => {
               </div>
 
               <div className="flex items-start gap-3">
-                <ProfileAvater name={technician?.user.name ?? '-'} imageUrl={technician?.user.profileImg ?? ""}/>
+                <ProfileAvater
+                  name={technician?.user.name ?? "-"}
+                  imageUrl={technician?.user.profileImg ?? ""}
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="truncate text-sm font-semibold">
@@ -486,36 +494,40 @@ const ServiceDetailsView = ({ service }: { service: IService }) => {
                 </div>
               </div>
 
-              {
-                manager && 
+              {manager && (
                 <div className="flex items-center justify-between gap-3 border-t pt-3">
-                <div className="flex items-center gap-3">
-                  <ProfileAvater name= {manager.user.name} imageUrl={manager.user.profileImg}/>
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {manager?.user?.name ?? "-"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Manager · approved
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <ProfileAvater
+                      name={manager.user.name}
+                      imageUrl={manager.user.profileImg}
+                    />
+                    <div>
+                      <p className="text-sm font-semibold">
+                        {manager?.user?.name ?? "-"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Manager · approved
+                      </p>
+                    </div>
                   </div>
+                  <ImageIcon
+                    className="size-4 text-muted-foreground"
+                    aria-hidden
+                  />
                 </div>
-                <ImageIcon
-                  className="size-4 text-muted-foreground"
-                  aria-hidden
-                />
-              </div>
-              }
+              )}
             </div>
           </Section>
 
           <Section title="Service info">
-            <InfoRow label="Region" value={ region.area ?? "-"} />
+            <InfoRow label="Region" value={region.area ?? "-"} />
             <InfoRow
               label="Work order"
               value={
                 <span className="font-mono">
-                  {wo?.id?.slice(0, 8).toUpperCase() ?? <span className="text-red-500 text-sm">Not orderd</span>}
+                  {wo?.id?.slice(0, 8).toUpperCase() ?? (
+                    <span className="text-red-500 text-sm">Not orderd</span>
+                  )}
                 </span>
               }
             />
