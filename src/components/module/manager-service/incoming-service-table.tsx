@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { IService } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
+import { ServiceReviewModal } from "./review-modal";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -18,12 +19,11 @@ type Props = {
   services: IService[];
 };
 
-const ServiceTable = ({ services }: Props) => {
+const IncomingServiceTable = ({ services }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
-  // console.log("pathname", pathname);
+  console.log("pathname", pathname);
 
-  console.log("services", services);
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -36,19 +36,11 @@ const ServiceTable = ({ services }: Props) => {
               <TableHead>Servicing Date</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Priority</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Review</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {services.map((service: IService, idx: number) => {
-              const isView =
-                service.status === "PENDING" ||
-                service.status === "APPROVED" ||
-                service.status === "ASSIGNED" ||
-                service.status === "COMPLETED" ||
-                service.status === "IN_PROGRESS";
-
               return (
                 <TableRow key={service.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
@@ -63,22 +55,20 @@ const ServiceTable = ({ services }: Props) => {
                       {badgeText(service.priority)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={statusVarient(service.status)}>
-                      {badgeText(service.status)}
-                    </Badge>
-                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 items-center justify-end">
-                      {isView && (
+                      {service.status === "PENDING" && (
                         <Button
                           onClick={() => {
-                            router.push(`${pathname}/${service.id}`);
+                            router.push(
+                              `${pathname}/${service.workOrders?.id}`,
+                            );
+                            console.log("work id ", service.workOrders?.id);
                           }}
                           type="button"
-                          variant="outline"
+                          variant="accepted"
                         >
-                          Details
+                          Assign
                         </Button>
                       )}
                     </div>
@@ -93,4 +83,4 @@ const ServiceTable = ({ services }: Props) => {
   );
 };
 
-export default ServiceTable;
+export default IncomingServiceTable;

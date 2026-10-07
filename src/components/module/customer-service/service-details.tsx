@@ -34,7 +34,6 @@ import {
   CopyId,
   formatClock,
   formatDateTime,
-  formatDuration,
   formatMoney,
   formatServiceDate,
   getInitials,
@@ -46,13 +45,16 @@ import {
 } from "./details-util";
 import { useGetMe } from "@/hooks";
 import ProfileAvater from "@/shared/avater";
-import { badgeText, statusVarient } from "@/utils";
-
-const backHref = "/customer-dashboard/service/my-services";
+import { badgeText, formatDuration, statusVarient } from "@/utils";
 
 type Photo = { url: string; type: string };
 
-const ServiceDetailsView = ({ service }: { service: IService }) => {
+type Props = {
+  service: IService;
+  backHref: string;
+};
+
+const ServiceDetailsView = ({ service, backHref }: Props) => {
   const wo = service.workOrders ?? null;
   const payment = wo?.payment ?? null;
   const schedule = wo?.schedule ?? null;
@@ -525,7 +527,9 @@ const ServiceDetailsView = ({ service }: { service: IService }) => {
               label="Work order"
               value={
                 <span className="font-mono">
-                  {wo?.id?.slice(0, 8).toUpperCase() ?? (
+                  {wo?.id ? (
+                    `#${wo?.id?.slice(0, 8).toUpperCase()}`
+                  ) : (
                     <span className="text-red-500 text-sm">Not orderd</span>
                   )}
                 </span>

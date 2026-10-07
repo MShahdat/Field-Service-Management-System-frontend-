@@ -77,16 +77,6 @@ export function SummaryCard({
   );
 }
 
-// 120 => "2 hours" | 90 => "1 hour 30 min" | 45 => "45 min"
-export function formatDuration(minutes?: number | null) {
-  if (!minutes) return "-";
-  if (minutes < 60) return `${minutes} min`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  const hours = `${h} ${h === 1 ? "hour" : "hours"}`;
-  return m ? `${hours} ${m} min` : hours;
-}
-
 export function Section({
   title,
   action,
@@ -251,4 +241,44 @@ export function getInitials(name?: string | null) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
+}
+
+export function Fact({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-sm font-semibold leading-snug">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+export function getTimeRange(start?: string | null, duration?: number | null) {
+  if (!start) return "-";
+  const [h, m] = start.split(":").map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return start;
+
+  const fmt = (totalMin: number) => {
+    const mins = ((totalMin % 1440) + 1440) % 1440;
+    const hh = Math.floor(mins / 60);
+    const mm = String(mins % 60).padStart(2, "0");
+    return `${hh % 12 || 12}:${mm} ${hh >= 12 ? "PM" : "AM"}`;
+  };
+
+  const startMin = h * 60 + m;
+  return duration
+    ? `${fmt(startMin)} – ${fmt(startMin + duration)}`
+    : fmt(startMin);
 }

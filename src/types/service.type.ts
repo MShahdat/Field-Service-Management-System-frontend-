@@ -9,8 +9,9 @@ import {
   WorkOrderStatus,
 } from "./common.types";
 import { IRegion } from "./region.type";
+import { ITechnician } from "./technician.types";
 
-interface IUser {
+export interface IUser {
   id: string;
   name: string;
   email: string;
@@ -19,12 +20,9 @@ interface IUser {
   emailVerified: boolean;
 }
 
-interface ITechnician {
-  user: IUser;
-}
-
 export interface ServiceRequest {
   id: string;
+  title: string;
   description: string;
   priority: Priority;
   status: ServiceStatus;
@@ -42,6 +40,7 @@ export interface ServiceRequest {
 }
 
 export interface IServiceCreate {
+  title: string;
   description?: string;
   servicingDate: string;
   preferredStartTime: string;
@@ -52,6 +51,7 @@ export interface IServiceCreate {
 }
 
 export interface IServiceUpdate {
+  title: string;
   description: string;
   servicingDate: string;
   preferredStartTime: string;
@@ -178,6 +178,7 @@ export interface IWorkOrder {
 
 export interface IService {
   id: string;
+  title: string;
   description: string;
   priority: Priority;
   status: ServiceStatus;
@@ -210,10 +211,25 @@ export interface IService {
   customer: ICustomer;
 }
 
-type Status = "REJECTED" | "APPROVED";
+type Status = "REJECTED" | "ASSIGNED";
 
-export interface IReviewService {
-  serviceId: string;
+export interface IAvailability {
+  id: string;
+  type: string;
+  dayOfWeek: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+}
+
+export interface IEligibleTechnician {
+  eligibleTech: ITechnician[];
+}
+
+export interface IAssignTechnician {
+  workOrderId: string;
+  technicianId: string;
+  amount: number;
   status: Status;
   rejectionReason?: string;
 }

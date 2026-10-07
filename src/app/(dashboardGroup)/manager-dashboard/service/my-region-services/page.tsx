@@ -1,7 +1,6 @@
 import ServiceLists from "@/components/module/manager-service/service-region-lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
-import React from "react";
 
 const MyRegionServices = () => {
   return (

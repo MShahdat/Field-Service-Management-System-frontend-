@@ -1,7 +1,9 @@
 import {
+  assignTechnician,
   createService,
   customerMyServices,
   deleteService,
+  getEligibleTechnician,
   getMyRegionService,
   reviewService,
   singleService,
@@ -92,6 +94,34 @@ export const useReviewService = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["single-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
+      });
+    },
+  });
+};
+
+export const useEligibleTechnician = (id: string) => {
+  return useQuery({
+    queryKey: ["eligible-technician", id],
+    queryFn: () => getEligibleTechnician(id),
+  });
+};
+
+export const useAssignTechnician = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: assignTechnician,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["my-service-customer"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
       });
     },
   });

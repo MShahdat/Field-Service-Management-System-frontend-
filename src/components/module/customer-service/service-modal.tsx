@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { Edit, Pencil, Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -114,6 +114,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
 
   const form = useForm({
     defaultValues: {
+      title: service?.title ?? "",
       description: service?.description ?? "",
       servicingDate: service?.servicingDate ?? "",
       preferredStartTime: service?.preferredStartTime ?? "",
@@ -121,7 +122,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
       city: service?.address.city ?? "",
       postalCode: service?.address.postalCode ?? "",
       latitude: String(service?.address.coordinates?.latitude ?? ""),
-      longitude: String(service?.address.coordinates?.longtude ?? ""),
+      longitude: String(service?.address.coordinates?.longitude ?? ""),
       categoryId: service?.category?.id ?? "",
       priority: service?.priority as Priority,
       regionId: "",
@@ -131,6 +132,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
     },
     onSubmit: ({ value }) => {
       const data = {
+        title: value.title,
         description: value.description,
         servicingDate: value.servicingDate,
         preferredStartTime: value.preferredStartTime,
@@ -138,9 +140,9 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
           street: value.street,
           city: value.city,
           postalCode: value.postalCode,
-          coordinate: {
-            latitude: value.latitude,
-            longitude: value.longitude,
+          coordinates: {
+            latitude: Number(value.latitude),
+            longitude: Number(value.longitude),
           },
         },
         categoryId: value.categoryId,
@@ -219,6 +221,32 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
           </DialogHeader>
 
           <FieldGroup>
+            <form.Field name="title">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor="title">
+                      Title<span className="text-red-500">*</span>
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      type="text"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      // autoComplete="off"
+                      placeholder="Write title"
+                      required
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
             <div className="grid grid-cols-2 gap-2">
               <form.Field name="categoryId">
                 {(field) => {

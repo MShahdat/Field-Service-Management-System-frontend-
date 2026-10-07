@@ -1,6 +1,6 @@
 export interface Coordinates {
-  latitude: number;
-  longtude: number;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface Address {
@@ -23,7 +23,7 @@ export type ServiceStatus =
   | "PENDING"
   | "APPROVED"
   | "REJECTED"
-  | "ASSIGMED"
+  | "ASSIGNED"
   | "IN_PROGRESS"
   | "COMPLETED"
   | "CANCELLED";

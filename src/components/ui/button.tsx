@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:bg-transparent dark:hover:bg-input/30",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
@@ -19,19 +19,21 @@ const buttonVariants = cva(
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
 
+        // Status button variants (No partial background fills, solid on hover)
+        // Status button variants — solid, shade shifts on hover
         requested:
-          "bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 [a]:hover:bg-amber-500/20",
+          "border-transparent bg-amber-500 text-white shadow-sm hover:bg-amber-600 hover:shadow-md focus-visible:border-amber-600 focus-visible:ring-amber-500/30 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300",
         inProgress:
-          "bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 [a]:hover:bg-blue-500/20",
+          "border-transparent bg-blue-500 text-white shadow-sm hover:bg-blue-600 hover:shadow-md focus-visible:border-blue-600 focus-visible:ring-blue-500/30 dark:bg-blue-400 dark:text-blue-950 dark:hover:bg-blue-300",
         declined:
-          "bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400 [a]:hover:bg-red-500/20",
-        paid: "bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 [a]:hover:bg-purple-500/20",
+          "border-transparent bg-red-500 text-white shadow-sm hover:bg-red-600 hover:shadow-md focus-visible:border-red-600 focus-visible:ring-red-500/30 dark:bg-red-400 dark:text-red-950 dark:hover:bg-red-300",
+        paid: "border-transparent bg-purple-500 text-white shadow-sm hover:bg-purple-600 hover:shadow-md focus-visible:border-purple-600 focus-visible:ring-purple-500/30 dark:bg-purple-400 dark:text-purple-950 dark:hover:bg-purple-300",
         accepted:
-          "bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400 [a]:hover:bg-green-500/20",
+          "border-transparent bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 hover:shadow-md focus-visible:border-emerald-700 focus-visible:ring-emerald-600/30 dark:bg-emerald-400 dark:text-emerald-950 dark:hover:bg-emerald-300",
         completed:
-          "bg-gray-500/10 text-gray-600 dark:bg-gray-500/20 dark:text-gray-400 [a]:hover:bg-gray-500/20",
+          "border-transparent bg-gray-500 text-white shadow-sm hover:bg-gray-600 hover:shadow-md focus-visible:border-gray-600 focus-visible:ring-gray-500/30 dark:bg-gray-400 dark:text-gray-950 dark:hover:bg-gray-300",
         cancelled:
-          "bg-red-900/10 text-red-800 dark:bg-red-900/30 dark:text-red-400 [a]:hover:bg-red-900/20",
+          "border-transparent bg-red-700 text-white shadow-sm hover:bg-red-800 hover:shadow-md focus-visible:border-red-800 focus-visible:ring-red-700/30 dark:bg-red-500 dark:text-red-950 dark:hover:bg-red-400",
       },
       size: {
         default:

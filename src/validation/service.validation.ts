@@ -3,6 +3,7 @@ import { z } from "zod";
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export const serviceZodSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(5, "Description must be at least 5 characters"),
   servicingDate: z.string().min(1, "Please select a date"),
   preferredStartTime: z.string().regex(timeRegex, "Use HH:mm format"),
