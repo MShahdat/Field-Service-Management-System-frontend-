@@ -125,7 +125,7 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
       longitude: String(service?.address.coordinates?.longitude ?? ""),
       categoryId: service?.category?.id ?? "",
       priority: service?.priority as Priority,
-      regionId: "",
+      regionId: service?.region?.id ?? "",
     },
     validators: {
       onSubmit: serviceZodSchema,

@@ -1,6 +1,7 @@
 import { Address } from "./common.types";
 import { IRegion } from "./region.type";
 import { IUser } from "./service.type";
+import { ISkills } from "./skills.types";
 
 export type ITechStatus = "AVAILABLE" | "BUSY" | "OFF_DUTY";
 
@@ -24,4 +25,5 @@ export interface ITechnician {
   user: IUser;
   availability: IAvailability[];
   regions: IRegion[];
+  skills: ISkills[];
 }

@@ -4,3 +4,4 @@ export * from "./manager.api";
 export * from "./category.api";
 export * from "./skills.api";
 export * from "./service.api";
+export * from "./user.api";

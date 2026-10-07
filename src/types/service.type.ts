@@ -37,6 +37,7 @@ export interface ServiceRequest {
     technician: ITechnician | null;
   } | null;
   category: ICategory;
+  region: IRegion;
 }
 
 export interface IServiceCreate {
