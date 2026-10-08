@@ -163,7 +163,7 @@ export function AvailabilityRow({
         aria-label={`${day} availability`}
       >
         <div
-          className="h-full rounded-full bg-primary transition-[width]"
+          className="h-full rounded-full bg-muted-foreground transition-[width]"
           style={{ width: `${pct}%` }}
         />
       </div>

@@ -46,3 +46,5 @@ export type ScheduleStatus =
   | "CONFIRMED"
   | "COMPLETED"
   | "CANCELLED";
+
+export type Endpoint = "today" | "incoming" | "all";

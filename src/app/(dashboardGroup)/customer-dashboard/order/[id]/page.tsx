@@ -13,7 +13,7 @@ const OrderDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { data, isPending, isError } = useSingleOrder(id);
 
   if (isPending) {
-    return <DetailsSkeleton/>
+    return <DetailsSkeleton />;
   }
 
   if (isError || !data?.data) {

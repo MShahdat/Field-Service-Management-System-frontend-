@@ -32,9 +32,10 @@ import {
 type Props = {
   order: IWorkOrder;
   backHref: string;
+  label: string;
 };
 
-const OrderDetailsView = ({ order, backHref }: Props) => {
+const OrderDetailsView = ({ order, backHref, label }: Props) => {
   const service = order.service;
   const payment = order.payment;
   const schedule = order.schedule;
@@ -88,7 +89,7 @@ const OrderDetailsView = ({ order, backHref }: Props) => {
           className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-3.5" aria-hidden />
-          My Orders
+          {label}
         </Link>
         <ChevronRight className="size-3.5" aria-hidden />
         <span className="font-medium text-foreground">Order details</span>

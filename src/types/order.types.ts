@@ -5,16 +5,14 @@ import { ISchedule } from "./schedule.types";
 import { ICustomer, IService, IServiceReport } from "./service.type";
 import { ITechnician } from "./technician.types";
 
-
 export type WorkOrderStatus =
-  "SCHEDULED" |
-  "EN_ROUTE" |
-  "STARTED" |
-  "COMPLETED" |
-  "CANCELLED"
+  | "SCHEDULED"
+  | "EN_ROUTE"
+  | "STARTED"
+  | "COMPLETED"
+  | "CANCELLED";
 
-
-  export interface Feedback {
+export interface Feedback {
   id: string;
   rating: number;
   comment: string;
@@ -24,7 +22,6 @@ export type WorkOrderStatus =
   updatedAt: string;
   workOrderId: string;
 }
-
 
 export interface AttachmentFile {
   url: string;
@@ -64,4 +61,11 @@ export interface IWorkOrder {
   schedule: ISchedule | null;
   technician: ITechnician | null;
   serviceReport: IServiceReport | null;
+}
+
+type UpdateStatus = "STARTED" | "COMPLETED";
+
+export interface IUpdateOrderStatus {
+  workOrderId: string;
+  status: UpdateStatus;
 }

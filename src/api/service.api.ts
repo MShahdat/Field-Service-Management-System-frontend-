@@ -36,7 +36,6 @@ export const singleService = (id: string) => {
   return apiClient(`/service/${id}`);
 };
 
-
 export const getMyRegionService = (params?: QueryParams) => {
   return apiClient(`/service/my-region`, {
     params,

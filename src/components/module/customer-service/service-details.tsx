@@ -195,14 +195,11 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
 
       {/* description */}
       <Card className="mb-4">
-        <CardHeader className="font-semibold">
-          Description
-        </CardHeader>
+        <CardHeader className="font-semibold">Description</CardHeader>
         <CardContent>
-        <span className="text-muted-foreground">
-          {service.description ?? ""}
-        </span>
-
+          <span className="text-muted-foreground">
+            {service.description ?? ""}
+          </span>
         </CardContent>
       </Card>
 

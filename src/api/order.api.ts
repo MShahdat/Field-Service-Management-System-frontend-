@@ -1,7 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import { QueryParams } from "@/types";
-
-
+import { IUpdateOrderStatus, QueryParams } from "@/types";
 
 export const MyOrder = (params: QueryParams) => {
   return apiClient("/workorder/my-workorder", {
@@ -9,8 +7,19 @@ export const MyOrder = (params: QueryParams) => {
   });
 };
 
-
-
 export const singleOrder = (id: string) => {
   return apiClient(`/workorder/${id}`);
+};
+
+export const updateOrderStatus = (payload: IUpdateOrderStatus) => {
+  return apiClient("/workorder/update", {
+    method: "PATCH",
+    body: payload,
+  });
+};
+
+export const todaysOrder = (params: QueryParams) => {
+  return apiClient(`/workorder/today`, {
+    params,
+  });
 };

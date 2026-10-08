@@ -1,9 +1,4 @@
-type ScheduleStatus =
-  "SCHEDULED" |
-  "CONFIRMED" |
-  "COMPLETED" |
-  "CANCELLED"
-
+type ScheduleStatus = "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
 export interface ISchedule {
   id: string;
@@ -12,7 +7,7 @@ export interface ISchedule {
   endTime: string;
   actualStart: string | null;
   actualEnd: string | null;
-  status: ScheduleStatus
+  status: ScheduleStatus;
   isdeleted: boolean;
   deletedAt: string | null;
   createdAt: string;

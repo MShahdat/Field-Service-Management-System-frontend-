@@ -1,7 +1,6 @@
-import OrderLists from '@/components/module/customer-service/order-lists';
-import { ItemShow } from '@/shared/items-show';
-import SearchBar from '@/shared/search-bar';
-
+import OrderLists from "@/components/module/customer-service/order-lists";
+import { ItemShow } from "@/shared/items-show";
+import SearchBar from "@/shared/search-bar";
 
 const OrderPage = () => {
   return (
@@ -27,7 +26,7 @@ const OrderPage = () => {
           </div>
         </div>
 
-        <OrderLists/>
+        <OrderLists />
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
-import OrderLists from '@/components/module/technician/order-lists';
-import { ItemShow } from '@/shared/items-show';
-import SearchBar from '@/shared/search-bar';
-
+import WorkorderLists from "@/components/module/workorder/workorder-lists";
+import { ItemShow } from "@/shared/items-show";
+import SearchBar from "@/shared/search-bar";
 
 const MyOrderPage = () => {
   return (
@@ -26,7 +25,7 @@ const MyOrderPage = () => {
             </div>
           </div>
         </div>
-        <OrderLists/>
+        <WorkorderLists />
       </div>
     </div>
   );

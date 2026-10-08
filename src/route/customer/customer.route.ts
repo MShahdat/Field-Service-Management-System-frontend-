@@ -42,7 +42,7 @@ export const customerRoutes = [
     items: [
       {
         title: "Orders",
-      url: `${prefix}/order`,
+        url: `${prefix}/order`,
       },
     ],
   },

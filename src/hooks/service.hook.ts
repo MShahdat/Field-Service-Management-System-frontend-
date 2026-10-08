@@ -83,7 +83,6 @@ export const useGetMyRegionService = (params?: QueryParams) => {
   });
 };
 
-
 export const useEligibleTechnician = (id: string) => {
   return useQuery({
     queryKey: ["eligible-technician", id],

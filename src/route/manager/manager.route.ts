@@ -39,6 +39,21 @@ export const managerRoutes = [
     ],
   },
   {
+    title: "Work Order",
+    url: "#",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Work Order",
+        url: `${prefix}/workorder/my-order`,
+      },
+      {
+        title: "Todays Order",
+        url: `${prefix}/workorder/todays-order`,
+      },
+    ],
+  },
+  {
     title: "Payment",
     url: "#",
     icon: BookOpen,

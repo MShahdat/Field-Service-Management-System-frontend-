@@ -1,8 +1,8 @@
-import TodayOrderLists from "@/components/module/workorder/todays-order-lists";
+import WorkorderLists from "@/components/module/workorder/workorder-lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
 
-const TodayOrderPage = () => {
+const MyOrderPage = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flex flex-col space-y-6">
@@ -11,7 +11,7 @@ const TodayOrderPage = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  Todays Order
+                  My Work Orders
                 </p>
                 <SearchBar />
               </div>
@@ -25,10 +25,10 @@ const TodayOrderPage = () => {
             </div>
           </div>
         </div>
-        <TodayOrderLists />
+        <WorkorderLists />
       </div>
     </div>
   );
 };
 
-export default TodayOrderPage;
+export default MyOrderPage;

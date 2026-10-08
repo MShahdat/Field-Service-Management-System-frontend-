@@ -33,7 +33,6 @@ const MyServiceCard = ({ service }: Props) => {
           <h3 className="text-base font-bold text-card-foreground">
             {service.title === "" ? "Title of this service" : service.title}
           </h3>
-          
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -42,7 +41,6 @@ const MyServiceCard = ({ service }: Props) => {
             <Clock className="size-3.5" aria-hidden />
             {service?.preferredStartTime} – {service?.preferredEndTime}
           </Badge>
-          
         </div>
 
         {service?.status === "REJECTED" ? (

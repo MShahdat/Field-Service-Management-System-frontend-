@@ -14,7 +14,7 @@ const TechnicianPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { data, isPending, isError } = useEligibleTechnician(workOrderId);
 
   if (isPending) {
-    return <DetailsSkeleton/>
+    return <DetailsSkeleton />;
   }
 
   if (isError || !data?.data) {

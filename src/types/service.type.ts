@@ -92,7 +92,6 @@ export interface Manager {
   user: IUser;
 }
 
-
 export interface IServiceReport {
   id: string;
   reportUrl: string;
@@ -112,8 +111,6 @@ export interface ICustomer {
   userId: string;
   user: IUser;
 }
-
-
 
 export interface IService {
   id: string;

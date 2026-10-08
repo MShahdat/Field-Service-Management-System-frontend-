@@ -1,23 +1,15 @@
-type PaymentStatus =
-  "UNPAID" |
-  "PAID" |
-  "FAILED" |
-  "CANCELLED" |
-  "REFUNDED"
-
-
-
+type PaymentStatus = "UNPAID" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED";
 
 export interface IPayment {
   id: string;
   paymentId: string;
   amount: number;
-  method: 'bKash' | string;
+  method: "bKash" | string;
   transectionId: string | null;
-  status: PaymentStatus
+  status: PaymentStatus;
   paidAt: string | null;
   payerReference: string;
-  currency: 'BDT' | string;
+  currency: "BDT" | string;
   merchantInvoiceNumber: string;
   refundTrxId: string | null;
   refundAmount: number | null;

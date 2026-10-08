@@ -8,8 +8,6 @@ import { useSearchParams } from "next/navigation";
 import OrderCard from "./order-card";
 import { IWorkOrder } from "@/types";
 
-
-
 const OrderLists = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
@@ -44,7 +42,7 @@ const OrderLists = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {orders.map((order: IWorkOrder) => (
           <div key={order.id}>
-            <OrderCard order={order}/>
+            <OrderCard order={order} />
           </div>
         ))}
       </div>
