@@ -265,20 +265,28 @@ export function Fact({
   );
 }
 
-export function getTimeRange(start?: string | null, duration?: number | null) {
+const formatTime = (totalMinutes: number) => {
+  const mins = ((totalMinutes % 1440) + 1440) % 1440;
+  const hours = Math.floor(mins / 60);
+  const minutes = mins % 60;
+  const suffix = hours >= 12 ? "PM" : "AM";
+  const hour12 = hours % 12 || 12;
+
+  return `${String(hour12).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${suffix}`;
+};
+
+export const getTimeRange = (
+  start?: string | null,
+  duration?: number | null,
+) => {
   if (!start) return "-";
+
   const [h, m] = start.split(":").map(Number);
   if (Number.isNaN(h) || Number.isNaN(m)) return start;
 
-  const fmt = (totalMin: number) => {
-    const mins = ((totalMin % 1440) + 1440) % 1440;
-    const hh = Math.floor(mins / 60);
-    const mm = String(mins % 60).padStart(2, "0");
-    return `${hh % 12 || 12}:${mm} ${hh >= 12 ? "PM" : "AM"}`;
-  };
-
   const startMin = h * 60 + m;
+
   return duration
-    ? `${fmt(startMin)} – ${fmt(startMin + duration)}`
-    : fmt(startMin);
-}
+    ? `${formatTime(startMin)} - ${formatTime(startMin + duration)}`
+    : formatTime(startMin);
+};

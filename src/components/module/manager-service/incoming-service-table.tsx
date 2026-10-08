@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { IService } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
-import { ServiceReviewModal } from "./review-modal";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -67,6 +66,7 @@ const IncomingServiceTable = ({ services }: Props) => {
                           }}
                           type="button"
                           variant="accepted"
+                          size={"sm"}
                         >
                           Assign
                         </Button>

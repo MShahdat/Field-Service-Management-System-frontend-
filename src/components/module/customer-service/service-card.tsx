@@ -10,6 +10,7 @@ import { MyServiceModal } from "./service-modal";
 import DeleteModal from "./delete-modal";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { badgeText, statusVarient } from "@/utils";
+import { formatClock, formatServiceDate } from "./details-util";
 
 type Props = {
   service: ServiceRequest;
@@ -18,6 +19,15 @@ type Props = {
 const MyServiceCard = ({ service }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+
+  const isEdit = service.status === "PENDING" || service.status === "REJECTED";
+
+  const isDelete =
+    service.status === "PENDING" ||
+    service.status === "CANCELLED" ||
+    service.status === "REJECTED" ||
+    service.status === "COMPLETED";
+
   return (
     <Card className="">
       <CardContent className="flex h-full flex-col gap-5">
@@ -36,10 +46,13 @@ const MyServiceCard = ({ service }: Props) => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Badge variant="requested">{service?.servicingDate}</Badge>
+          <Badge variant="requested">
+            {formatServiceDate(service.servicingDate)}
+          </Badge>
           <Badge variant="inProgress">
             <Clock className="size-3.5" aria-hidden />
-            {service?.preferredStartTime} – {service?.preferredEndTime}
+            {formatClock(service.preferredStartTime)} –{" "}
+            {formatClock(service.preferredEndTime)}
           </Badge>
         </div>
 
@@ -95,8 +108,8 @@ const MyServiceCard = ({ service }: Props) => {
           </Button>
 
           <div className="flex gap-1.5">
-            <MyServiceModal service={service} mode="edit" />
-            <DeleteModal service={service} />
+            {isEdit && <MyServiceModal service={service} mode="edit" />}
+            {isDelete && <DeleteModal service={service} />}
           </div>
         </div>
       </CardContent>

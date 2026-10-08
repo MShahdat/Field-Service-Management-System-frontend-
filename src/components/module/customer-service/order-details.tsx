@@ -19,6 +19,7 @@ import type { IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import {
   CopyId,
+  formatClock,
   formatDateTime,
   formatMoney,
   formatServiceDate,
@@ -28,6 +29,7 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   order: IWorkOrder;
@@ -61,7 +63,7 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
         key: "completed",
         label:
           order.status === "CANCELLED" ? "Order cancelled" : "Work completed",
-        at: schedule?.actualEnd ?? order.updatedAt,
+        at: schedule?.actualEnd ?? null,
       },
       {
         key: "paid",
@@ -77,6 +79,10 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
     () => (order.attachment ?? []).filter((a) => !a.isDelete),
     [order],
   );
+
+  const isPayBtn =
+    (order.status === "STARTED" || order.status === "COMPLETED") &&
+    order.payment?.status === "UNPAID";
 
   return (
     <div className="space-y-4">
@@ -127,11 +133,7 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
           icon={CalendarDays}
           label="Servicing date"
           value={formatServiceDate(order.servicingDate)}
-          sub={
-            schedule
-              ? `Schedule ${badgeText(schedule.status)}`
-              : "No schedule yet"
-          }
+          sub={`${formatClock(service.preferredStartTime)} to ${formatClock(service.preferredEndTime)}`}
         />
         <SummaryCard
           icon={User}
@@ -263,7 +265,16 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
         </div>
 
         <div className="space-y-4">
-          <Section title="Payment">
+          <Section
+            title="Payment"
+            action={
+              isPayBtn && (
+                <Button size="sm" variant="accepted" onClick={() => {}}>
+                  Pay Now
+                </Button>
+              )
+            }
+          >
             {payment ? (
               <div>
                 <InfoRow label="Amount" value={formatMoney(payment.amount)} />

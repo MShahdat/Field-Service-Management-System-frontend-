@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MyOrder, singleOrder, todaysOrder, updateOrderStatus } from "@/api";
-import type { IUpdateOrderStatus, QueryParams } from "@/types";
+import type { QueryParams } from "@/types";
 
 export const useMyOrder = (params: QueryParams) => {
   return useQuery({

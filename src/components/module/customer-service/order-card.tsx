@@ -1,14 +1,23 @@
 "use client";
 
-import { ArrowRight, CalendarDays, Hourglass, Wallet } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  Hourglass,
+  Wallet,
+} from "lucide-react";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProfileAvater from "@/shared/avater";
 import type { IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
-import { formatMoney, formatServiceDate } from "./details-util";
+import { formatClock, formatMoney, formatServiceDate } from "./details-util";
+import { usePaymentCreate } from "@/hooks";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
   order: IWorkOrder;
@@ -24,6 +33,28 @@ const OrderCard = ({ order }: Props) => {
       ? "COMPLETED"
       : "PENDING"
     : null;
+
+  const isPayBtn =
+    (order.status === "STARTED" || order.status === "COMPLETED") &&
+    order.payment?.status === "UNPAID";
+
+  const { mutate, isPending } = usePaymentCreate();
+
+  const handlePay = () => {
+    const data = {
+      workOrderId: order.id,
+    };
+    console.log("payment data", data);
+    mutate(data, {
+      onSuccess: (res) => {
+        redirect(`${res.data.bkashURL}`);
+      },
+      onError: (er) => {
+        toast.error(er.message);
+        return;
+      },
+    });
+  };
 
   return (
     <Card className="h-full">
@@ -56,9 +87,9 @@ const OrderCard = ({ order }: Props) => {
             <CalendarDays className="size-3.5" aria-hidden />
             {formatServiceDate(order.servicingDate)}
           </Badge>
-          <Badge variant="secondary">
-            <Wallet className="size-3.5" aria-hidden />
-            {order.payment ? formatMoney(order.payment.amount) : "—"}
+          <Badge variant="accepted">
+            <Clock className="size-3.5" aria-hidden />
+            {`${formatClock(order.service.preferredStartTime)} - ${formatClock(order.service.preferredEndTime)}`}
           </Badge>
         </div>
 
@@ -92,11 +123,30 @@ const OrderCard = ({ order }: Props) => {
           </div>
         )}
 
-        <div className="mt-auto pt-1">
+        <div className="flex gap-2 justify-end mt-auto">
+          {isPayBtn && (
+            <Button
+              variant={"accepted"}
+              className="flex-1"
+              onClick={() => {
+                handlePay();
+                console.log("clicked");
+              }}
+            >
+              {isPending ? (
+                <>
+                  <Spinner /> Payment
+                </>
+              ) : (
+                "Payment"
+              )}
+            </Button>
+          )}
+
           <Button
             type="button"
             variant="secondary"
-            className="w-full"
+            className={"flex-1"}
             onClick={() => router.push(`${pathname}/${order.id}`)}
           >
             View details

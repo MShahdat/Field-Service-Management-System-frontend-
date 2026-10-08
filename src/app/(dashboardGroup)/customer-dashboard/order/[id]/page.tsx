@@ -32,6 +32,7 @@ const OrderDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
       <OrderDetailsView
         order={data.data}
         backHref="/customer-dashboard/order"
+        label="Order"
       />
     </div>
   );

@@ -19,3 +19,7 @@ export interface IPayment {
   updatedAt: string;
   workOrderId: string;
 }
+
+export interface IPaymentPayload {
+  workOrderId: string;
+}
