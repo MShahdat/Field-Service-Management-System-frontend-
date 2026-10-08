@@ -89,4 +89,15 @@ export const adminRoutes = [
       },
     ],
   },
+  {
+    title: "Payments",
+    url: "#",
+    icon: Bot,
+    items: [
+      {
+        title: "Payment",
+        url: `${prefix}/payment`,
+      },
+    ],
+  },
 ];

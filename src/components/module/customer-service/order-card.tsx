@@ -18,6 +18,7 @@ import { formatClock, formatMoney, formatServiceDate } from "./details-util";
 import { usePaymentCreate } from "@/hooks";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import PaymentBtn from "@/shared/payment.btn";
 
 type Props = {
   order: IWorkOrder;
@@ -37,24 +38,6 @@ const OrderCard = ({ order }: Props) => {
   const isPayBtn =
     (order.status === "STARTED" || order.status === "COMPLETED") &&
     order.payment?.status === "UNPAID";
-
-  const { mutate, isPending } = usePaymentCreate();
-
-  const handlePay = () => {
-    const data = {
-      workOrderId: order.id,
-    };
-    console.log("payment data", data);
-    mutate(data, {
-      onSuccess: (res) => {
-        redirect(`${res.data.bkashURL}`);
-      },
-      onError: (er) => {
-        toast.error(er.message);
-        return;
-      },
-    });
-  };
 
   return (
     <Card className="h-full">
@@ -124,24 +107,7 @@ const OrderCard = ({ order }: Props) => {
         )}
 
         <div className="flex gap-2 justify-end mt-auto">
-          {isPayBtn && (
-            <Button
-              variant={"accepted"}
-              className="flex-1"
-              onClick={() => {
-                handlePay();
-                console.log("clicked");
-              }}
-            >
-              {isPending ? (
-                <>
-                  <Spinner /> Payment
-                </>
-              ) : (
-                "Payment"
-              )}
-            </Button>
-          )}
+          {isPayBtn && <PaymentBtn workOrderId={order.id} />}
 
           <Button
             type="button"

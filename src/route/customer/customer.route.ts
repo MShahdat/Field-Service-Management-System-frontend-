@@ -54,7 +54,7 @@ export const customerRoutes = [
     items: [
       {
         title: "My Payments",
-        url: `${prefix}/service/all-services`,
+        url: `${prefix}/payment/my-payment`,
       },
     ],
   },

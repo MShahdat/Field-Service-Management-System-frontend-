@@ -38,4 +38,15 @@ export const technicianRoutes = [
       },
     ],
   },
+  {
+    title: "Payment",
+    url: "#",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Payments",
+        url: `${prefix}/payment`,
+      },
+    ],
+  },
 ];

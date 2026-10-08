@@ -10,13 +10,6 @@ export interface Address {
   coordinates?: Coordinates;
 }
 
-export type WorkOrderStatus =
-  | "SCHEDULED"
-  | "EN_ROUTE"
-  | "STARTED"
-  | "COMPLETED"
-  | "CANCELLED";
-
 export type Priority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export type ServiceStatus =

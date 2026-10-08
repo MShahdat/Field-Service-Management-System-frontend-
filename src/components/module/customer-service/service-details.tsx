@@ -29,14 +29,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { IService } from "@/types";
-import type { Priority, ServiceStatus } from "@/types/common.types";
 import {
   CopyId,
   formatClock,
   formatDateTime,
   formatMoney,
   formatServiceDate,
-  getInitials,
   InfoRow,
   Section,
   Stars,
@@ -46,6 +44,7 @@ import {
 import ProfileAvater from "@/shared/avater";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import PaymentBtn from "@/shared/payment.btn";
 
 type Photo = { url: string; type: string };
 
@@ -127,6 +126,10 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
     ],
     [service, schedule, payment, feedback, serviceReport],
   );
+
+  const isPayBtn =
+    (wo?.status === "STARTED" || wo?.status === "COMPLETED") &&
+    wo?.payment?.status === "UNPAID";
 
   return (
     <div className="w-full mx-auto">
@@ -429,7 +432,10 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
         {/* RIGHT */}
         <div className="flex min-w-0 flex-col gap-4">
           {payment && (
-            <Section title="Payment">
+            <Section
+              title="Payment"
+              action={isPayBtn && <PaymentBtn workOrderId={wo?.id} />}
+            >
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-2xl font-bold">
                   {formatMoney(payment?.amount)}

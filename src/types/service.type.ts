@@ -6,7 +6,6 @@ import {
   Priority,
   ScheduleStatus,
   ServiceStatus,
-  WorkOrderStatus,
 } from "./common.types";
 import { IWorkOrder } from "./order.types";
 import { IRegion } from "./region.type";

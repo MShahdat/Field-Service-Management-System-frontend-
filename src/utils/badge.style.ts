@@ -1,10 +1,12 @@
 export const statusVarient = (s: string) => {
   switch (s) {
     case "COMPLETED":
+    case "PAID":
       return "accepted" as const;
     case "PENDING":
     case "MEDIUM":
     case "SCHEDULED":
+    case "UNPAID":
       return "requested" as const;
     case "APPROVED":
     case "ASSIGMED":
@@ -16,6 +18,8 @@ export const statusVarient = (s: string) => {
     case "CANCELLED":
     case "HIGH":
     case "URGENT":
+    case "FAILDED":
+    case "CANCEL":
       return "declined" as const;
     case "LOW":
       return "completed" as const;

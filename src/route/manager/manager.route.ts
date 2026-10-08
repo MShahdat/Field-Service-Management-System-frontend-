@@ -60,7 +60,7 @@ export const managerRoutes = [
     items: [
       {
         title: "Payments",
-        url: `${prefix}/payments`,
+        url: `${prefix}/payment`,
       },
     ],
   },

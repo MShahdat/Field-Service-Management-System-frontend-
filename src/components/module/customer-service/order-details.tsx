@@ -30,6 +30,7 @@ import {
   Timeline,
 } from "./details-util";
 import { Button } from "@/components/ui/button";
+import PaymentBtn from "@/shared/payment.btn";
 
 type Props = {
   order: IWorkOrder;
@@ -267,13 +268,7 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
         <div className="space-y-4">
           <Section
             title="Payment"
-            action={
-              isPayBtn && (
-                <Button size="sm" variant="accepted" onClick={() => {}}>
-                  Pay Now
-                </Button>
-              )
-            }
+            action={isPayBtn && <PaymentBtn workOrderId={order.id} />}
           >
             {payment ? (
               <div>

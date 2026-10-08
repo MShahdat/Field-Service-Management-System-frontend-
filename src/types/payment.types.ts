@@ -1,3 +1,5 @@
+import { IWorkOrder } from "./order.types";
+
 type PaymentStatus = "UNPAID" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED";
 
 export interface IPayment {
@@ -18,6 +20,7 @@ export interface IPayment {
   createdAt: string;
   updatedAt: string;
   workOrderId: string;
+  workOrder: IWorkOrder;
 }
 
 export interface IPaymentPayload {
