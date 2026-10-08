@@ -43,9 +43,9 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import { useGetMe } from "@/hooks";
 import ProfileAvater from "@/shared/avater";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type Photo = { url: string; type: string };
 
@@ -157,7 +157,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
               <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                {service.category?.name ?? "Service"} service
+                {service.title === "" ? "Service title" : service.title}
               </h1>
               <Badge variant={statusVarient(service.status)}>
                 {badgeText(service.status)}
@@ -169,7 +169,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
             <div className="mt-1 flex flex-wrap items-center gap-1 text-sm">
               <CopyId value={service.id} />
               <span className="text-muted-foreground">
-                · {service.description || "No description"}
+                · {service.category.name ?? "Category Name"}
               </span>
             </div>
           </div>
@@ -192,6 +192,19 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
           )}
         </div>
       </header>
+
+      {/* description */}
+      <Card className="mb-4">
+        <CardHeader className="font-semibold">
+          Description
+        </CardHeader>
+        <CardContent>
+        <span className="text-muted-foreground">
+          {service.description ?? ""}
+        </span>
+
+        </CardContent>
+      </Card>
 
       {/* Summary cards */}
       <section

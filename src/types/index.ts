@@ -6,3 +6,6 @@ export * from "./api.type";
 export * from "./category.types";
 export * from "./service.type";
 export * from "./common.types";
+export * from "./order.types";
+export * from "./payment.types";
+export * from './schedule.types'

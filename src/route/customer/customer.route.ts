@@ -25,15 +25,28 @@ export const customerRoutes = [
     icon: BookOpen,
     items: [
       {
-        title: "My Services",
+        title: "Services",
         url: `${prefix}/service/my-services`,
       },
       {
-        title: "Todays Services",
+        title: "Todays Service",
         url: `${prefix}/service/todays-service`,
       },
     ],
   },
+
+  {
+    title: "Order Management",
+    url: "#",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Orders",
+      url: `${prefix}/order`,
+      },
+    ],
+  },
+
   {
     title: "Payment",
     url: "#",

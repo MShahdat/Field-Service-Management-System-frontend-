@@ -1,7 +1,6 @@
 import apiClient from "@/lib/apiClient";
 import {
   IAssignTechnician,
-  IReviewService,
   IServiceCreate,
   IServiceUpdate,
   QueryParams,
@@ -37,12 +36,6 @@ export const singleService = (id: string) => {
   return apiClient(`/service/${id}`);
 };
 
-export const reviewService = (payload: IReviewService) => {
-  return apiClient("/service/review", {
-    method: "POST",
-    body: payload,
-  });
-};
 
 export const getMyRegionService = (params?: QueryParams) => {
   return apiClient(`/service/my-region`, {

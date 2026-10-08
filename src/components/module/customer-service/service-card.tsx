@@ -9,6 +9,7 @@ import { Clock, Hourglass, Pencil, Trash2, XCircle } from "lucide-react";
 import { MyServiceModal } from "./service-modal";
 import DeleteModal from "./delete-modal";
 import { redirect, usePathname, useRouter } from "next/navigation";
+import { badgeText, statusVarient } from "@/utils";
 
 type Props = {
   service: ServiceRequest;
@@ -20,13 +21,19 @@ const MyServiceCard = ({ service }: Props) => {
   return (
     <Card className="">
       <CardContent className="flex h-full flex-col gap-5">
+        <div className="flex items-center justify-between">
+          <Badge variant={statusVarient(service.priority)}>
+            {badgeText(service.priority)}
+          </Badge>
+          <Badge variant={statusVarient(service.status)}>
+            {badgeText(service.status)}
+          </Badge>
+        </div>
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-base font-bold text-card-foreground">
-            {service?.category.name}
+            {service.title === "" ? "Title of this service" : service.title}
           </h3>
-          <Badge variant="secondary">
-            {service?.status.toLocaleLowerCase()}
-          </Badge>
+          
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -35,9 +42,7 @@ const MyServiceCard = ({ service }: Props) => {
             <Clock className="size-3.5" aria-hidden />
             {service?.preferredStartTime} – {service?.preferredEndTime}
           </Badge>
-          <Badge variant={"accepted"}>
-            {service.priority.toLocaleLowerCase()}
-          </Badge>
+          
         </div>
 
         {service?.status === "REJECTED" ? (

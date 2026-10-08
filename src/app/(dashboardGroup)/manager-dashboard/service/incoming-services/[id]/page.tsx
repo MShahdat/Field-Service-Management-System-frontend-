@@ -6,6 +6,7 @@ import { useEligibleTechnician } from "@/hooks";
 import DataNotFoundCard from "@/shared/data-not-found";
 import TechnicianAssignPage from "@/components/module/manager-service/technician-assign";
 import type { ITechnician } from "@/types/technician.types";
+import DetailsSkeleton from "@/loading/details-loading";
 
 const TechnicianPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id: workOrderId } = use(params);
@@ -13,21 +14,7 @@ const TechnicianPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { data, isPending, isError } = useEligibleTechnician(workOrderId);
 
   if (isPending) {
-    return (
-      <div className="w-11/12 mx-auto py-6 space-y-4">
-        <Skeleton className="h-6 w-48" />
-        <Skeleton className="h-24 w-full" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-24" />
-          ))}
-        </div>
-        <div className="grid lg:grid-cols-[1.7fr_1fr] gap-4">
-          <Skeleton className="h-64" />
-          <Skeleton className="h-64" />
-        </div>
-      </div>
-    );
+    return <DetailsSkeleton/>
   }
 
   if (isError || !data?.data) {
@@ -44,7 +31,6 @@ const TechnicianPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const raw = (data?.data as { eligibleTech?: unknown })?.eligibleTech;
   const eligibleTech = (Array.isArray(raw) ? raw : []) as ITechnician[];
 
-  // Backend returns [] when no candidates, else { service, eligibleTech }
   if (Array.isArray(data?.data) || !data?.data.service) {
     return (
       <div className="w-11/12 mx-auto py-6">

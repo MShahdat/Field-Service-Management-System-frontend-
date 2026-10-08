@@ -20,32 +20,21 @@ export const technicianRoutes = [
     ],
   },
   {
-    title: "Service",
+    title: "Work Order",
     url: "#",
     icon: BookOpen,
     items: [
       {
-        title: "My Services",
-        url: `${prefix}/service/all-services`,
+        title: "My Work Order",
+        url: `${prefix}/workorder/my-order`,
       },
       {
-        title: "Todays Services",
-        url: `${prefix}/service/today`,
+        title: "Todays Order",
+        url: `${prefix}/workorder/todays-order`,
       },
       {
-        title: "Completed Service",
-        url: `${prefix}/service/completed`,
-      },
-    ],
-  },
-  {
-    title: "Payment",
-    url: "#",
-    icon: BookOpen,
-    items: [
-      {
-        title: "My Payments",
-        url: `${prefix}/service/all-services`,
+        title: "Incoming Order",
+        url: `${prefix}/workorder/incoming-order`,
       },
     ],
   },

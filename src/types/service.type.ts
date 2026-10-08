@@ -8,6 +8,7 @@ import {
   ServiceStatus,
   WorkOrderStatus,
 } from "./common.types";
+import { IWorkOrder } from "./order.types";
 import { IRegion } from "./region.type";
 import { ITechnician } from "./technician.types";
 
@@ -91,51 +92,8 @@ export interface Manager {
   user: IUser;
 }
 
-export interface Feedback {
-  id: string;
-  rating: number;
-  comment: string;
-  isDeleted: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  workOrderId: string;
-}
 
-export interface AttachmentFile {
-  url: string;
-  publicId: string;
-}
-
-export interface Attachment {
-  id: string;
-  files: AttachmentFile[];
-  description: string;
-  type: FileAttachmentType;
-  isDelete: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  workOrderId: string;
-}
-
-export interface Schedule {
-  id: string;
-  servicingDate: string;
-  startTime: string;
-  endTime: string;
-  actualStart: string | null;
-  actualEnd: string | null;
-  status: ScheduleStatus;
-  isdeleted: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  technicianId: string;
-  workOrderId: string;
-}
-
-export interface ServiceReport {
+export interface IServiceReport {
   id: string;
   reportUrl: string;
   reportPublicId: string;
@@ -155,27 +113,7 @@ export interface ICustomer {
   user: IUser;
 }
 
-export interface IWorkOrder {
-  id: string;
-  servicingDate: string;
-  status: WorkOrderStatus;
-  note: string | null;
-  createdAt: string;
-  updatedAt: string;
-  regionId: string;
-  customerId: string;
-  technicianId: string | null;
-  serviceId: string;
-  managerId: string;
 
-  payment: Payment;
-  manager: Manager;
-  feedback: Feedback | null;
-  attachment: Attachment[];
-  schedule: Schedule | null;
-  technician: ITechnician | null;
-  serviceReport: ServiceReport | null;
-}
 
 export interface IService {
   id: string;

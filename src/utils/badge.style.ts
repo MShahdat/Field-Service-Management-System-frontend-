@@ -4,10 +4,13 @@ export const statusVarient = (s: string) => {
       return "accepted" as const;
     case "PENDING":
     case "MEDIUM":
+    case "SCHEDULED":
       return "requested" as const;
     case "APPROVED":
     case "ASSIGMED":
     case "IN_PROGRESS":
+    case "EN_ROUTE":
+    case "STARTED":
       return "inProgress" as const;
     case "REJECTED":
     case "CANCELLED":

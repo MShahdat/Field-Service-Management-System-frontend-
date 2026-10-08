@@ -28,7 +28,7 @@ const DeleteModal = ({ service }: Props) => {
   const isDelete =
     service.status === "APPROVED" ||
     service.status === "IN_PROGRESS" ||
-    service.status === "ASSIGMED";
+    service.status === "ASSIGNED";
 
   const { mutate, isPending } = useDeleteService();
 
