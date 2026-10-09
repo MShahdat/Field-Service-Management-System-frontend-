@@ -4,6 +4,9 @@ import {
   ArrowLeft,
   CalendarDays,
   ChevronRight,
+  Download,
+  Eye,
+  FileText,
   MapPin,
   Phone,
   User,
@@ -32,6 +35,9 @@ import {
 import PaymentBtn from "@/shared/payment.btn";
 import { FeedbackModal } from "@/components/module/feedback/feedback-modal";
 import FeedbackDeleteModal from "@/components/module/feedback/feedback-delete-modal";
+import { ReportModal } from "@/components/module/report/report-modal";
+import ReportDeleteModal from "@/components/module/report/report-delete-modal";
+import { useGetMe } from "@/hooks";
 
 type Props = {
   order: IWorkOrder;
@@ -53,6 +59,15 @@ const OrderDetailsView = ({
   const manager = order.manager;
   const customer = order.customer;
   const feedback = order.feedback;
+  const serviceReport = order.serviceReport ?? null;
+
+  const { data: me } = useGetMe();
+  const isTechnician =
+    (me as { data?: { role?: string } } | undefined)?.data?.role ===
+    "TECHNICIAN";
+  const isCompleted =
+    order.status === "COMPLETED" && service?.status === "COMPLETED";
+  const canManageReport = isTechnician && isCompleted;
 
   const events = useMemo(
     () => [
@@ -255,6 +270,83 @@ const OrderDetailsView = ({
                   </li>
                 ))}
               </ul>
+            )}
+          </Section>
+
+          <Section
+            title="Service Report"
+            action={
+              canManageReport && !serviceReport ? (
+                <ReportModal mode="create" workOrderId={order.id} />
+              ) : undefined
+            }
+          >
+            {serviceReport ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted">
+                      <FileText
+                        className="size-5 text-muted-foreground"
+                        aria-hidden
+                      />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">
+                        {serviceReport.description || "Service report"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Uploaded {formatDateTime(serviceReport.createdAt)}
+                        {serviceReport.updatedAt !== serviceReport.createdAt
+                          ? ` · Updated ${formatDateTime(serviceReport.updatedAt)}`
+                          : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <Link
+                      href={serviceReport.reportUrl}
+                      target="_blank"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                    >
+                      <Eye className="size-3.5" aria-hidden />
+                      View
+                    </Link>
+                    <a
+                      href={serviceReport.reportUrl}
+                      download
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                    >
+                      <Download className="size-3.5" aria-hidden />
+                      Download
+                    </a>
+                  </div>
+                </div>
+                {canManageReport && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <ReportModal
+                      mode="edit"
+                      workOrderId={order.id}
+                      report={serviceReport}
+                    />
+                    <ReportDeleteModal reportId={serviceReport.id} />
+                  </div>
+                )}
+              </div>
+            ) : canManageReport ? (
+              <p className="py-2 text-sm text-muted-foreground">
+                Work completed. Upload the service report as .pdf, .doc or .docx
+                for this order.
+              </p>
+            ) : isTechnician && !isCompleted ? (
+              <p className="py-2 text-sm text-muted-foreground">
+                Report upload is available once the work order and service are
+                both completed.
+              </p>
+            ) : (
+              <p className="py-2 text-sm text-muted-foreground">
+                No service report uploaded for this order yet.
+              </p>
             )}
           </Section>
 

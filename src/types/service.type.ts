@@ -91,18 +91,6 @@ export interface Manager {
   user: IUser;
 }
 
-export interface IServiceReport {
-  id: string;
-  reportUrl: string;
-  reportPublicId: string;
-  description: string | null;
-  isDelete: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  workOrderId: string;
-}
-
 export interface ICustomer {
   id: string;
   phone: string | null;

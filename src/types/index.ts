@@ -10,3 +10,4 @@ export * from "./order.types";
 export * from "./payment.types";
 export * from "./schedule.types";
 export * from "./feedback.type";
+export * from "./report.types";

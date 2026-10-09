@@ -8,3 +8,4 @@ export * from "./user.hook";
 export * from "./order.hook";
 export * from "./payment.hook";
 export * from "./feedback.hook";
+export * from "./report.hook";

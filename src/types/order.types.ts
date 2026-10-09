@@ -2,8 +2,9 @@ import { FileAttachmentType } from "./common.types";
 import { IFeedback } from "./feedback.type";
 import { IManager } from "./manager.types";
 import { IPayment } from "./payment.types";
+import { IServiceReport } from "./report.types";
 import { ISchedule } from "./schedule.types";
-import { ICustomer, IService, IServiceReport } from "./service.type";
+import { ICustomer, IService } from "./service.type";
 import { ITechnician } from "./technician.types";
 
 export type WorkOrderStatus =
