@@ -6,3 +6,4 @@ export * from "./region.validation";
 export * from "./service.validation";
 export * from "./feedback.validation";
 export * from "./report.validation";
+export * from "./attachment.validation";

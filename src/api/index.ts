@@ -9,3 +9,4 @@ export * from "./order.api";
 export * from "./payment.api";
 export * from "./feedback.api";
 export * from "./report.api";
+export * from "./attatchment.api";

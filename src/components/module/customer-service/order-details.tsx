@@ -37,7 +37,11 @@ import { FeedbackModal } from "@/components/module/feedback/feedback-modal";
 import FeedbackDeleteModal from "@/components/module/feedback/feedback-delete-modal";
 import { ReportModal } from "@/components/module/report/report-modal";
 import ReportDeleteModal from "@/components/module/report/report-delete-modal";
+import { AttachmentCreateModal } from "@/components/module/attachment/attachment-create-modal";
+import { AttachmentEditModal } from "@/components/module/attachment/attachment-edit-modal";
+import AttachmentDeleteModal from "@/components/module/attachment/attachment-delete-modal";
 import { useGetMe } from "@/hooks";
+import type { IAttachment } from "@/types";
 
 type Props = {
   order: IWorkOrder;
@@ -62,12 +66,31 @@ const OrderDetailsView = ({
   const serviceReport = order.serviceReport ?? null;
 
   const { data: me } = useGetMe();
-  const isTechnician =
-    (me as { data?: { role?: string } } | undefined)?.data?.role ===
-    "TECHNICIAN";
+  const meUser = (me as { data?: { id?: string; role?: string } } | undefined)
+    ?.data;
+  const myId = meUser?.id;
+  const myRole = meUser?.role;
+  const isTechnician = myRole === "TECHNICIAN";
   const isCompleted =
     order.status === "COMPLETED" && service?.status === "COMPLETED";
   const canManageReport = isTechnician && isCompleted;
+
+  // CREATE needs workOrder authorization: own customer / own technician of this order.
+  const isOwnCustomer =
+    myRole === "CUSTOMER" && !!myId && customer?.userId === myId;
+  const isOwnTechnician =
+    myRole === "TECHNICIAN" && !!myId && technician?.userId === myId;
+  const canAddAttachment = Boolean(myId) && (isOwnCustomer || isOwnTechnician);
+
+  // UPDATE/DELETE needs attachment-own authorization.
+  // If backend returns an owner field (uploadedById/customerId/technicianId),
+  // only the uploader can manage. Otherwise falls back to workOrder ownership.
+  const canManageAttachment = (a: IAttachment) => {
+    if (!canAddAttachment || !myId) return false;
+    const ownerId = a.uploadedById ?? a.customerId ?? a.technicianId ?? null;
+    if (ownerId) return ownerId === myId;
+    return true;
+  };
 
   const events = useMemo(
     () => [
@@ -232,43 +255,61 @@ const OrderDetailsView = ({
           <Section
             title="Attachments"
             action={
-              <span className="text-xs text-muted-foreground">
-                {attachments.length} file
-                {attachments.length === 1 ? "" : "s"}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {attachments.length} file
+                  {attachments.length === 1 ? "" : "s"}
+                </span>
+                {canAddAttachment && (
+                  <AttachmentCreateModal workOrderId={order.id} />
+                )}
+              </div>
             }
           >
             {attachments.length === 0 ? (
               <p className="py-2 text-sm text-muted-foreground">
-                No attachments uploaded for this order.
+                {canAddAttachment
+                  ? "No attachments yet. Upload before/after photos or documents for this order."
+                  : "No attachments uploaded for this order."}
               </p>
             ) : (
               <ul className="space-y-2">
-                {attachments.map((a) => (
-                  <li
-                    key={a.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate font-medium">
-                        {a.description || badgeText(a.type)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {badgeText(a.type)} · {a.files.length} file
-                        {a.files.length === 1 ? "" : "s"}
-                      </p>
-                    </div>
-                    {a.files[0]?.url && (
-                      <Link
-                        href={a.files[0].url}
-                        target="_blank"
-                        className="shrink-0 text-xs font-semibold text-primary hover:underline"
-                      >
-                        View
-                      </Link>
-                    )}
-                  </li>
-                ))}
+                {attachments.map((a) => {
+                  const canManage = canManageAttachment(a);
+                  return (
+                    <li
+                      key={a.id}
+                      className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium">
+                          {a.description || badgeText(a.type)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {badgeText(a.type)} · {a.files.length} file
+                          {a.files.length === 1 ? "" : "s"}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        {a.files[0]?.url && (
+                          <Link
+                            href={a.files[0].url}
+                            target="_blank"
+                            className="text-xs font-semibold text-primary hover:underline"
+                          >
+                            View
+                          </Link>
+                        )}
+                        {canManage && (
+                          <>
+                            <AttachmentEditModal attachment={a} />
+                            <AttachmentDeleteModal attachmentId={a.id} />
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </Section>

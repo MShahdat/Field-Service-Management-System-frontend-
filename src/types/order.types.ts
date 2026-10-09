@@ -1,3 +1,4 @@
+import { IAttachment } from "./attatchment.types";
 import { FileAttachmentType } from "./common.types";
 import { IFeedback } from "./feedback.type";
 import { IManager } from "./manager.types";
@@ -13,23 +14,6 @@ export type WorkOrderStatus =
   | "STARTED"
   | "COMPLETED"
   | "CANCELLED";
-
-export interface AttachmentFile {
-  url: string;
-  publicId: string;
-}
-
-export interface Attachment {
-  id: string;
-  files: AttachmentFile[];
-  description: string;
-  type: FileAttachmentType;
-  isDelete: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  workOrderId: string;
-}
 
 export interface IWorkOrder {
   id: string;
@@ -48,7 +32,7 @@ export interface IWorkOrder {
   payment: IPayment | null;
   service: IService;
   feedback: IFeedback | null;
-  attachment: Attachment[];
+  attachment: IAttachment[];
   schedule: ISchedule | null;
   technician: ITechnician | null;
   serviceReport: IServiceReport | null;

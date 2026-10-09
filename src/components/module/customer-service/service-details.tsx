@@ -5,6 +5,7 @@ import {
   AlertCircle,
   ArrowLeft,
   CalendarDays,
+  ChevronLeft,
   ChevronRight,
   Clock,
   Download,
@@ -18,17 +19,20 @@ import {
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import ProfileAvater from "@/shared/avater";
+import PaymentBtn from "@/shared/payment.btn";
 import type { IService } from "@/types";
+import { badgeText, formatDuration, statusVarient } from "@/utils";
 import {
   CopyId,
   formatClock,
@@ -41,12 +45,13 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import ProfileAvater from "@/shared/avater";
-import { badgeText, formatDuration, statusVarient } from "@/utils";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import PaymentBtn from "@/shared/payment.btn";
+import Image from "next/image";
 
-type Photo = { url: string; type: string };
+type Photo = { url: string; type: string; description?: string };
+
+type GalleryTab = "ALL" | "BEFORE_PHOTO" | "AFTER_PHOTO" | "SIGNATURE";
+
+const IMAGE_URL_RE = /\.(png|jpe?g|webp)(\?|#|$)/i;
 
 type Props = {
   service: IService;
@@ -64,21 +69,29 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
   const region = service?.region ?? null;
   const customer = service?.customer ?? null;
 
-  const [tab, setTab] = useState<
-    "ALL" | "BEFORE_PHOTO" | "AFTER_PHOTO" | "SIGNATURE" | "DOCUMENT"
-  >("ALL");
+  const [tab, setTab] = useState<GalleryTab>("ALL");
 
-  const [galleryOpen, setGalleryOpen] = useState(false);
+  // Lightbox index into `filtered` (null = closed). Replaces old galleryOpen boolean.
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  // Images only: skip soft-deleted attachments, DOCUMENT type, and non-image urls.
+  // Upload still allows pdf/doc — they are just hidden from this gallery.
   const photos: Photo[] = useMemo(() => {
     const list: Photo[] = [];
-    wo?.attachment?.forEach((a) => {
-      a.files?.forEach((f) => {
-        if (f?.url) {
-          list.push({ url: f.url, type: (a.type ?? "BEFORE").toUpperCase() });
-        }
+    wo?.attachment
+      ?.filter((a) => !a.isDelete)
+      .forEach((a) => {
+        if ((a.type ?? "").toUpperCase() === "DOCUMENT") return;
+        a.files?.forEach((f) => {
+          if (f?.url && IMAGE_URL_RE.test(f.url)) {
+            list.push({
+              url: f.url,
+              type: (a.type ?? "BEFORE_PHOTO").toUpperCase(),
+              description: a.description,
+            });
+          }
+        });
       });
-    });
     return list;
   }, [wo]);
 
@@ -86,6 +99,47 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
     tab === "ALL" ? photos : photos.filter((p) => p.type === tab);
   const preview = filtered.slice(0, 3);
   const overflowCount = Math.max(filtered.length - preview.length, 0);
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const goPrev = useCallback(() => {
+    setLightboxIndex((i) =>
+      i === null || filtered.length === 0
+        ? i
+        : (i - 1 + filtered.length) % filtered.length,
+    );
+  }, [filtered.length]);
+  const goNext = useCallback(() => {
+    setLightboxIndex((i) =>
+      i === null || filtered.length === 0 ? i : (i + 1) % filtered.length,
+    );
+  }, [filtered.length]);
+
+  const handleTabChange = (t: GalleryTab) => {
+    setTab(t);
+    setLightboxIndex(null);
+  };
+
+  // Keyboard navigation while lightbox is open.
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goPrev();
+      else if (e.key === "ArrowRight") goNext();
+      else if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIndex, goPrev, goNext, closeLightbox]);
+
+  // Clamp index when filter changes underneath an open lightbox.
+  useEffect(() => {
+    if (lightboxIndex !== null && lightboxIndex >= filtered.length) {
+      setLightboxIndex(filtered.length > 0 ? 0 : null);
+    }
+  }, [filtered.length, lightboxIndex]);
+
+  const activePhoto =
+    lightboxIndex !== null ? filtered[lightboxIndex] : undefined;
 
   const events = useMemo(
     () => [
@@ -278,13 +332,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
             action={
               <div className="flex gap-1.5">
                 {(
-                  [
-                    "ALL",
-                    "BEFORE_PHOTO",
-                    "AFTER_PHOTO",
-                    "SIGNATURE",
-                    "DOCUMENT",
-                  ] as const
+                  ["ALL", "BEFORE_PHOTO", "AFTER_PHOTO", "SIGNATURE"] as const
                 ).map((t) => (
                   <Button
                     key={t}
@@ -294,13 +342,12 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
                       tab === t &&
                         "bg-primary text-primary-foreground hover:bg-primary/90",
                     )}
-                    onClick={() => setTab(t)}
+                    onClick={() => handleTabChange(t)}
                   >
                     {t === "ALL" && "All"}
                     {t === "BEFORE_PHOTO" && "Before"}
                     {t === "AFTER_PHOTO" && "After"}
                     {t === "SIGNATURE" && "Signature"}
-                    {t === "DOCUMENT" && "Document"}
                   </Button>
                 ))}
               </div>
@@ -316,14 +363,15 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
                   <button
                     key={`${p.url}-${i}`}
                     type="button"
-                    onClick={() => setGalleryOpen(true)}
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={`Open image ${i + 1} of ${filtered.length}`}
                     className="group relative aspect-square overflow-hidden rounded-xl border bg-muted"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={p.url}
                       alt={`${p.type} ${i + 1}`}
-                      className="size-full object-cover"
+                      className="size-full object-cover transition-transform group-hover:scale-105"
                       loading="lazy"
                     />
                     <span className="absolute bottom-2 left-2 rounded-full border bg-background/90 px-2 py-0.5 text-[11px] font-medium capitalize">
@@ -334,7 +382,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
                 {overflowCount > 0 || filtered.length > 3 ? (
                   <button
                     type="button"
-                    onClick={() => setGalleryOpen(true)}
+                    onClick={() => setLightboxIndex(3)}
                     className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border bg-muted/40 text-sm hover:bg-muted"
                   >
                     <span className="text-2xl font-bold">+{overflowCount}</span>
@@ -346,36 +394,76 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
               </div>
             )}
 
-            {/* Attachments modal */}
-            <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-              <DialogTrigger asChild>
-                <span className="hidden" />
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl">
-                <DialogHeader>
-                  <DialogTitle>All attachments ({photos.length})</DialogTitle>
+            {/* Image lightbox: full screen */}
+            <Dialog
+              open={lightboxIndex !== null}
+              onOpenChange={(v) => {
+                if (!v) closeLightbox();
+              }}
+            >
+              <DialogContent className="flex h-[80vh] max-h-[90vh] w-[80vw] max-w-none flex-col gap-0 overflow-hidden rounded-xl border-0 p-0 sm:max-w-none">
+                <DialogHeader className="sr-only">
+                  <DialogTitle>
+                    Attachment {lightboxIndex !== null ? lightboxIndex + 1 : 0}{" "}
+                    of {filtered.length}
+                  </DialogTitle>
                 </DialogHeader>
-                <div className="grid max-h-[70vh] grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-3">
-                  {photos.map((p, i) => (
+                {activePhoto && (
+                  <div className="relative flex min-h-0 flex-1 items-center justify-center bg-black">
+                    <img
+                      key={activePhoto.url}
+                      src={activePhoto.url}
+                      alt={`${activePhoto.type} ${(lightboxIndex ?? 0) + 1} of ${filtered.length}`}
+                      className="h-[90vh] w-full object-contain"
+                    />
+                    <span className="absolute top-3 left-3 rounded-full bg-background/90 px-2.5 py-1 text-xs font-medium">
+                      {(lightboxIndex ?? 0) + 1} / {filtered.length}
+                    </span>
+                    <span className="absolute top-3 right-14 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium capitalize">
+                      {activePhoto.type.toLowerCase()}
+                    </span>
+                    {filtered.length > 1 && (
+                      <>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="secondary"
+                          aria-label="Previous image"
+                          onClick={goPrev}
+                          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full opacity-90 hover:opacity-100"
+                        >
+                          <ChevronLeft className="size-5" aria-hidden />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="secondary"
+                          aria-label="Next image"
+                          onClick={goNext}
+                          className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full opacity-90 hover:opacity-100"
+                        >
+                          <ChevronRight className="size-5" aria-hidden />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-3 bg-background p-3">
+                  <p className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+                    {activePhoto?.description || "No description"}
+                  </p>
+                  {activePhoto && (
                     <a
-                      key={`${p.url}-${i}`}
-                      href={p.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="relative aspect-square overflow-hidden rounded-xl border bg-muted"
+                      href={activePhoto.url}
+                      download
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "sm" }),
+                      )}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.url}
-                        alt={`attachment ${i + 1}`}
-                        className="size-full object-cover"
-                        loading="lazy"
-                      />
-                      <span className="absolute bottom-2 left-2 rounded-full bg-background/90 px-2 py-0.5 text-[11px] capitalize">
-                        {p.type.toLowerCase()}
-                      </span>
+                      <Download className="size-4" aria-hidden />
+                      Download
                     </a>
-                  ))}
+                  )}
                 </div>
               </DialogContent>
             </Dialog>
