@@ -3,11 +3,13 @@ export const statusVarient = (s: string) => {
     case "COMPLETED":
     case "PAID":
     case "AVAILABLE":
+    case "ACTIVE":
       return "accepted" as const;
     case "PENDING":
     case "MEDIUM":
     case "SCHEDULED":
     case "UNPAID":
+    case "BLOCKED":
       return "requested" as const;
     case "APPROVED":
     case "ASSIGMED":
@@ -22,6 +24,7 @@ export const statusVarient = (s: string) => {
     case "URGENT":
     case "FAILDED":
     case "CANCEL":
+    case "DELETED":
       return "declined" as const;
     case "OFF_DUTY":
       return "outline" as const;

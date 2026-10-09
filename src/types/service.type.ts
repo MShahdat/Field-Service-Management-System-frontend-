@@ -1,11 +1,14 @@
 import { ICategory } from "./category.types";
 import {
   Address,
+  AuthProvider,
   FileAttachmentType,
   PaymentStatus,
   Priority,
   ScheduleStatus,
   ServiceStatus,
+  UserRole,
+  UserStatus,
 } from "./common.types";
 import { IWorkOrder } from "./order.types";
 import { IRegion } from "./region.type";
@@ -16,8 +19,11 @@ export interface IUser {
   name: string;
   email: string;
   profileImg: string;
-  status: string;
+  status: UserStatus;
   emailVerified: boolean;
+  isDeleted: boolean;
+  role: UserRole;
+  authProvider: AuthProvider;
 }
 
 export interface ServiceRequest {

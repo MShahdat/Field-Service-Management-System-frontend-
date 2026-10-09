@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import GoogleAuth from "../auth/google-auth";
 import FacebookAuth from "../auth/facebook-auth";
 import { loginZodSchema } from "@/validation";
+import { getDashboardUrl } from "@/utils";
 
 const LoginForm = () => {
   const [showPass, setShowPass] = useState(false);
@@ -41,14 +42,15 @@ const LoginForm = () => {
         password: value.password,
       };
       mutate(loginData, {
-        onSuccess: (res: unknown) => {
-          const message =
-            typeof res === "object" && res !== null && "message" in res
-              ? String((res as { message: unknown }).message)
-              : "Logged in successfully";
-          toast.success(message);
+        onSuccess: (res) => {
+          toast.success(res.message);
           form.reset();
-          router.push("/");
+          const dashboardUrl = getDashboardUrl(res?.data?.user.role)
+          if (dashboardUrl) {
+            router.push(dashboardUrl);
+          } else {
+            router.push("/");
+          }
           router.refresh();
         },
         onError: (err: Error) => {

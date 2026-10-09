@@ -28,6 +28,7 @@ import { redirect } from "next/navigation";
 import { useGetMe, useLogout } from "@/hooks";
 import { Logo } from "@/assets/logo";
 import { LoggedUser } from "@/types/auth.types";
+import { getDashboardUrl } from "@/utils";
 import { ModeToggle } from "./theme";
 
 export function Navbar() {
@@ -35,17 +36,7 @@ export function Navbar() {
   console.log("user", data);
 
   const user = data?.data as LoggedUser | undefined;
-  const role = user?.role;
-
-  const dashboardUrl = role
-    ? {
-        SUPER_ADMIN: "/admin-dashboard",
-        ADMIN: "/admin-dashboard",
-        TECHNICIAN: "/technician-dashboard",
-        CUSTOMER: "/customer-dashboard",
-        MANAGER: "/manager-dashboard",
-      }[role]
-    : undefined;
+  const dashboardUrl = getDashboardUrl(user?.role);
 
   const navLinks = [
     { label: "Home", href: "/", icon: LayoutDashboard },

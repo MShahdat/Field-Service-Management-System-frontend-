@@ -1,13 +1,12 @@
 import DashboardPage from "@/components/dashboard/dashboard-page";
-import { Navbar } from "@/shared/navbar";
+import AuthGuards from "@/components/auth/auth-guard";
 import { ReactNode } from "react";
 
 const DashboardLayoutPage = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
-      {/* <Navbar/> */}
-      <DashboardPage>{children}</DashboardPage>
-    </div>
+    // <AuthGuards>
+    <DashboardPage>{children}</DashboardPage>
+    // </AuthGuards>
   );
 };
 

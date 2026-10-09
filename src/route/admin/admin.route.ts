@@ -25,7 +25,7 @@ export const adminRoutes = [
     items: [
       {
         title: "All Users",
-        url: `${prefix}/users/all-users`,
+        url: `${prefix}/user`,
       },
       {
         title: "Approve Manager",
