@@ -29,16 +29,23 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import { Button } from "@/components/ui/button";
 import PaymentBtn from "@/shared/payment.btn";
+import { FeedbackModal } from "@/components/module/feedback/feedback-modal";
+import FeedbackDeleteModal from "@/components/module/feedback/feedback-delete-modal";
 
 type Props = {
   order: IWorkOrder;
   backHref: string;
   label: string;
+  showFeedbackActions?: boolean;
 };
 
-const OrderDetailsView = ({ order, backHref, label }: Props) => {
+const OrderDetailsView = ({
+  order,
+  backHref,
+  label,
+  showFeedbackActions = false,
+}: Props) => {
   const service = order.service;
   const payment = order.payment;
   const schedule = order.schedule;
@@ -84,6 +91,11 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
   const isPayBtn =
     (order.status === "STARTED" || order.status === "COMPLETED") &&
     order.payment?.status === "UNPAID";
+
+  const canGiveFeedback =
+    showFeedbackActions &&
+    order.status === "COMPLETED" &&
+    service?.status === "COMPLETED";
 
   return (
     <div className="space-y-4">
@@ -246,9 +258,16 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
             )}
           </Section>
 
-          <Section title="Feedback">
+          <Section
+            title="Feedback"
+            action={
+              canGiveFeedback && !feedback ? (
+                <FeedbackModal mode="create" workOrderId={order.id} />
+              ) : undefined
+            }
+          >
             {feedback ? (
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <Stars value={feedback.rating} />
                 <p className="text-sm leading-relaxed">
                   {feedback.comment || "No comment provided."}
@@ -256,7 +275,22 @@ const OrderDetailsView = ({ order, backHref, label }: Props) => {
                 <p className="text-xs text-muted-foreground">
                   {formatDateTime(feedback.createdAt)}
                 </p>
+                {canGiveFeedback && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <FeedbackModal
+                      mode="edit"
+                      workOrderId={order.id}
+                      feedback={feedback}
+                    />
+                    <FeedbackDeleteModal feedbackId={feedback.id} />
+                  </div>
+                )}
               </div>
+            ) : canGiveFeedback ? (
+              <p className="py-2 text-sm text-muted-foreground">
+                Service completed. Share your experience — submit your feedback
+                for this order.
+              </p>
             ) : (
               <p className="py-2 text-sm text-muted-foreground">
                 No feedback submitted for this order yet.

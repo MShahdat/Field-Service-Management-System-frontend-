@@ -33,6 +33,7 @@ const OrderDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
         order={data.data}
         backHref="/customer-dashboard/order"
         label="Order"
+        showFeedbackActions
       />
     </div>
   );

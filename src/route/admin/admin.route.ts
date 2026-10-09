@@ -100,4 +100,15 @@ export const adminRoutes = [
       },
     ],
   },
+  {
+    title: "Feedbacks",
+    url: "#",
+    icon: Bot,
+    items: [
+      {
+        title: "Feedback",
+        url: `${prefix}/feedback`,
+      },
+    ],
+  },
 ];

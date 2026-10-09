@@ -14,7 +14,10 @@ import {
 import type { Endpoint, IWorkOrder, LoggedUser } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import OrderStatusModal from "./order-status-update";
-import { formatServiceDate } from "../customer-service/details-util";
+import {
+  formatClock,
+  formatServiceDate,
+} from "../customer-service/details-util";
 
 type Props = {
   orders: IWorkOrder[];
@@ -72,7 +75,7 @@ const WorkorderTable = ({ orders, user, endpoint }: Props) => {
                     </TableCell>
                   )}
                   {today && (
-                    <TableCell>{`${order.service.preferredStartTime} - ${order.service.preferredEndTime}`}</TableCell>
+                    <TableCell>{`${formatClock(order.service.preferredStartTime)} - ${formatClock(order.service.preferredEndTime)}`}</TableCell>
                   )}
                   <TableCell>
                     <Badge variant={statusVarient(order.service.priority)}>

@@ -4,3 +4,4 @@ export * from "./category.validation";
 export * from "./skill.validation";
 export * from "./region.validation";
 export * from "./service.validation";
+export * from "./feedback.validation";

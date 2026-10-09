@@ -72,6 +72,7 @@ const ServiceTable = ({ services }: Props) => {
                     <div className="flex gap-2 items-center justify-end">
                       {isView && (
                         <Button
+                          size={"sm"}
                           onClick={() => {
                             router.push(`${pathname}/${service.id}`);
                           }}

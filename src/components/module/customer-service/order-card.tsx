@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  ArrowRight,
-  CalendarDays,
-  Clock,
-  Hourglass,
-  Wallet,
-} from "lucide-react";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { ArrowRight, CalendarDays, Clock, Hourglass } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProfileAvater from "@/shared/avater";
 import type { IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
-import { formatClock, formatMoney, formatServiceDate } from "./details-util";
-import { usePaymentCreate } from "@/hooks";
-import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
+import { formatClock, formatServiceDate } from "./details-util";
 import PaymentBtn from "@/shared/payment.btn";
 
 type Props = {
@@ -28,6 +19,8 @@ const OrderCard = ({ order }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const technician = order.technician;
+
+  // console.log('order feedback', order.feedback)
 
   const paymentBadge = order.payment
     ? order.payment.status === "PAID"
@@ -108,7 +101,6 @@ const OrderCard = ({ order }: Props) => {
 
         <div className="flex gap-2 justify-end mt-auto">
           {isPayBtn && <PaymentBtn workOrderId={order.id} />}
-
           <Button
             type="button"
             variant="secondary"

@@ -1,4 +1,5 @@
 import { FileAttachmentType } from "./common.types";
+import { IFeedback } from "./feedback.type";
 import { IManager } from "./manager.types";
 import { IPayment } from "./payment.types";
 import { ISchedule } from "./schedule.types";
@@ -11,17 +12,6 @@ export type WorkOrderStatus =
   | "STARTED"
   | "COMPLETED"
   | "CANCELLED";
-
-export interface Feedback {
-  id: string;
-  rating: number;
-  comment: string;
-  isDeleted: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  workOrderId: string;
-}
 
 export interface AttachmentFile {
   url: string;
@@ -56,7 +46,7 @@ export interface IWorkOrder {
   manager: IManager | null;
   payment: IPayment | null;
   service: IService;
-  feedback: Feedback | null;
+  feedback: IFeedback | null;
   attachment: Attachment[];
   schedule: ISchedule | null;
   technician: ITechnician | null;

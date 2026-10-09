@@ -7,3 +7,4 @@ export * from "./service.hook";
 export * from "./user.hook";
 export * from "./order.hook";
 export * from "./payment.hook";
+export * from "./feedback.hook";

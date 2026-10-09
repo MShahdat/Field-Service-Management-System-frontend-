@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProfileAvater from "@/shared/avater";
 import { ServiceRequest } from "@/types";
-import { Clock, Hourglass, Pencil, Trash2, XCircle } from "lucide-react";
+import { Clock, Hourglass, XCircle } from "lucide-react";
 import { MyServiceModal } from "./service-modal";
 import DeleteModal from "./delete-modal";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { badgeText, statusVarient } from "@/utils";
 import { formatClock, formatServiceDate } from "./details-util";
 
