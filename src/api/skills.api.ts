@@ -1,6 +1,13 @@
 import apiClient from "@/lib/apiClient";
-import { QueryParams } from "@/types";
-import { ISkillCreated, ISkillUpdated } from "@/types/skills.types";
+import type { QueryParams } from "@/types";
+import type { ISkillCreated, ISkillUpdated } from "@/types/skills.types";
+
+//& public
+export const getSkills = (params?: QueryParams) => {
+  return apiClient("/skill/all", {
+    params,
+  });
+};
 
 //& admin
 export const getAllSkills = (params: QueryParams) => {

@@ -1,3 +1,14 @@
+export type UserRole =
+  | "SUPER_ADMIN"
+  | "ADMIN"
+  | "CUSTOMER"
+  | "TECHNICIAN"
+  | "MANAGER";
+
+export type UserStatus = "ACTIVE" | "BLOCKED" | "DELETED";
+
+export type AuthProvider = "CREDENTIAL" | "GOOGLE" | "FACEBOOK";
+
 export interface Coordinates {
   latitude: number | null;
   longitude: number | null;

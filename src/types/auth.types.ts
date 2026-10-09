@@ -1,13 +1,7 @@
-export type UserRole =
-  | "SUPER_ADMIN"
-  | "ADMIN"
-  | "CUSTOMER"
-  | "TECHNICIAN"
-  | "MANAGER";
-
-export type UserStatus = "ACTIVE" | "BLOCKED" | "DELETED";
-
-export type AuthProvider = "CREDENTIAL" | "GOOGLE" | "FACEBOOK";
+import { AuthProvider, UserRole, UserStatus } from "./common.types";
+import { IManager } from "./manager.types";
+import { ICustomer } from "./service.type";
+import { ITechnician } from "./technician.types";
 
 export type RegisterRole = "CUSTOMER" | "TECHNICIAN";
 
@@ -16,7 +10,8 @@ export interface IUserLogin {
   password: string;
 }
 
-export interface LoggedUser {
+export interface ILoggedUser {
+  id: string;
   name: string;
   email: string;
   authProvider: AuthProvider;
@@ -27,4 +22,7 @@ export interface LoggedUser {
   profileImg?: string;
   profileImgPublicId?: string;
   status: UserStatus;
+  customer: ICustomer;
+  technician: ITechnician;
+  manager: IManager;
 }

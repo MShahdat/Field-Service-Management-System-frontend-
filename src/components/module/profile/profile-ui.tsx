@@ -22,6 +22,7 @@ export function ProfileHeader({
   badges,
   topRight,
   backHref,
+  onEdit,
 }: {
   name: string;
   email: string;
@@ -30,6 +31,7 @@ export function ProfileHeader({
   badges: ReactNode;
   topRight: string;
   backHref: string;
+  onEdit?: () => void;
 }) {
   return (
     <div>
@@ -52,7 +54,9 @@ export function ProfileHeader({
             <p className="text-[14px] text-muted-foreground">{email}</p>
             <div className="mt-2 flex flex-wrap gap-2">{badges}</div>
           </div>
-          <Button className="sm:ml-auto font-bold">Edit Profile</Button>
+          <Button className="sm:ml-auto font-bold" onClick={onEdit}>
+            Edit Profile
+          </Button>
         </div>
       </div>
     </div>
@@ -163,7 +167,7 @@ export function AvailabilityRow({
         aria-label={`${day} availability`}
       >
         <div
-          className="h-full rounded-full bg-muted-foreground transition-[width]"
+          className="h-full rounded-full bg-primary/80 transition-[width]"
           style={{ width: `${pct}%` }}
         />
       </div>

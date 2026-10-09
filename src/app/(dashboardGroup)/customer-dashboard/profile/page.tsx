@@ -1,5 +1,6 @@
 "use client";
 
+import { formatAddress } from "@/components/module/profile/profile-helpers";
 import {
   InfoRow,
   ProfileHeader,
@@ -9,56 +10,66 @@ import {
 } from "@/components/module/profile/profile-ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks";
+import DataNotFoundCard from "@/shared/data-not-found";
+import type { ICustomer, ILoggedUser } from "@/types";
 
 const CustomerProfile = () => {
-  const { data, isPending } = useGetMe();
+  const { data, isPending, isError } = useGetMe();
 
   if (isPending) {
     return (
-      <div className="mx-auto max-w-6xl p-4">
+      <div className="mx-auto max-w-6xl space-y-4 p-4">
         <Skeleton className="h-44 rounded-2xl" />
+        <Skeleton className="h-32 rounded-2xl" />
       </div>
     );
   }
 
-  const me = data?.data as any;
-  const user = me?.user ?? me ?? {};
-  const cust = me?.customer ?? {};
-  const phone: string | null = cust?.phone ?? user?.phone ?? null;
-  const addrObj = cust?.address;
-  const addr: string | null = addrObj
-    ? [addrObj.street, addrObj.city, addrObj.postalCode]
-        .filter(Boolean)
-        .join(", ") || null
-    : null;
+  if (isError || !data?.data) {
+    return (
+      <div className="mx-auto max-w-6xl p-4">
+        <DataNotFoundCard
+          message="Profile not found"
+          description="We could not load your customer profile. Please try again."
+        />
+      </div>
+    );
+  }
+
+  const me = data.data as ILoggedUser;
+  const cust: ICustomer | null | undefined = me.customer;
+
+  const phone: string | null = cust?.phone ?? null;
+  const addr: string | null = formatAddress(cust?.address);
+
+  const emailStatus = me.emailVerified ? "Verified" : "Unverified";
+  const authLabel =
+    me.authProvider === "CREDENTIAL" ? "Credential" : (me.authProvider ?? "—");
+  const accountStatus = me.status ?? "Active";
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
         <ProfileHeader
-          name={user?.name ?? "Test Customer 01"}
-          email={user?.email ?? "cust.test1@mail.com"}
+          name={me.name ?? "—"}
+          email={me.email ?? "—"}
           roleLabel="Customer"
-          imageUrl={user?.profileImg}
+          imageUrl={me.profileImg}
           topRight="My Profile"
           backHref="/customer-dashboard"
           badges={
             <>
-              <StatusBadge>● Active</StatusBadge>
-              <StatusBadge>✓ Email verified</StatusBadge>
+              <StatusBadge>● {accountStatus}</StatusBadge>
+              <StatusBadge>
+                {me.emailVerified ? "✓ Email verified" : "○ Email unverified"}
+              </StatusBadge>
             </>
           }
         />
         <div className="grid gap-4 md:grid-cols-2">
           <SectionCard title="Personal Information">
-            <InfoRow
-              label="Full name"
-              value={user?.name ?? "Test Customer 01"}
-            />
-            <InfoRow
-              label="Email"
-              value={user?.email ?? "cust.test1@mail.com"}
-            />
+            <InfoRow label="Full name" value={me.name ?? "—"} />
+            <InfoRow label="Email" value={me.email ?? "—"} />
             {phone ? (
               <InfoRow label="Phone" value={phone} />
             ) : (
@@ -77,34 +88,14 @@ const CustomerProfile = () => {
           </SectionCard>
           <SectionCard title="Account">
             <div className="grid grid-cols-2 gap-3">
-              <StatCard value="Active" label="Account status" />
-              <StatCard
-                value={
-                  user?.emailVerified === false ? "Unverified" : "Verified"
-                }
-                label="Email"
-              />
-              <StatCard
-                value={
-                  user?.authProvider === "CREDENTIAL" || !user?.authProvider
-                    ? "Credential"
-                    : String(user.authProvider)
-                }
-                label="Authentication"
-              />
-              <StatCard
-                value={
-                  user?.createdAt
-                    ? new Date(user.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "Oct 7, 2026"
-                }
-                label="Member since"
-              />
+              <StatCard value={accountStatus} label="Account status" />
+              <StatCard value={emailStatus} label="Email" />
+              <StatCard value={authLabel} label="Authentication" />
+              <StatCard value="—" label="Member since" />
             </div>
+            <p className="pt-3 text-[13px] text-muted-foreground">
+              Customer ID: {cust?.id ?? me.id ?? "—"}
+            </p>
           </SectionCard>
         </div>
       </div>

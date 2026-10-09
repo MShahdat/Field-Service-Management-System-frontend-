@@ -12,3 +12,5 @@ export * from "./schedule.types";
 export * from "./feedback.type";
 export * from "./report.types";
 export * from "./attatchment.types";
+export * from "./skills.types";
+export * from "./technician.types";

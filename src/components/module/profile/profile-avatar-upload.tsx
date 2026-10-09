@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfileImage } from "@/hooks";
 import { getFallbackText } from "@/utils/fallback.avater";
 
-const MAX_MB = 3;
+const MAX_MB = 10;
 
 export function ProfileAvatarUpload({
   name,

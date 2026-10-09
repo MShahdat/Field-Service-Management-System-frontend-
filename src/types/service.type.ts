@@ -136,15 +136,6 @@ export interface IService {
 
 type Status = "REJECTED" | "ASSIGNED";
 
-export interface IAvailability {
-  id: string;
-  type: string;
-  dayOfWeek: number;
-  date: string;
-  startTime: string;
-  endTime: string;
-}
-
 export interface IEligibleTechnician {
   eligibleTech: ITechnician[];
 }

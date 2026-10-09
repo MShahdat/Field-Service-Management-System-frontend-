@@ -1,12 +1,21 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createSkill,
   getAllSkills,
+  getSkills,
   skillDeleteUpdate,
   skillStatusUpdate,
   updateSkill,
 } from "@/api";
-import { QueryParams } from "@/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { QueryParams } from "@/types";
+
+//& public (technician profile complete form)
+export const useGetSkills = (params?: QueryParams) => {
+  return useQuery({
+    queryKey: ["skills", params],
+    queryFn: () => getSkills(params),
+  });
+};
 
 export const useGetAllSkills = (params: QueryParams) => {
   return useQuery({

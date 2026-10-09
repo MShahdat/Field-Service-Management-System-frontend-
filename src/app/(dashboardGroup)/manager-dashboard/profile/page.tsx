@@ -16,9 +16,11 @@ import {
 } from "@/components/module/profile/profile-ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMe } from "@/hooks";
+import DataNotFoundCard from "@/shared/data-not-found";
+import type { ILoggedUser, IManager, IRegion } from "@/types";
 
 const ManagerProfile = () => {
-  const { data, isPending } = useGetMe();
+  const { data, isPending, isError } = useGetMe();
   const [showNid, setShowNid] = useState(false);
 
   if (isPending) {
@@ -33,44 +35,65 @@ const ManagerProfile = () => {
     );
   }
 
-  const me = data?.data as any;
-  const user = me?.user ?? me ?? {};
-  const mgr = me?.manager ?? me ?? {};
-  const regions: any[] = mgr?.region ?? mgr?.regions ?? [];
-  const list = regions.length
-    ? regions
-    : [
-        { area: "Test Region 1", description: "Description of region" },
-        { area: "Test Region 2", description: "Description of region" },
-      ];
-  const addr = formatAddress(mgr?.address) ?? "Test, Test street, 1000";
+  if (isError || !data?.data) {
+    return (
+      <div className="mx-auto max-w-6xl p-4">
+        <DataNotFoundCard
+          message="Profile not found"
+          description="We could not load your manager profile. Please try again."
+        />
+      </div>
+    );
+  }
+
+  const me = data.data as ILoggedUser;
+  const mgr: IManager | null | undefined = me.manager;
+
+  const regions: IRegion[] = mgr?.region ?? [];
+  const addr: string | null = formatAddress(mgr?.address);
+  const memberSince =
+    mgr?.createdAt != null && mgr.createdAt !== ""
+      ? formatMemberSince(mgr.createdAt)
+      : "—";
+  const verificationLabel = mgr?.verificationStatus ?? "—";
+  const accountStatus = me.status ?? "Active";
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
         <ProfileHeader
-          name={user?.name ?? "Test Manager 1"}
-          email={user?.email ?? "manager.test1@mail.com"}
+          name={me.name ?? "—"}
+          email={me.email ?? "—"}
           roleLabel="Manager"
-          imageUrl={user?.profileImg}
+          imageUrl={me.profileImg}
           topRight="Profile"
           backHref="/manager-dashboard"
           badges={
             <>
-              <StatusBadge>● Active</StatusBadge>
-              <StatusBadge>✓ Verified</StatusBadge>
+              <StatusBadge>● {accountStatus}</StatusBadge>
+              <StatusBadge>
+                {me.emailVerified ? "✓ Verified" : "○ Unverified"}
+              </StatusBadge>
+              {mgr?.verificationStatus ? (
+                <StatusBadge>· {verificationLabel}</StatusBadge>
+              ) : null}
             </>
           }
         />
         <div className="grid gap-4 md:grid-cols-2">
           <SectionCard title="Personal Information">
-            <InfoRow label="Full name" value={user?.name ?? "Test Manager 1"} />
-            <InfoRow
-              label="Email"
-              value={user?.email ?? "manager.test1@mail.com"}
-            />
-            <InfoRow label="Phone" value={mgr?.phone ?? "015365987458"} />
-            <InfoRow label="Address" value={addr} />
+            <InfoRow label="Full name" value={me.name ?? "—"} />
+            <InfoRow label="Email" value={me.email ?? "—"} />
+            {mgr?.phone ? (
+              <InfoRow label="Phone" value={mgr.phone} />
+            ) : (
+              <InfoRow label="Phone" value="Not added yet" muted />
+            )}
+            {addr ? (
+              <InfoRow label="Address" value={addr} />
+            ) : (
+              <InfoRow label="Address" value="Not added yet" muted />
+            )}
             <div className="flex items-center justify-between gap-4 border-b border-border/60 py-3 last:border-0">
               <span className="text-[14px] text-muted-foreground">NID</span>
               <span className="flex items-center gap-2 text-right text-[14px] font-semibold text-foreground">
@@ -94,26 +117,39 @@ const ManagerProfile = () => {
               </span>
             </div>
           </SectionCard>
-          <SectionCard title={`Assigned Regions · ${list.length} Active`}>
-            <div className="space-y-3">
-              {list.map((r: any, i: number) => (
-                <RegionCard
-                  key={r?.id ?? i}
-                  title={r.area ?? r.name ?? `Region ${i + 1}`}
-                  sub={`Active · ${r.description ?? "Description of region"}`}
-                />
-              ))}
-            </div>
+          <SectionCard title={`Assigned Regions · ${regions.length} Active`}>
+            {regions.length === 0 ? (
+              <p className="text-[14px] text-muted-foreground">
+                No regions assigned yet. Regions assigned by admin will appear
+                here.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {regions.map((r: IRegion, i: number) => (
+                  <RegionCard
+                    key={r.id ?? i}
+                    title={r.area ?? `Region ${i + 1}`}
+                    sub={`Active · ${r.description ?? "No description"}`}
+                  />
+                ))}
+              </div>
+            )}
           </SectionCard>
         </div>
         <SectionCard title="Account Security">
           <div className="flex flex-wrap gap-2">
-            <StatusBadge>● Active</StatusBadge>
-            <StatusBadge>✓ Email verified</StatusBadge>
-            <StatusBadge>Credential authentication</StatusBadge>
+            <StatusBadge>● {accountStatus}</StatusBadge>
+            <StatusBadge>
+              {me.emailVerified ? "✓ Email verified" : "○ Email unverified"}
+            </StatusBadge>
+            <StatusBadge>
+              {me.authProvider === "CREDENTIAL"
+                ? "Credential authentication"
+                : (me.authProvider ?? "—")}
+            </StatusBadge>
           </div>
           <p className="mt-3 text-[14px] text-muted-foreground">
-            Member since {formatMemberSince(user?.createdAt ?? mgr?.createdAt)}
+            Member since {memberSince}
           </p>
         </SectionCard>
       </div>
