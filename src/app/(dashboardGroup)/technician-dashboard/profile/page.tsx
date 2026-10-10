@@ -105,9 +105,9 @@ const TechnicianProfile = () => {
               for services until phone, NID, bio, address, region, skill and
               availability are set.
             </p>
-            <Button onClick={() => setEditOpen(true)} className="shrink-0">
+            {/* <Button onClick={() => setEditOpen(true)} className="shrink-0">
               Complete Profile
-            </Button>
+            </Button> */}
           </div>
         )}
 

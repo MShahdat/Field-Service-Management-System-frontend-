@@ -57,7 +57,10 @@ export default function ContactPage() {
           {submitted ? (
             <div className="flex h-full min-h-[340px] flex-col items-center justify-center py-16 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/25 bg-primary/5">
-                <CheckCircle2 className="h-5 w-5 text-primary" strokeWidth={1.75} />
+                <CheckCircle2
+                  className="h-5 w-5 text-primary"
+                  strokeWidth={1.75}
+                />
               </div>
               <h3 className="mt-5 text-lg sm:text-xl font-semibold">
                 We&apos;ve got your message
@@ -71,21 +74,35 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  <Label
+                    htmlFor="name"
+                    className="text-xs uppercase tracking-wide text-muted-foreground"
+                  >
                     Full name
                   </Label>
                   <Input id="name" placeholder="Jane Rahman" required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-xs uppercase tracking-wide text-muted-foreground">
+                  <Label
+                    htmlFor="email"
+                    className="text-xs uppercase tracking-wide text-muted-foreground"
+                  >
                     Email
                   </Label>
-                  <Input id="email" type="email" placeholder="you@example.com" required />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="topic" className="text-xs uppercase tracking-wide text-muted-foreground">
+                <Label
+                  htmlFor="topic"
+                  className="text-xs uppercase tracking-wide text-muted-foreground"
+                >
                   Topic
                 </Label>
                 <Select required>
@@ -94,16 +111,25 @@ export default function ContactPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="booking">A schedule issue</SelectItem>
-                    <SelectItem value="technician">Technician application</SelectItem>
-                    <SelectItem value="billing">Billing &amp; payments</SelectItem>
-                    <SelectItem value="press">Press &amp; partnerships</SelectItem>
+                    <SelectItem value="technician">
+                      Technician application
+                    </SelectItem>
+                    <SelectItem value="billing">
+                      Billing &amp; payments
+                    </SelectItem>
+                    <SelectItem value="press">
+                      Press &amp; partnerships
+                    </SelectItem>
                     <SelectItem value="other">Something else</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message" className="text-xs uppercase tracking-wide text-muted-foreground">
+                <Label
+                  htmlFor="message"
+                  className="text-xs uppercase tracking-wide text-muted-foreground"
+                >
                   Message
                 </Label>
                 <Textarea
@@ -132,7 +158,10 @@ export default function ContactPage() {
 
           <div className="mt-6 divide-y divide-border">
             {contactDetails.map((c, i) => (
-              <div key={c.label} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+              <div
+                key={c.label}
+                className="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
+              >
                 <span className="font-mono text-xs text-muted-foreground/70 tabular-nums">
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -141,7 +170,9 @@ export default function ContactPage() {
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs text-muted-foreground">{c.label}</div>
-                  <div className="text-sm font-medium break-words">{c.value}</div>
+                  <div className="text-sm font-medium break-words">
+                    {c.value}
+                  </div>
                 </div>
               </div>
             ))}
@@ -149,7 +180,9 @@ export default function ContactPage() {
 
           <div className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted-foreground">
             For urgent, active-job issues, use the{" "}
-            <span className="font-medium text-foreground">Report a problem</span>{" "}
+            <span className="font-medium text-foreground">
+              Report a problem
+            </span>{" "}
             button on your booking page for the fastest response.
           </div>
         </div>

@@ -30,18 +30,23 @@ import { getFallbackText } from "@/utils";
 import ProfileAvater from "@/shared/avater";
 import { useLogout } from "@/hooks";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { ILoggedUser } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
 
-export function NavUser({ user }: { user: any }) {
+export function NavUser({ user }: { user: ILoggedUser }) {
   const { isMobile } = useSidebar();
-
+  const queryClient = useQueryClient();
   const { mutate } = useLogout();
+  const router = useRouter()
 
   const handleLogout = () => {
     mutate(undefined, {
       onSuccess: (res) => {
+        queryClient.removeQueries({ queryKey: ["user"] });
         toast.success(res.message);
-        redirect("/login");
+        router.push('/login');
+        router.refresh();
       },
       onError: (err) => {
         toast.error(err.message);
@@ -79,13 +84,10 @@ export function NavUser({ user }: { user: any }) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                {/* <Avatar className="h-9 w-9 rounded-lg">
-                  <AvatarImage src={user.prifileImg} alt={user.name} />
-                  <AvatarFallback className="rounded-full text-black font-bold">
-                    {getFallbackText(user.name)}
-                  </AvatarFallback>
-                </Avatar> */}
-                <ProfileAvater name={user.name} imageUrl={user.profileImg} />
+                <ProfileAvater
+                  name={user.name}
+                  imageUrl={user.profileImg ?? ""}
+                />
                 <div className="grid flex-1 text-left text-[16px] leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>

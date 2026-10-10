@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: <explanation> */
 import Link from "next/link";
 
 export const Logo = () => {
@@ -17,7 +18,7 @@ export const Logo = () => {
         </svg>
       </span>
       <span className="text-lg lg:text-xl font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
-        FSMS
+        FieldDesk 
       </span>
     </Link>
   );

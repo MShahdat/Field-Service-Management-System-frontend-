@@ -56,9 +56,10 @@ const IMAGE_URL_RE = /\.(png|jpe?g|webp)(\?|#|$)/i;
 type Props = {
   service: IService;
   backHref: string;
+  label?: string
 };
 
-const ServiceDetailsView = ({ service, backHref }: Props) => {
+const ServiceDetailsView = ({ service, backHref, label }: Props) => {
   const wo = service.workOrders ?? null;
   const payment = wo?.payment ?? null;
   const schedule = wo?.schedule ?? null;
@@ -196,7 +197,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
           className="inline-flex items-center gap-1 rounded-sm hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
         >
           <ArrowLeft className="size-4" aria-hidden />
-          My Services
+          {label ?? "My Services"}
         </Link>
         <ChevronRight className="size-3.5" aria-hidden />
         <span className="text-foreground">Service details</span>

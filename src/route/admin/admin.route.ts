@@ -19,7 +19,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "User Management",
+    title: "User Manage",
     url: "#",
     icon: Bot,
     items: [
@@ -34,7 +34,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "Service Management",
+    title: "Service Manage",
     url: "#",
     icon: BookOpen,
     items: [
@@ -44,12 +44,12 @@ export const adminRoutes = [
       },
       {
         title: "Todays Services",
-        url: `${prefix}/service/today`,
+        url: `${prefix}/service/todays-services`,
       },
     ],
   },
   {
-    title: "Category Management",
+    title: "Category Manage",
     url: "#",
     icon: Bot,
     items: [
@@ -60,7 +60,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "Region Management",
+    title: "Region Manage",
     url: "#",
     icon: Bot,
     items: [
@@ -71,7 +71,7 @@ export const adminRoutes = [
     ],
   },
   {
-    title: "Skill Management",
+    title: "Skill Manage",
     url: "#",
     icon: Bot,
     items: [

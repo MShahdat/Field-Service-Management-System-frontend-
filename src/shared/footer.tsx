@@ -1,39 +1,43 @@
-import Link from 'next/link';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { FaFacebookF } from "react-icons/fa6";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaInstagramSquare } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 
-import { Wrench } from 'lucide-react';
+import { Wrench } from "lucide-react";
 
 const FOOTER_LINKS = {
   company: [
-    { label: 'About us', href: '/about' },
-    { label: 'How it works', href: '/' },
-    { label: 'Careers', href: '/' },
-    { label: 'Press', href: '/' },
+    { label: "About us", href: "/about" },
+    { label: "How it works", href: "/" },
+    { label: "Careers", href: "/" },
+    { label: "Press", href: "/" },
   ],
   customers: [
-    { label: 'Browse services', href: '/' },
-    { label: 'Find technicians', href: '/technicians' },
-    { label: 'Booking help', href: '/' },
-    { label: 'Cancellations', href: '/' },
+    { label: "Browse services", href: "/" },
+    { label: "Find technicians", href: "/technicians" },
+    { label: "Booking help", href: "/" },
+    { label: "Cancellations", href: "/" },
   ],
   technicians: [
-    { label: 'Become a pro', href: '/' },
-    { label: 'Technician dashboard', href: '/technicians' },
-    { label: 'Payouts', href: '/' },
-    { label: 'Community', href: '/' },
+    { label: "Become a pro", href: "/" },
+    { label: "Technician dashboard", href: "/technicians" },
+    { label: "Payouts", href: "/" },
+    { label: "Community", href: "/" },
   ],
 };
 
 const SOCIALS = [
-  { icon: <FaFacebookF />, href: 'https://facebook.com', label: 'Facebook' },
-  { icon: <IoLogoYoutube />, href: 'https://instagram.com', label: 'YouTube' },
-  { icon: <FaInstagramSquare />, href: 'https://twitter.com', label: 'Instagram' },
-  { icon: <FaTwitter />, href: 'https://linkedin.com', label: 'Twitter' },
+  { icon: <FaFacebookF />, href: "https://facebook.com", label: "Facebook" },
+  { icon: <IoLogoYoutube />, href: "https://instagram.com", label: "YouTube" },
+  {
+    icon: <FaInstagramSquare />,
+    href: "https://twitter.com",
+    label: "Instagram",
+  },
+  { icon: <FaTwitter />, href: "https://linkedin.com", label: "Twitter" },
 ];
 
 const Footer = () => {
@@ -45,12 +49,16 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-10">
           {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2 text-lg font-bold">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-lg font-bold"
+            >
               <Wrench className="h-5 w-5 text-primary" />
               FSMS
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xs">
-              Connecting homeowners with trusted, verified service professionals since 2023.
+              Connecting homeowners with trusted, verified service professionals
+              since 2023.
             </p>
             <div className="mt-5 flex gap-3">
               {SOCIALS.map(({ icon, href, label }) => (
@@ -62,9 +70,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="h-9 w-9 flex items-center justify-center rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
                 >
-                  <div className="text-sm">
-                    {icon}
-                  </div>
+                  <div className="text-sm">{icon}</div>
                 </a>
               ))}
             </div>
@@ -72,14 +78,19 @@ const Footer = () => {
 
           <FooterColumn title="Company" links={FOOTER_LINKS.company} />
           <FooterColumn title="For customers" links={FOOTER_LINKS.customers} />
-          <FooterColumn title="For technicians" links={FOOTER_LINKS.technicians} />
+          <FooterColumn
+            title="For technicians"
+            links={FOOTER_LINKS.technicians}
+          />
         </div>
 
         {/* Newsletter */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <p className="text-sm font-medium">Stay updated</p>
-            <p className="text-sm text-muted-foreground">Tips and updates, no spam.</p>
+            <p className="text-sm text-muted-foreground">
+              Tips and updates, no spam.
+            </p>
           </div>
           <form className="flex w-full max-w-sm gap-2">
             <Input
@@ -106,13 +117,16 @@ const Footer = () => {
             <Link href="/" className="hover:text-foreground transition-colors">
               Sitemap
             </Link>
-            <Link href="/contact" className="hover:text-foreground transition-colors">
+            <Link
+              href="/contact"
+              className="hover:text-foreground transition-colors"
+            >
               Contact
             </Link>
           </div>
         </div>
       </div>
-    </footer >
+    </footer>
   );
 };
 
@@ -124,7 +138,9 @@ const FooterColumn = ({
   links: { label: string; href: string }[];
 }) => (
   <div>
-    <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">{title}</p>
+    <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
+      {title}
+    </p>
     <ul className="mt-4 space-y-3">
       {links.map(({ label, href }) => (
         <li key={label}>

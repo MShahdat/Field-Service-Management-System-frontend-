@@ -11,4 +11,4 @@ export * from "./feedback.api";
 export * from "./report.api";
 export * from "./attatchment.api";
 export * from "./technician.api";
-export * from './analytics.api'
+export * from "./analytics.api";

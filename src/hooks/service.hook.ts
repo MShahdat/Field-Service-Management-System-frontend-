@@ -19,14 +19,12 @@ export const useCustomerMyService = (params: QueryParams) => {
   });
 };
 
-
 export const useGetAllServices = (params?: QueryParams) => {
   return useQuery({
     queryKey: ["all-services", params],
     queryFn: () => getAllServices(params),
   });
-}
-
+};
 
 export const useCreateService = () => {
   const queryClient = useQueryClient();

@@ -31,7 +31,7 @@ const LoginForm = () => {
   const form = useForm({
     defaultValues: {
       email: "",
-      password: "",
+      password: "@Cu123456",
     },
     validators: {
       onSubmit: loginZodSchema,
@@ -45,7 +45,7 @@ const LoginForm = () => {
         onSuccess: (res) => {
           toast.success(res.message);
           form.reset();
-          const dashboardUrl = getDashboardUrl(res?.data?.user.role)
+          const dashboardUrl = getDashboardUrl(res?.data?.user.role);
           if (dashboardUrl) {
             router.push(dashboardUrl);
           } else {
@@ -119,7 +119,7 @@ const LoginForm = () => {
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <Link
                     href="/forgot-password"
-                    className="ml-auto text-sm underline-offset-4 hover:underline"
+                    className="ml-auto text-sm underline-offset-4 hover:underline text-foreground"
                   >
                     Forgot your password?
                   </Link>

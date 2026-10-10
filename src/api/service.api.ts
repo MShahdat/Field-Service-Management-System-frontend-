@@ -12,7 +12,6 @@ export const customerMyServices = (params: QueryParams) => {
   });
 };
 
-
 export const getAllServices = (params?: QueryParams) => {
   return apiClient("/service/all-services", {
     params,

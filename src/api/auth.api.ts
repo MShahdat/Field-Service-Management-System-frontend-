@@ -45,20 +45,16 @@ export const userEmailVerify = (payload: { email: string; otp: string }) => {
   });
 };
 
-
-
 export const forgotPassword = (payload: IForgotPasswordPayload) => {
-  return apiClient('/auth/forgot-password', {
+  return apiClient("/auth/forgot-password", {
     method: "POST",
-    body: payload
-  })
-}
-
-
+    body: payload,
+  });
+};
 
 export const resetPassword = (payload: IResetPasswordPayload) => {
-  return apiClient('/auth/reset-password', {
+  return apiClient("/auth/reset-password", {
     method: "POST",
-    body: payload
-  })
-}
+    body: payload,
+  });
+};

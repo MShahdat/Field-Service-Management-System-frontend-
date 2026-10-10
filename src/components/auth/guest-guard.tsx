@@ -5,13 +5,18 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useGetMe } from "@/hooks";
 import { getDashboardUrl } from "@/utils";
+import GlobalLoading from "@/loading/loading";
 
 type IProps = {
   children: ReactNode;
 };
 
 // Routes that stay accessible even when logged in (e.g. OTP verification step).
-const GUEST_GUARD_ALLOWLIST = ["/register/email-verify"];
+const GUEST_GUARD_ALLOWLIST = [
+  "/register/email-verify",
+  "/forgot-password",
+  "/reset-password",
+];
 
 const GuestGuard = ({ children }: IProps) => {
   const router = useRouter();
@@ -39,11 +44,8 @@ const GuestGuard = ({ children }: IProps) => {
   }
 
   if (isPending) {
-    return (
-      <div className="flex min-h-svh items-center justify-center">
-        <p className="text-sm text-muted-foreground">loading....</p>
-      </div>
-    );
+    // return <GlobalLoading/>;
+    return 
   }
 
   if (!isError && user && dashboardUrl) {

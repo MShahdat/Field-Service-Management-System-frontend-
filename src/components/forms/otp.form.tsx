@@ -17,7 +17,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "../ui/input-otp";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
@@ -33,8 +33,11 @@ const OtpPage = () => {
   const email = params.get("email");
   const role = params.get("role") as Role | "user";
 
+  const router = useRouter()
+
   if (!email) {
-    redirect("/register");
+    router.push("/register")
+    router.refresh()
   }
 
   const [otp, setOtp] = useState("");
@@ -94,7 +97,7 @@ const OtpPage = () => {
       return;
     }
     const data = {
-      email,
+      email: email as string,
       otp,
     };
 
@@ -103,13 +106,11 @@ const OtpPage = () => {
     verify(data, {
       onSuccess: (res) => {
         localStorage.removeItem(`otp-expiry-${role}-${email}`);
-        if (role === "manager") {
+        
           toast.success(res.message);
-          redirect(`/`);
-        } else {
-          toast.success(res.message);
-          redirect(`/login`);
-        }
+          router.push('/login')
+          router.refresh()
+        
       },
       onError: (err) => {
         console.log(err);
@@ -164,14 +165,15 @@ const OtpPage = () => {
               value={otp}
               pattern={REGEXP_ONLY_DIGITS}
               required
+              containerClassName="w-full gap-2"
             >
-              <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+              <InputOTPGroup className="flex-1 *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-full *:data-[slot=input-otp-slot]:flex-1 *:data-[slot=input-otp-slot]:text-xl">
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />
               </InputOTPGroup>
-              <InputOTPSeparator className="mx-2" />
-              <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+              <InputOTPSeparator className="shrink-0" />
+              <InputOTPGroup className="flex-1 *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-full *:data-[slot=input-otp-slot]:flex-1 *:data-[slot=input-otp-slot]:text-xl">
                 <InputOTPSlot index={3} />
                 <InputOTPSlot index={4} />
                 <InputOTPSlot index={5} />

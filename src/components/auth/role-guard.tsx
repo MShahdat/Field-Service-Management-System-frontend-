@@ -31,7 +31,8 @@ const RoleGuard = ({ children, roles }: IProps) => {
   }, [data, isPending, isError]);
 
   if (isPending) {
-    return <GlobalLoading/>
+    return <GlobalLoading />;
+    // return
   }
 
   if (isAuthorized) {

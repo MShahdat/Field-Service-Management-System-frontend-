@@ -21,7 +21,8 @@ const AuthGuards = ({ children }: { children: ReactNode }) => {
   }, [isError, user, isPending]);
 
   if (isPending) {
-    return <GlobalLoading/>;
+    // return <GlobalLoading />;
+    return 
   }
 
   return <>{children}</>;

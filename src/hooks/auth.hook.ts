@@ -49,7 +49,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: ["user"],
       });
     },
@@ -61,25 +61,21 @@ export const useEmailVerify = () => {
   return useMutation({
     mutationFn: userEmailVerify,
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: ["user"],
       });
     },
   });
 };
 
-
-
 export const useForgotPassword = () => {
   return useMutation({
-    mutationFn: forgotPassword
-  })
-}
-
-
+    mutationFn: forgotPassword,
+  });
+};
 
 export const useResetPassword = () => {
   return useMutation({
-    mutationFn: resetPassword
-  })
-}
+    mutationFn: resetPassword,
+  });
+};

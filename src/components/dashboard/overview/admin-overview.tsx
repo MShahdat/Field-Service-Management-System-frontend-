@@ -65,8 +65,11 @@ export function AdminOverview() {
     {
       name: "Others/Active",
       value: Math.max(
-        s.totalServices - s.pendingServices - s.cancelledServices - s.rejectedServices,
-        0
+        s.totalServices -
+          s.pendingServices -
+          s.cancelledServices -
+          s.rejectedServices,
+        0,
       ),
     },
   ];
@@ -87,25 +90,98 @@ export function AdminOverview() {
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Total Revenue" value={fmtMoney(s.totalRevenue)} icon={DollarSign} description="Lifetime collected" accent="bg-green-500/10 text-green-600" />
-        <StatCard title="This Month" value={fmtMoney(s.currentMonthRevenue)} icon={TrendingUp} description="Current month revenue" accent="bg-blue-500/10 text-blue-600" />
-        <StatCard title="Refunded" value={fmtMoney(s.totalRefunded)} icon={Undo2} description="Total refunded" accent="bg-red-500/10 text-red-600" />
-        <StatCard title="Work Orders" value={`${s.totalStartedWorkOrders}/${s.totalWorkOrders}`} icon={ClipboardList} description={`${completion}% started`} />
-        <StatCard title="Customers" value={s.totalCustomers} icon={Users} href="/admin-dashboard/user" />
-        <StatCard title="Managers" value={s.totalManagers} icon={UserCog} href="/admin-dashboard/user" />
-        <StatCard title="Technicians" value={s.totalTechnicians} icon={Wrench} href="/admin-dashboard/user" />
-        <StatCard title="Pending Managers" value={s.pendingManagers} icon={Clock} description={`${s.rejectedManagers} rejected`} href="/admin-dashboard/approve-manager" accent="bg-amber-500/10 text-amber-600" />
-        <StatCard title="Total Services" value={s.totalServices} icon={Briefcase} />
-        <StatCard title="Pending Services" value={s.pendingServices} icon={Clock} accent="bg-amber-500/10 text-amber-600" />
-        <StatCard title="Cancelled" value={s.cancelledServices} icon={Ban} accent="bg-red-500/10 text-red-600" />
-        <StatCard title="Rejected" value={s.rejectedServices} icon={Ban} accent="bg-rose-500/10 text-rose-600" />
+        <StatCard
+          title="Total Revenue"
+          value={fmtMoney(s.totalRevenue)}
+          icon={DollarSign}
+          description="Lifetime collected"
+          accent="bg-green-500/10 text-green-600"
+        />
+        <StatCard
+          title="This Month"
+          value={fmtMoney(s.currentMonthRevenue)}
+          icon={TrendingUp}
+          description="Current month revenue"
+          accent="bg-blue-500/10 text-blue-600"
+        />
+        <StatCard
+          title="Refunded"
+          value={fmtMoney(s.totalRefunded)}
+          icon={Undo2}
+          description="Total refunded"
+          accent="bg-red-500/10 text-red-600"
+        />
+        <StatCard
+          title="Work Orders"
+          value={`${s.totalStartedWorkOrders}/${s.totalWorkOrders}`}
+          icon={ClipboardList}
+          description={`${completion}% started`}
+        />
+        <StatCard
+          title="Customers"
+          value={s.totalCustomers}
+          icon={Users}
+          href="/admin-dashboard/user"
+        />
+        <StatCard
+          title="Managers"
+          value={s.totalManagers}
+          icon={UserCog}
+          href="/admin-dashboard/user"
+        />
+        <StatCard
+          title="Technicians"
+          value={s.totalTechnicians}
+          icon={Wrench}
+          href="/admin-dashboard/user"
+        />
+        <StatCard
+          title="Pending Managers"
+          value={s.pendingManagers}
+          icon={Clock}
+          description={`${s.rejectedManagers} rejected`}
+          href="/admin-dashboard/approve-manager"
+          accent="bg-amber-500/10 text-amber-600"
+        />
+        <StatCard
+          title="Total Services"
+          value={s.totalServices}
+          icon={Briefcase}
+        />
+        <StatCard
+          title="Pending Services"
+          value={s.pendingServices}
+          icon={Clock}
+          accent="bg-amber-500/10 text-amber-600"
+        />
+        <StatCard
+          title="Cancelled"
+          value={s.cancelledServices}
+          icon={Ban}
+          accent="bg-red-500/10 text-red-600"
+        />
+        <StatCard
+          title="Rejected"
+          value={s.rejectedServices}
+          icon={Ban}
+          accent="bg-rose-500/10 text-rose-600"
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Service Status Distribution" description="Where all services stand">
+        <ChartCard
+          title="Service Status Distribution"
+          description="Where all services stand"
+        >
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={servicePie} dataKey="value" nameKey="name" outerRadius={100} label>
+              <Pie
+                data={servicePie}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                label
+              >
                 {servicePie.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
@@ -115,7 +191,10 @@ export function AdminOverview() {
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title="Users by Role" description="Customer vs manager vs technician">
+        <ChartCard
+          title="Users by Role"
+          description="Customer vs manager vs technician"
+        >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={userBar}>
               <CartesianGrid strokeDasharray="3 3" />

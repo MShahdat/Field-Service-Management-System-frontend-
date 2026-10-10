@@ -1,17 +1,18 @@
-'use client'
+"use client";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGetCategories } from "@/hooks";
+import GlobalLoading from "@/loading/loading";
 import { ICategory } from "@/types";
 import { LucideIcon, Search, ShieldCheck } from "lucide-react";
-import * as LucideIcons from 'lucide-react';
+import * as LucideIcons from "lucide-react";
 
 const STATS = [
-  { value: '2,000+', label: 'Service completed' },
-  { value: '4.8', label: 'Average rating' },
-  { value: '24/7', label: 'Dispatch support' },
+  { value: "2,000+", label: "Service completed" },
+  { value: "4.8", label: "Average rating" },
+  { value: "24/7", label: "Dispatch support" },
 ];
 
 function getIcon(name?: string | null): LucideIcon {
@@ -21,14 +22,18 @@ function getIcon(name?: string | null): LucideIcon {
 }
 
 export const HeroSection = () => {
+  const { data, isPending } = useGetCategories();
 
-  const {data} = useGetCategories()
 
-  if(!data?.success){
-    return
+  if (isPending) {
+    return <GlobalLoading/>
   }
 
-  const categoryItems = data?.data ?? []
+  if (!data?.success) {
+    return;
+  }
+
+  const categoryItems = data?.data ?? [];
 
   const visibleCategories = categoryItems.slice(0, 5);
 
@@ -37,15 +42,15 @@ export const HeroSection = () => {
       className="relative overflow-hidden bg-background text-foreground"
       style={{
         backgroundImage:
-          'radial-gradient(circle, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px)',
-        backgroundSize: '22px 22px',
+          "radial-gradient(circle, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px)",
+        backgroundSize: "22px 22px",
       }}
     >
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 60% 50% at 50% 40%, transparent 20%, var(--background) 85%)',
+            "radial-gradient(ellipse 60% 50% at 50% 40%, transparent 20%, var(--background) 85%)",
         }}
       />
 

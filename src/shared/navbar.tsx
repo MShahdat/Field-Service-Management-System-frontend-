@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   LayoutDashboard,
   FolderKanban,
-  BarChart3,
   User,
   LifeBuoy,
   LogOut,
@@ -24,26 +23,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
 import { useGetMe, useLogout } from "@/hooks";
 import { Logo } from "@/assets/logo";
 import { ILoggedUser } from "@/types/auth.types";
 import { getDashboardUrl } from "@/utils";
 import { ModeToggle } from "./theme";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   const { data } = useGetMe();
   console.log("user", data);
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
   const user = data?.data as ILoggedUser | undefined;
   const dashboardUrl = getDashboardUrl(user?.role);
 
   const navLinks = [
     { label: "Home", href: "/", icon: LayoutDashboard },
-    { label: "Technicians", href: "/technicians", icon: BarChart3 },
+    // { label: "Technicians", href: "/technician", icon: BarChart3 },
     ...(dashboardUrl
       ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
       : []),
+    { label: "Support", href: "/support", icon: LifeBuoy },
     { label: "About", href: "/about-us", icon: FolderKanban },
     { label: "Contact", href: "/contact", icon: Contact },
   ] as const;
@@ -63,8 +66,12 @@ export function Navbar() {
   const handleLogout = () => {
     mutate(undefined, {
       onSuccess: (res) => {
+        queryClient.removeQueries({
+          queryKey: ["user"]
+        })
         toast.success(res.message);
-        redirect("/login");
+        router.push('/login');
+        router.refresh()
       },
       onError: (err) => {
         toast.error(err.message);
