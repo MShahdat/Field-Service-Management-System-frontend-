@@ -1,7 +1,7 @@
-import React from "react";
+import { ManagerOverview } from "@/components/dashboard/overview/manager-overview";
 
 const ManagerDashboardPage = () => {
-  return <div>manager dashboard page</div>;
+  return <ManagerOverview />;
 };
 
 export default ManagerDashboardPage;

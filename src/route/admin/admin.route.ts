@@ -46,14 +46,6 @@ export const adminRoutes = [
         title: "Todays Services",
         url: `${prefix}/service/today`,
       },
-      {
-        title: "Tutorials",
-        url: "#",
-      },
-      {
-        title: "Changelog",
-        url: "#",
-      },
     ],
   },
   {

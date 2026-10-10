@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Endpoint, IWorkOrder, LoggedUser } from "@/types";
+import type { Endpoint, ILoggedUser, IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import OrderStatusModal from "./order-status-update";
 import {
@@ -21,7 +21,7 @@ import {
 
 type Props = {
   orders: IWorkOrder[];
-  user: LoggedUser;
+  user: ILoggedUser;
   endpoint: Endpoint;
 };
 

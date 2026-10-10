@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetMe } from "@/hooks";
+import GlobalLoading from "@/loading/loading";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
@@ -20,7 +21,7 @@ const AuthGuards = ({ children }: { children: ReactNode }) => {
   }, [isError, user, isPending]);
 
   if (isPending) {
-    return <p>loading....</p>;
+    return <GlobalLoading/>;
   }
 
   return <>{children}</>;

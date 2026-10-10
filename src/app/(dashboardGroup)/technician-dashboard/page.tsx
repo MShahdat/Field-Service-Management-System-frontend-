@@ -1,16 +1,7 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import React from "react";
+import { TechnicianOverview } from "@/components/dashboard/overview/technician-overview";
 
 const TechnicianDashboardpage = () => {
-  return (
-    <div>
-      technician page
-      <Link href={"/"}>
-        <Button>home</Button>
-      </Link>
-    </div>
-  );
+  return <TechnicianOverview />;
 };
 
 export default TechnicianDashboardpage;

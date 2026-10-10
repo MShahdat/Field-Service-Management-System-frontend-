@@ -5,6 +5,7 @@ import { UserRole } from "@/types";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import UnauthorizedPage from "./unauthorized";
+import GlobalLoading from "@/loading/loading";
 
 type IProps = {
   children: ReactNode;
@@ -30,7 +31,7 @@ const RoleGuard = ({ children, roles }: IProps) => {
   }, [data, isPending, isError]);
 
   if (isPending) {
-    return <p>loading....</p>;
+    return <GlobalLoading/>
   }
 
   if (isAuthorized) {

@@ -1,4 +1,5 @@
 import apiClient from "@/lib/apiClient";
+import { IForgotPasswordPayload, IResetPasswordPayload } from "@/types";
 
 export const userRegister = (payload: {
   name: string;
@@ -43,3 +44,21 @@ export const userEmailVerify = (payload: { email: string; otp: string }) => {
     body: payload,
   });
 };
+
+
+
+export const forgotPassword = (payload: IForgotPasswordPayload) => {
+  return apiClient('/auth/forgot-password', {
+    method: "POST",
+    body: payload
+  })
+}
+
+
+
+export const resetPassword = (payload: IResetPasswordPayload) => {
+  return apiClient('/auth/reset-password', {
+    method: "POST",
+    body: payload
+  })
+}

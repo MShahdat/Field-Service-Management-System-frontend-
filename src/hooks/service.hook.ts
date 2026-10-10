@@ -3,6 +3,7 @@ import {
   createService,
   customerMyServices,
   deleteService,
+  getAllServices,
   getEligibleTechnician,
   getMyRegionService,
   singleService,
@@ -18,6 +19,15 @@ export const useCustomerMyService = (params: QueryParams) => {
   });
 };
 
+
+export const useGetAllServices = (params?: QueryParams) => {
+  return useQuery({
+    queryKey: ["all-services", params],
+    queryFn: () => getAllServices(params),
+  });
+}
+
+
 export const useCreateService = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -28,6 +38,12 @@ export const useCreateService = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["single-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["all-services"],
       });
     },
   });
@@ -50,6 +66,12 @@ export const useUpdateService = () => {
       queryClient.invalidateQueries({
         queryKey: ["single-service"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["all-services"],
+      });
     },
   });
 };
@@ -64,6 +86,12 @@ export const useDeleteService = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["single-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["all-services"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
       });
     },
   });
@@ -103,6 +131,9 @@ export const useAssignTechnician = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["my-region-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["all-services"],
       });
     },
   });

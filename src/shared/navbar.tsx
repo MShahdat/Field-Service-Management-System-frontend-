@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { useGetMe, useLogout } from "@/hooks";
 import { Logo } from "@/assets/logo";
-import { LoggedUser } from "@/types/auth.types";
+import { ILoggedUser } from "@/types/auth.types";
 import { getDashboardUrl } from "@/utils";
 import { ModeToggle } from "./theme";
 
@@ -35,7 +35,7 @@ export function Navbar() {
   const { data } = useGetMe();
   console.log("user", data);
 
-  const user = data?.data as LoggedUser | undefined;
+  const user = data?.data as ILoggedUser | undefined;
   const dashboardUrl = getDashboardUrl(user?.role);
 
   const navLinks = [
@@ -44,7 +44,7 @@ export function Navbar() {
     ...(dashboardUrl
       ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
       : []),
-    { label: "About", href: "/about", icon: FolderKanban },
+    { label: "About", href: "/about-us", icon: FolderKanban },
     { label: "Contact", href: "/contact", icon: Contact },
   ] as const;
 

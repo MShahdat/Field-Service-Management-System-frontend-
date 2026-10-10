@@ -1,8 +1,10 @@
 import {
+  forgotPassword,
   getFacebookAuthUrl,
   getGoogleAuthUrl,
   getMe,
   logout,
+  resetPassword,
   userEmailVerify,
   userLogin,
   userRegister,
@@ -65,3 +67,19 @@ export const useEmailVerify = () => {
     },
   });
 };
+
+
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: forgotPassword
+  })
+}
+
+
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: resetPassword
+  })
+}

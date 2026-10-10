@@ -1,7 +1,7 @@
-import React from "react";
+import { CustomerOverview } from "@/components/dashboard/overview/customer-overview";
 
 const CustomerDashboardPage = () => {
-  return <div>customer dashboard</div>;
+  return <CustomerOverview />;
 };
 
 export default CustomerDashboardPage;

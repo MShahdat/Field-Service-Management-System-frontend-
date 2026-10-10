@@ -1,4 +1,4 @@
-import { AuthProvider, UserStatus } from "./auth.types";
+import type { AuthProvider, UserStatus } from "./common.types";
 
 export type ManagerVerificationStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type ReviewStatus = "APPROVED" | "REJECTED";

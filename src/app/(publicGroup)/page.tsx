@@ -1,13 +1,12 @@
-import { Button } from "@/components/ui/button";
+
+import { HeroSection } from "@/shared/hero";
+import HowWhy from "@/shared/how-why";
 
 export default function Home() {
   return (
-    <>
-      Field service management system
-      <p className="text-primary">ok</p>
-      <Button variant={"default"} size={"sm"}>
-        click me
-      </Button>
-    </>
+    <div>
+     <HeroSection/>
+      <HowWhy/>
+    </div>
   );
 }
