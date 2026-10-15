@@ -15,6 +15,13 @@ export const managerEmailVerify = (payload: { email: string; otp: string }) => {
   });
 };
 
+export const managerResendOtp = (payload: { email: string }) => {
+  return apiClient("/manager/resend-otp", {
+    method: "POST",
+    body: payload,
+  });
+};
+
 export const getManagerList = (params?: QueryParams) => {
   return apiClient(`/manager/all-managers`, {
     params,

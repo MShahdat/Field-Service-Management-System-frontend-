@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  BriefcaseBusiness,
+  ReceiptText,
+  Undo2,
+  UsersRound,
+  Wallet,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,40 +46,67 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
           Details
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Payment details</DialogTitle>
-          <DialogDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <CopyId value={payment.paymentId} />
-            <span aria-hidden>·</span>
-            <span>{service?.title ?? "Service payment"}</span>
-          </DialogDescription>
+      <DialogContent className="flex max-h-[calc(100dvh-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl border-border p-0 sm:max-w-lg">
+        {/* Themed header */}
+        <DialogHeader className="relative shrink-0 gap-1 overflow-hidden bg-primary px-5 pt-5 pb-5 sm:px-6">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+          >
+            <div className="absolute -top-12 -right-12 size-44 rounded-full bg-white/10 blur-2xl" />
+            <div className="absolute -bottom-16 left-24 size-40 rounded-full bg-black/10 blur-2xl" />
+          </div>
+          <div className="relative flex items-start gap-3 pr-8">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/25 backdrop-blur">
+              <ReceiptText className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <DialogTitle className="text-base font-bold tracking-tight text-white sm:text-lg">
+                Payment details
+              </DialogTitle>
+              <DialogDescription className="mt-1 truncate text-[13px] leading-relaxed text-white/80">
+                {service?.title ?? "Service payment"} ·{" "}
+                {payment.currency || "BDT"} · {payment.method || "bKash"}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Summary */}
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted px-4 py-3">
-            <div>
-              <p className="text-xs text-muted-foreground">
-                {payment.currency || "BDT"} · {payment.method || "bKash"}
-              </p>
-              <p className="text-xl font-extrabold tracking-tight">
-                {formatMoney(payment.amount)}
-              </p>
+        {/* Scrollable body */}
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+          <div className="space-y-4">
+            {/* Summary */}
+            <div className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/[0.08] via-card to-card">
+              <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <CopyId value={payment.paymentId} />
+                  </div>
+                  <p className="mt-1.5 truncate text-2xl font-extrabold tracking-tight text-foreground tabular-nums">
+                    {formatMoney(payment.amount)}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {payment.currency || "BDT"} · {payment.method || "bKash"}
+                  </p>
+                </div>
+                <Badge
+                  variant={statusVarient(
+                    payment.status === "PAID" ? "COMPLETED" : "PENDING",
+                  )}
+                  className="w-fit shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold shadow-none ring-1 ring-border"
+                >
+                  <span className="size-1.5 rounded-full bg-current" />
+                  {badgeText(payment.status)}
+                </Badge>
+              </div>
             </div>
-            <Badge
-              variant={statusVarient(
-                payment.status === "PAID" ? "COMPLETED" : "PENDING",
-              )}
-            >
-              {badgeText(payment.status)}
-            </Badge>
-          </div>
 
-          {/* Payment info */}
-          <div>
-            <h3 className="mb-1 text-sm font-semibold">Payment info</h3>
-            <div className="rounded-xl border px-3 py-1">
+            {/* Payment info */}
+            <ModalSection
+              step="01"
+              icon={<Wallet className="size-4" />}
+              title="Payment info"
+            >
               <InfoRow
                 label="Payment ID"
                 value={
@@ -93,7 +127,7 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
                       {payment.transectionId}
                     </span>
                   ) : (
-                    <p className="text-red-500">Not paid yet</p>
+                    <p className="font-medium text-destructive">Not paid yet</p>
                   )
                 }
               />
@@ -112,13 +146,14 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
               {payment.reason && (
                 <InfoRow label="Reason" value={payment.reason} />
               )}
-            </div>
-          </div>
+            </ModalSection>
 
-          {/* Work order / service */}
-          <div>
-            <h3 className="mb-1 text-sm font-semibold">Service</h3>
-            <div className="rounded-xl border px-3 py-1">
+            {/* Work order / service */}
+            <ModalSection
+              step="02"
+              icon={<BriefcaseBusiness className="size-4" />}
+              title="Service"
+            >
               <InfoRow label="Title" value={service?.title ?? "—"} />
               <InfoRow
                 label="Category"
@@ -132,13 +167,14 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
                 label="Work status"
                 value={workOrder?.status ? badgeText(workOrder.status) : "—"}
               />
-            </div>
-          </div>
+            </ModalSection>
 
-          {/* People */}
-          <div>
-            <h3 className="mb-1 text-sm font-semibold">People</h3>
-            <div className="rounded-xl border px-3 py-1">
+            {/* People */}
+            <ModalSection
+              step="03"
+              icon={<UsersRound className="size-4" />}
+              title="People"
+            >
               <InfoRow
                 label="Technician"
                 value={technician?.user?.name ?? "Not assigned"}
@@ -150,14 +186,16 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
               {manager?.user?.name && (
                 <InfoRow label="Manager" value={manager.user.name} />
               )}
-            </div>
-          </div>
+            </ModalSection>
 
-          {/* Refund */}
-          {hasRefund && (
-            <div>
-              <h3 className="mb-1 text-sm font-semibold">Refund</h3>
-              <div className="rounded-xl border px-3 py-1">
+            {/* Refund */}
+            {hasRefund && (
+              <ModalSection
+                step="04"
+                icon={<Undo2 className="size-4" />}
+                title="Refund"
+                tone="amber"
+              >
                 <InfoRow
                   label="Refund Trx ID"
                   value={payment.refundTrxId ?? "—"}
@@ -178,11 +216,54 @@ export function PaymentDetails({ payment }: { payment: IPayment }) {
                       : "—"
                   }
                 />
-              </div>
-            </div>
-          )}
+              </ModalSection>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ModalSection({
+  step,
+  icon,
+  title,
+  tone = "primary",
+  children,
+}: {
+  step: string;
+  icon: React.ReactNode;
+  title: string;
+  tone?: "primary" | "amber";
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border bg-card">
+      <header className="flex items-center gap-3 border-b border-border/70 bg-muted/40 px-4 py-3">
+        <span
+          className={
+            tone === "amber"
+              ? "flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-sm font-extrabold text-amber-700 ring-1 ring-amber-500/25 dark:text-amber-400"
+              : "flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-extrabold text-primary-foreground shadow-sm"
+          }
+        >
+          {step}
+        </span>
+        <h3 className="flex min-w-0 items-center gap-1.5 truncate text-sm font-bold text-foreground">
+          <span
+            className={
+              tone === "amber"
+                ? "text-amber-600 dark:text-amber-400"
+                : "text-primary"
+            }
+          >
+            {icon}
+          </span>
+          {title}
+        </h3>
+      </header>
+      <div className="px-4 py-3">{children}</div>
+    </section>
   );
 }

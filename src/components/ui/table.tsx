@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { cn } from "cn";
+import type * as React from "react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -22,7 +22,10 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        "bg-primary/[0.06] dark:bg-primary/10 [&_tr]:border-b [&_tr]:border-border",
+        className,
+      )}
       {...props}
     />
   );
@@ -56,7 +59,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        "border-b border-border/70 transition-colors last:border-0 hover:bg-primary/[0.04] has-aria-expanded:bg-primary/[0.06] data-[state=selected]:bg-primary/[0.08] dark:hover:bg-primary/10",
         className,
       )}
       {...props}
@@ -69,7 +72,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        "h-11 px-3 align-middle text-left text-[11px] font-bold tracking-[0.06em] whitespace-nowrap text-muted-foreground uppercase tabular-nums sm:px-4 [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -82,7 +85,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        "px-3 py-3 align-middle text-[13px] whitespace-nowrap text-foreground tabular-nums first:font-semibold first:text-muted-foreground sm:px-4 sm:text-sm [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}

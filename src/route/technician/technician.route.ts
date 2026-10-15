@@ -1,4 +1,4 @@
-import { BookOpen, SquareTerminal } from "lucide-react";
+import { ClipboardList, CreditCard, LayoutDashboard } from "lucide-react";
 
 const prefix = `/technician-dashboard`;
 
@@ -6,7 +6,7 @@ export const technicianRoutes = [
   {
     title: "Dashboard",
     url: "#",
-    icon: SquareTerminal,
+    icon: LayoutDashboard,
     isActive: true,
     items: [
       {
@@ -22,7 +22,7 @@ export const technicianRoutes = [
   {
     title: "Work Order",
     url: "#",
-    icon: BookOpen,
+    icon: ClipboardList,
     items: [
       {
         title: "My Work Order",
@@ -41,7 +41,7 @@ export const technicianRoutes = [
   {
     title: "Payment",
     url: "#",
-    icon: BookOpen,
+    icon: CreditCard,
     items: [
       {
         title: "Payments",

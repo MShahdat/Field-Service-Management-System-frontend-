@@ -90,6 +90,12 @@ export function ManagerApplyForm() {
       mutate(data, {
         onSuccess: (res) => {
           toast.success(res.message);
+          // Start the OTP countdown only after the OTP email was sent.
+          // Backend manager OTP validity is 60 minutes.
+          localStorage.setItem(
+            `otp-expiry-manager-${value.email}`,
+            (Date.now() + 60 * 60 * 1000).toString(),
+          );
           const params = new URLSearchParams({ email: value.email });
           redirect(`/register/email-verify?${params.toString()}&role=manager`);
         },

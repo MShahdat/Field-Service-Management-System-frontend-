@@ -121,33 +121,46 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
 }
 
+
+
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 50px;
+  width: 20px;
   aspect-ratio: 1;
-  color: #f03355;
-  --_c: no-repeat radial-gradient(farthest-side, currentColor 92%, #0000);
-  background:
-    var(--_c) 50% 0 / 12px 12px,
-    var(--_c) 50% 100% / 12px 12px,
-    var(--_c) 100% 50% / 12px 12px,
-    var(--_c) 0 50% / 12px 12px,
-    var(--_c) 50% 50% / 12px 12px,
-    conic-gradient(from 90deg at 4px 4px, #0000 90deg, currentColor 0) -4px -4px
-    / calc(50% + 2px) calc(50% + 2px);
-  animation: l8 1s infinite linear;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 0 var(--color-chart-1);
+  animation: l2 1.5s infinite linear;
+  position: relative;
 }
 
-@keyframes l8 {
-  to {
-    transform: rotate(0.5turn);
+.loader:before,
+.loader:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--color-destructive);
+  animation: inherit;
+  animation-delay: -0.5s;
+}
+
+.loader:after {
+  animation-delay: -1s;
+}
+
+@keyframes l2 {
+  100% {
+    box-shadow: 0 0 0 40px #0000
   }
 }

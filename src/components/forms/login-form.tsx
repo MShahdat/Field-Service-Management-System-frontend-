@@ -31,7 +31,7 @@ const LoginForm = () => {
   const form = useForm({
     defaultValues: {
       email: "",
-      password: "@Cu123456",
+      password: "",
     },
     validators: {
       onSubmit: loginZodSchema,

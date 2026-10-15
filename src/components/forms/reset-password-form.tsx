@@ -2,7 +2,15 @@
 
 import { useForm } from "@tanstack/react-form";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { Eye, EyeClosed, RefreshCwIcon } from "lucide-react";
+import {
+  Eye,
+  EyeClosed,
+  LockKeyholeIcon,
+  RefreshCwIcon,
+  ShieldCheckIcon,
+  LockIcon,
+  TimerIcon,
+} from "lucide-react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -27,7 +35,6 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 import { Spinner } from "../ui/spinner";
-import { Separator } from "../ui/separator";
 
 function PasswordField({
   form,
@@ -46,7 +53,9 @@ function PasswordField({
           field.state.meta.isTouched && !field.state.meta.isValid;
         return (
           <Field data-invalid={isInvalid}>
-            <FieldLabel htmlFor={name}>{label}</FieldLabel>
+            <FieldLabel htmlFor={name} className="text-[13px] font-medium">
+              {label}
+            </FieldLabel>
             <div className="relative">
               <button
                 type="button"
@@ -68,7 +77,7 @@ function PasswordField({
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="********"
                 autoComplete="new-password"
-                className="pr-10"
+                className="h-9 rounded-xl bg-background pr-10 shadow-sm"
                 required
               />
             </div>
@@ -138,7 +147,6 @@ export function ResetPasswordForm() {
 
   const form = useForm({
     defaultValues: {
-      email,
       otp: "",
       newPassword: "",
       confirmPassword: "",
@@ -149,7 +157,7 @@ export function ResetPasswordForm() {
     onSubmit: ({ value }) => {
       mutate(
         {
-          email: value.email.trim(),
+          email,
           otp: value.otp,
           newPassword: value.newPassword,
         },
@@ -168,39 +176,39 @@ export function ResetPasswordForm() {
     },
   });
 
+  const progress = Math.min(
+    100,
+    Math.max(0, (timeLeft / OTP_VALIDITY_SECONDS) * 100),
+  );
+
   return (
-    <Card className="mx-auto w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Reset password</CardTitle>
-        <CardDescription>
-          Code sent to{" "}
-          <span className="font-semibold text-foreground">{email}</span>. Enter
-          OTP + new password, then login manually.
+    <Card className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border bg-card/95 shadow-xl shadow-primary/[0.06] backdrop-blur">
+      <div
+        aria-hidden
+        className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/50"
+      />
+      <CardHeader className="items-center gap-1 pb-1 text-center">
+        <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/[0.08] text-primary ring-1 ring-primary/20 shadow-sm">
+          <LockKeyholeIcon className="size-6" strokeWidth={1.8} />
+        </span>
+        <p className=" text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Reset password
+        </p>
+        <CardDescription className="mx-auto max-w-xs text-balance text-[13px] leading-relaxed">
+          Code sent to
+          <span className="mx-auto mt-1.5 block truncate rounded-full border bg-muted/60 px-3 py-1 text-[13px] font-medium text-foreground">
+            {email}
+          </span>
         </CardDescription>
       </CardHeader>
-      <Separator/>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit();
         }}
-        className="space-y-4"
       >
-        <CardContent>
-          <FieldGroup>
-            <form.Field name="email">
-              {(field: any) => (
-                <Field>
-                  <FieldLabel>Email</FieldLabel>
-                  <Input
-                    type="email"
-                    value={field.state.value}
-                    disabled
-                    readOnly
-                  />
-                </Field>
-              )}
-            </form.Field>
+        <CardContent className="px-6 sm:px-8">
+          <FieldGroup className="gap-4">
             <form.Field name="otp">
               {(field: any) => {
                 const isInvalid =
@@ -208,15 +216,20 @@ export function ResetPasswordForm() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <div className="flex items-center justify-between">
-                      <FieldLabel>OTP code</FieldLabel>
+                      <FieldLabel className="text-[13px] font-medium">
+                        OTP code
+                      </FieldLabel>
                       <Button
                         type="button"
-                        variant="outline"
-                        size="xs"
+                        variant="ghost"
+                        size="sm"
                         disabled={isResending || timeLeft > 0}
                         onClick={handleResend}
+                        className="h-7 gap-1.5 rounded-full px-2.5 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-60"
                       >
-                        <RefreshCwIcon />
+                        <RefreshCwIcon
+                          className={`size-3.5 ${isResending ? "animate-spin" : ""}`}
+                        />
                         {isResending ? "Sending..." : "Resend Code"}
                       </Button>
                     </div>
@@ -226,14 +239,14 @@ export function ResetPasswordForm() {
                       onChange={(v) => field.handleChange(v)}
                       onBlur={field.handleBlur}
                       pattern={REGEXP_ONLY_DIGITS}
-                      containerClassName="w-full gap-2"
+                      containerClassName="w-full gap-2 sm:gap-2.5"
                     >
                       <InputOTPGroup className="flex-1 *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-full *:data-[slot=input-otp-slot]:flex-1 *:data-[slot=input-otp-slot]:text-xl">
                         <InputOTPSlot index={0} />
                         <InputOTPSlot index={1} />
                         <InputOTPSlot index={2} />
                       </InputOTPGroup>
-                      <InputOTPSeparator className="shrink-0" />
+                      <InputOTPSeparator className="shrink-0 text-muted-foreground/50" />
                       <InputOTPGroup className="flex-1 *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-full *:data-[slot=input-otp-slot]:flex-1 *:data-[slot=input-otp-slot]:text-xl">
                         <InputOTPSlot index={3} />
                         <InputOTPSlot index={4} />
@@ -243,16 +256,38 @@ export function ResetPasswordForm() {
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
-                    {timeLeft > 0 ? (
-                      <CardDescription>
-                        Code expires in {formatMinutesSecond(timeLeft)} (valid
-                        for 5 min)
-                      </CardDescription>
-                    ) : (
-                      <CardDescription className="text-destructive">
-                        Code expired — click Resend Code to get a new one.
-                      </CardDescription>
-                    )}
+                    <div className="rounded-xl border bg-muted/40 px-3.5 py-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="inline-flex items-center gap-1.5 font-medium text-muted-foreground">
+                          <TimerIcon className="size-3.5" />
+                          {timeLeft > 0 ? "Code expires in" : "Code expired"}
+                        </span>
+                        <span
+                          className={`font-semibold tabular-nums ${timeLeft > 0 ? "text-foreground" : "text-destructive"}`}
+                        >
+                          {timeLeft > 0
+                            ? `${formatMinutesSecond(timeLeft)} (5 min)`
+                            : "Expired"}
+                        </span>
+                      </div>
+                      <div
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.round(progress)}
+                        className="mt-2 h-1 overflow-hidden rounded-full bg-muted"
+                      >
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary transition-[width] duration-1000"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      {timeLeft <= 0 && (
+                        <p className="mt-2 text-xs text-destructive">
+                          Code expired — click Resend Code to get a new one.
+                        </p>
+                      )}
+                    </div>
                   </Field>
                 );
               }}
@@ -269,7 +304,7 @@ export function ResetPasswordForm() {
             />
           </FieldGroup>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex-col gap-3 border-0 bg-transparent px-6 pb-5 pt-4 sm:px-8">
           <form.Subscribe
             selector={(state) => [
               state.values.otp,
@@ -285,7 +320,8 @@ export function ResetPasswordForm() {
                 <Button
                   disabled={isPending || !isComplete || isExpired}
                   type="submit"
-                  className="w-full"
+                  size="lg"
+                  className="w-full rounded-xl bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
                 >
                   {isPending ? (
                     <>
@@ -298,6 +334,19 @@ export function ResetPasswordForm() {
               );
             }}
           </form.Subscribe>
+          <div className="flex w-full items-center justify-center gap-4 border-t pt-3 text-[11px] font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheckIcon className="size-3.5" /> Secure
+            </span>
+            <span className="size-1 rounded-full bg-border" aria-hidden />
+            <span className="inline-flex items-center gap-1.5">
+              <LockIcon className="size-3.5" /> Encrypted
+            </span>
+            <span className="size-1 rounded-full bg-border" aria-hidden />
+            <span className="inline-flex items-center gap-1.5">
+              <TimerIcon className="size-3.5" /> Auto-expires
+            </span>
+          </div>
         </CardFooter>
       </form>
     </Card>

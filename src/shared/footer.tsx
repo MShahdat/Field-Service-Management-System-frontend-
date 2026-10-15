@@ -1,50 +1,46 @@
+import { Wrench } from "lucide-react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { FaInstagramSquare, FaTwitter } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa6";
 import { IoLogoYoutube } from "react-icons/io";
-import { FaInstagramSquare } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-
-import { Wrench } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const FOOTER_LINKS = {
   company: [
-    { label: "About us", href: "/about" },
-    { label: "How it works", href: "/" },
-    { label: "Careers", href: "/" },
-    { label: "Press", href: "/" },
+    { label: "About us", href: "/about-us" },
+    { label: "How it works", href: "/#how-it-works" },
+    { label: "Careers", href: "/about-us" },
+    { label: "Press", href: "/about-us" },
   ],
   customers: [
-    { label: "Browse services", href: "/" },
-    { label: "Find technicians", href: "/technicians" },
-    { label: "Booking help", href: "/" },
-    { label: "Cancellations", href: "/" },
+    { label: "Browse services", href: "/technician" },
+    { label: "Find technicians", href: "/technician" },
+    { label: "Booking help", href: "/support" },
+    { label: "Cancellations", href: "/support" },
   ],
   technicians: [
-    { label: "Become a pro", href: "/" },
-    { label: "Technician dashboard", href: "/technicians" },
-    { label: "Payouts", href: "/" },
-    { label: "Community", href: "/" },
+    { label: "Become a pro", href: "/manager-apply" },
+    { label: "Technician dashboard", href: "/technician" },
+    { label: "Payouts", href: "/support" },
+    { label: "Community", href: "/about-us" },
   ],
 };
 
 const SOCIALS = [
-  { icon: <FaFacebookF />, href: "https://facebook.com", label: "Facebook" },
-  { icon: <IoLogoYoutube />, href: "https://instagram.com", label: "YouTube" },
+  { icon: FaFacebookF, href: "https://facebook.com", label: "Facebook" },
+  { icon: IoLogoYoutube, href: "https://youtube.com", label: "YouTube" },
   {
-    icon: <FaInstagramSquare />,
-    href: "https://twitter.com",
+    icon: FaInstagramSquare,
+    href: "https://instagram.com",
     label: "Instagram",
   },
-  { icon: <FaTwitter />, href: "https://linkedin.com", label: "Twitter" },
+  { icon: FaTwitter, href: "https://x.com", label: "X (Twitter)" },
 ];
 
 const Footer = () => {
   return (
-    <footer className="bg-background text-foreground border-t border-border">
-      <div className="h-[1px] w-full bg-primary/5 dark:bg-primary/10" />
-
+    <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto max-w-11/12 px-4 sm:px-6 py-14 sm:py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-10">
           {/* Brand */}
@@ -54,23 +50,23 @@ const Footer = () => {
               className="flex items-center gap-2 text-lg font-bold"
             >
               <Wrench className="h-5 w-5 text-primary" />
-              FSMS
+              FieldDesk
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xs">
               Connecting homeowners with trusted, verified service professionals
               since 2023.
             </p>
             <div className="mt-5 flex gap-3">
-              {SOCIALS.map(({ icon, href, label }) => (
+              {SOCIALS.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-9 w-9 flex items-center justify-center rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <div className="text-sm">{icon}</div>
+                  <Icon className="size-4" aria-hidden />
                 </a>
               ))}
             </div>
@@ -92,13 +88,21 @@ const Footer = () => {
               Tips and updates, no spam.
             </p>
           </div>
-          <form className="flex w-full max-w-sm gap-2">
+          <form
+            className="flex w-full max-w-sm gap-2"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <Input
               type="email"
+              required
+              aria-label="Email address"
               placeholder="you@email.com"
               className="h-10 bg-card border-border text-foreground placeholder:text-muted-foreground"
             />
-            <Button className="h-10 px-5 bg-primary text-primary-foreground hover:bg-primary/90 shrink-0">
+            <Button
+              type="submit"
+              className="h-10 px-5 bg-primary text-primary-foreground hover:bg-primary/90 shrink-0"
+            >
               Join
             </Button>
           </form>
@@ -106,7 +110,9 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© FSMS, Inc. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} FieldDesk, Inc. All rights reserved.
+          </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="hover:text-foreground transition-colors">
               Privacy Policy

@@ -1,4 +1,9 @@
-import { BookOpen, SquareTerminal } from "lucide-react";
+import {
+  ClipboardList,
+  CreditCard,
+  LayoutDashboard,
+  Wrench,
+} from "lucide-react";
 
 const prefix = `/manager-dashboard`;
 
@@ -6,7 +11,7 @@ export const managerRoutes = [
   {
     title: "Dashboard",
     url: "#",
-    icon: SquareTerminal,
+    icon: LayoutDashboard,
     isActive: true,
     items: [
       {
@@ -22,7 +27,7 @@ export const managerRoutes = [
   {
     title: "Service",
     url: "#",
-    icon: BookOpen,
+    icon: Wrench,
     items: [
       {
         title: "My Region Service",
@@ -41,7 +46,7 @@ export const managerRoutes = [
   {
     title: "Work Order",
     url: "#",
-    icon: BookOpen,
+    icon: ClipboardList,
     items: [
       {
         title: "Work Order",
@@ -56,7 +61,7 @@ export const managerRoutes = [
   {
     title: "Payment",
     url: "#",
-    icon: BookOpen,
+    icon: CreditCard,
     items: [
       {
         title: "Payments",

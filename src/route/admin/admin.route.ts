@@ -1,4 +1,13 @@
-import { BookOpen, Bot, SquareTerminal } from "lucide-react";
+import {
+  CreditCard,
+  LayoutDashboard,
+  MapPin,
+  MessageSquare,
+  Sparkles,
+  Tags,
+  Users,
+  Wrench,
+} from "lucide-react";
 
 const prefix = `/admin-dashboard`;
 
@@ -6,7 +15,7 @@ export const adminRoutes = [
   {
     title: "Dashboard",
     url: "#",
-    icon: SquareTerminal,
+    icon: LayoutDashboard,
     items: [
       {
         title: "Overview",
@@ -21,7 +30,7 @@ export const adminRoutes = [
   {
     title: "User Manage",
     url: "#",
-    icon: Bot,
+    icon: Users,
     items: [
       {
         title: "All Users",
@@ -36,7 +45,7 @@ export const adminRoutes = [
   {
     title: "Service Manage",
     url: "#",
-    icon: BookOpen,
+    icon: Wrench,
     items: [
       {
         title: "Services",
@@ -51,7 +60,7 @@ export const adminRoutes = [
   {
     title: "Category Manage",
     url: "#",
-    icon: Bot,
+    icon: Tags,
     items: [
       {
         title: "All Categories",
@@ -62,7 +71,7 @@ export const adminRoutes = [
   {
     title: "Region Manage",
     url: "#",
-    icon: Bot,
+    icon: MapPin,
     items: [
       {
         title: "All Regions",
@@ -73,7 +82,7 @@ export const adminRoutes = [
   {
     title: "Skill Manage",
     url: "#",
-    icon: Bot,
+    icon: Sparkles,
     items: [
       {
         title: "All Skills",
@@ -84,7 +93,7 @@ export const adminRoutes = [
   {
     title: "Payments",
     url: "#",
-    icon: Bot,
+    icon: CreditCard,
     items: [
       {
         title: "Payment",
@@ -95,7 +104,7 @@ export const adminRoutes = [
   {
     title: "Feedbacks",
     url: "#",
-    icon: Bot,
+    icon: MessageSquare,
     items: [
       {
         title: "Feedback",

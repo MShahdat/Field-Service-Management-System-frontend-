@@ -1,3 +1,5 @@
+"use client";
+
 import Footerpage from "@/shared/footer";
 import { Navbar } from "@/shared/navbar";
 

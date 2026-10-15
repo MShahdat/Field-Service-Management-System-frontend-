@@ -44,12 +44,11 @@ const GuestGuard = ({ children }: IProps) => {
   }
 
   if (isPending) {
-    // return <GlobalLoading/>;
-    return 
+    return <GlobalLoading />;
   }
 
   if (!isError && user && dashboardUrl) {
-    return null;
+    return;
   }
 
   return <>{children}</>;

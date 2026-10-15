@@ -1,7 +1,7 @@
 import GlobalLoading from "@/loading/loading";
 
 const loading = () => {
-  return <GlobalLoading/>;
+  return <GlobalLoading />;
 };
 
 export default loading;

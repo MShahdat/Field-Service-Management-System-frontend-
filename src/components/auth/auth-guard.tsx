@@ -22,7 +22,7 @@ const AuthGuards = ({ children }: { children: ReactNode }) => {
 
   if (isPending) {
     // return <GlobalLoading />;
-    return 
+    return;
   }
 
   return <>{children}</>;

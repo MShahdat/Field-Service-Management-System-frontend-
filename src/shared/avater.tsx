@@ -12,7 +12,7 @@ const ProfileAvater = ({ name, imageUrl }: Props) => {
   return (
     <Avatar className="h-9 w-9 rounded-lg">
       <AvatarImage src={imageUrl} alt={name} />
-      <AvatarFallback className="rounded-full text-black font-bold">
+      <AvatarFallback className="rounded-lg bg-sidebar-accent font-semibold text-sidebar-accent-foreground">
         {getFallbackText(name)}
       </AvatarFallback>
     </Avatar>

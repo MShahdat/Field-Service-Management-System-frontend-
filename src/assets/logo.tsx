@@ -18,7 +18,7 @@ export const Logo = () => {
         </svg>
       </span>
       <span className="text-lg lg:text-xl font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
-        FieldDesk 
+        FieldDesk
       </span>
     </Link>
   );

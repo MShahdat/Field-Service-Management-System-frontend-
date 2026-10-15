@@ -36,8 +36,8 @@ export function RegisterForm() {
     defaultValues: {
       name: "",
       email: "",
-      password: "@Cu123456",
-      confirmPassword: "@Cu123456",
+      password: "",
+      confirmPassword: "",
       role: "CUSTOMER",
     },
     validators: {
@@ -56,6 +56,12 @@ export function RegisterForm() {
       mutate(data, {
         onSuccess: (res) => {
           toast.success(res.message);
+          // Start the OTP countdown only after the OTP email was sent.
+          const roleKey = value.role.toLowerCase();
+          localStorage.setItem(
+            `otp-expiry-${roleKey}-${value.email}`,
+            (Date.now() + 5 * 60 * 1000).toString(),
+          );
           const params = new URLSearchParams({ email: value.email });
           redirect(
             `/register/email-verify?${params.toString()}&role=${value.role.toLowerCase()}`,

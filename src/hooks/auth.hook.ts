@@ -8,6 +8,7 @@ import {
   userEmailVerify,
   userLogin,
   userRegister,
+  userResendOtp,
 } from "@/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -65,6 +66,12 @@ export const useEmailVerify = () => {
         queryKey: ["user"],
       });
     },
+  });
+};
+
+export const useUserResendOtp = () => {
+  return useMutation({
+    mutationFn: userResendOtp,
   });
 };
 

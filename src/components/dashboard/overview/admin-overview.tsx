@@ -1,6 +1,4 @@
 "use client";
-import { useGetAdminStats } from "@/hooks";
-import type { AdminAnalytics, ApiResponse } from "@/types";
 import {
   Ban,
   Briefcase,
@@ -29,12 +27,19 @@ import {
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetAdminStats } from "@/hooks";
+import type { AdminAnalytics, ApiResponse } from "@/types";
 import { ChartCard } from "./chart-card";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
-import { StatCard, fmtMoney } from "./stat-card";
+import { fmtMoney, StatCard } from "./stat-card";
 
-const PIE_COLORS = ["#6366f1", "#f59e0b", "#ef4444", "#10b981"];
+const PIE_COLORS = ["#D97706", "#DC2626", "#E11D48", "#BE123C"];
+const TOOLTIP_STYLE = {
+  borderRadius: 12,
+  border: "1px solid var(--color-border)",
+  fontSize: 12,
+};
 
 export function AdminOverview() {
   const { data, isPending, isError, refetch } = useGetAdminStats();
@@ -42,20 +47,32 @@ export function AdminOverview() {
   if (isPending) return <OverviewSkeleton />;
   if (isError)
     return (
-      <Card className="m-4 md:m-6">
-        <CardContent className="flex items-center gap-3 p-6">
-          <span className="text-sm">Failed to load admin stats.</span>
-          <Button size="sm" onClick={() => refetch()}>
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="p-4 md:p-6">
+        <Card className="rounded-2xl border-dashed">
+          <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center">
+            <span className="text-sm font-medium">
+              Failed to load admin stats.
+            </span>
+            <Button
+              size="sm"
+              className="w-fit rounded-xl font-semibold"
+              onClick={() => refetch()}
+            >
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
 
   const s = (data as unknown as ApiResponse<AdminAnalytics>)?.data;
   if (!s)
     return (
-      <p className="p-6 text-sm text-muted-foreground">No stats available.</p>
+      <div className="p-4 md:p-6">
+        <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
+          <p className="text-sm text-muted-foreground">No stats available.</p>
+        </div>
+      </div>
     );
 
   const servicePie = [
@@ -83,33 +100,32 @@ export function AdminOverview() {
     : 0;
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
+    <div className="space-y-4 p-4 sm:space-y-5 md:p-6">
       <OverviewHeader
         title="Admin Overview"
         subtitle="Platform-wide users, services, work orders & revenue."
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 xl:grid-cols-4">
         <StatCard
           title="Total Revenue"
           value={fmtMoney(s.totalRevenue)}
           icon={DollarSign}
           description="Lifetime collected"
-          accent="bg-green-500/10 text-green-600"
+          accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
         />
         <StatCard
           title="This Month"
           value={fmtMoney(s.currentMonthRevenue)}
           icon={TrendingUp}
           description="Current month revenue"
-          accent="bg-blue-500/10 text-blue-600"
         />
         <StatCard
           title="Refunded"
           value={fmtMoney(s.totalRefunded)}
           icon={Undo2}
           description="Total refunded"
-          accent="bg-red-500/10 text-red-600"
+          accent="bg-red-500/10 text-red-600 ring-red-500/20"
         />
         <StatCard
           title="Work Orders"
@@ -141,7 +157,7 @@ export function AdminOverview() {
           icon={Clock}
           description={`${s.rejectedManagers} rejected`}
           href="/admin-dashboard/approve-manager"
-          accent="bg-amber-500/10 text-amber-600"
+          accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
         />
         <StatCard
           title="Total Services"
@@ -152,19 +168,19 @@ export function AdminOverview() {
           title="Pending Services"
           value={s.pendingServices}
           icon={Clock}
-          accent="bg-amber-500/10 text-amber-600"
+          accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
         />
         <StatCard
           title="Cancelled"
           value={s.cancelledServices}
           icon={Ban}
-          accent="bg-red-500/10 text-red-600"
+          accent="bg-red-500/10 text-red-600 ring-red-500/20"
         />
         <StatCard
           title="Rejected"
           value={s.rejectedServices}
           icon={Ban}
-          accent="bg-rose-500/10 text-rose-600"
+          accent="bg-rose-500/10 text-rose-600 ring-rose-500/20"
         />
       </div>
 
@@ -186,8 +202,8 @@ export function AdminOverview() {
                   <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend />
+              <Tooltip contentStyle={TOOLTIP_STYLE} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -197,33 +213,57 @@ export function AdminOverview() {
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={userBar}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="total" fill="#6366f1" radius={[6, 6, 0, 0]} />
+              <CartesianGrid
+                stroke="var(--color-border)"
+                strokeDasharray="3 3"
+              />
+              <XAxis
+                dataKey="name"
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                allowDecimals={false}
+                tick={{ fontSize: 12 }}
+                tickLine={false}
+                axisLine={false}
+              />
+              <Tooltip contentStyle={TOOLTIP_STYLE} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Bar dataKey="total" fill="#BE123C" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+      <Card className="rounded-2xl shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
+        <CardHeader className="pb-1">
+          <CardTitle className="flex items-center text-[15px] font-bold tracking-tight">
+            <span className="mr-2 inline-block h-4 w-1 shrink-0 rounded-full bg-primary" />
+            Quick Actions
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
+        <CardContent className="flex flex-wrap gap-2 pt-2">
           <Link href="/admin-dashboard/approve-manager">
-            <Button>Approve Managers ({s.pendingManagers})</Button>
+            <Button className="rounded-xl font-semibold">
+              Approve Managers ({s.pendingManagers})
+            </Button>
           </Link>
           <Link href="/admin-dashboard/user">
-            <Button variant="outline">All Users</Button>
+            <Button variant="outline" className="rounded-xl font-semibold">
+              All Users
+            </Button>
           </Link>
           <Link href="/admin-dashboard/payment">
-            <Button variant="outline">Payments</Button>
+            <Button variant="outline" className="rounded-xl font-semibold">
+              Payments
+            </Button>
           </Link>
           <Link href="/admin-dashboard/feedback">
-            <Button variant="outline">Feedback</Button>
+            <Button variant="outline" className="rounded-xl font-semibold">
+              Feedback
+            </Button>
           </Link>
         </CardContent>
       </Card>

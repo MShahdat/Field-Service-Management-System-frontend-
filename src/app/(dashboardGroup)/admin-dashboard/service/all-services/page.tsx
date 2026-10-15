@@ -1,4 +1,3 @@
-
 import ServiceLists from "@/components/module/admin/service.lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";

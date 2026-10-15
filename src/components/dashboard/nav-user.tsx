@@ -1,14 +1,21 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
   CreditCard,
+  HomeIcon,
   LogOut,
-  Sparkles,
+  Monitor,
+  Moon,
+  Palette,
+  Sun,
+  UserRound,
 } from "lucide-react";
-
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -16,7 +23,12 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -25,27 +37,24 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
-import { getFallbackText } from "@/utils";
-import ProfileAvater from "@/shared/avater";
 import { useLogout } from "@/hooks";
-import { toast } from "sonner";
-import { redirect, useRouter } from "next/navigation";
-import { ILoggedUser } from "@/types";
-import { useQueryClient } from "@tanstack/react-query";
+import ProfileAvater from "@/shared/avater";
+import type { ILoggedUser } from "@/types";
+import { getDashboardUrl, getFallbackText } from "@/utils";
 
 export function NavUser({ user }: { user: ILoggedUser }) {
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { mutate } = useLogout();
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLogout = () => {
     mutate(undefined, {
       onSuccess: (res) => {
         queryClient.removeQueries({ queryKey: ["user"] });
         toast.success(res.message);
-        router.push('/login');
+        router.push("/login");
         router.refresh();
       },
       onError: (err) => {
@@ -53,6 +62,15 @@ export function NavUser({ user }: { user: ILoggedUser }) {
       },
     });
   };
+
+  const dashboardUrl = getDashboardUrl(user.role);
+  const profileUrl = dashboardUrl ? `${dashboardUrl}/profile` : "/login";
+  const billingUrl =
+    user.role === "CUSTOMER" && dashboardUrl
+      ? `${dashboardUrl}/payment/my-payment`
+      : dashboardUrl
+        ? `${dashboardUrl}/payment`
+        : "/login";
 
   return (
     <SidebarMenu>
@@ -65,13 +83,15 @@ export function NavUser({ user }: { user: ILoggedUser }) {
             >
               <Avatar className="h-9 w-9 rounded-lg">
                 <AvatarImage src={user.profileImg} alt={user.name} />
-                <AvatarFallback className=" rounded-full text-black font-bold">
+                <AvatarFallback className="rounded-lg bg-sidebar-accent font-semibold text-sidebar-accent-foreground">
                   {getFallbackText(user.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-[16px] leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -90,25 +110,68 @@ export function NavUser({ user }: { user: ILoggedUser }) {
                 />
                 <div className="grid flex-1 text-left text-[16px] leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
+              <DropdownMenuItem asChild>
+                <Link href={profileUrl}>
+                  <UserRound />
+                  Account
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link href={billingUrl}>
+                  <CreditCard />
+                  Billing
+                </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/">
+                  <HomeIcon />
+                  Home
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Palette />
+                  <span>Theme</span>
+                  <span className="ml-auto text-xs capitalize text-muted-foreground">
+                    {theme ?? "system"}
+                  </span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuRadioGroup
+                    value={theme ?? "system"}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="light">
+                      <Sun />
+                      Light
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark">
+                      <Moon />
+                      Dark
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="system">
+                      <Monitor />
+                      System
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => handleLogout()}
-              className="text-red-700 font-semibold"
+              className="font-medium text-destructive focus:bg-destructive/10 focus:text-destructive [&_svg]:text-destructive"
             >
               <LogOut />
               <p>Log out</p>

@@ -26,7 +26,6 @@ const ServiceTable = ({ services }: Props) => {
 
   console.log("services", services);
 
-  
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -45,15 +44,14 @@ const ServiceTable = ({ services }: Props) => {
           </TableHeader>
           <TableBody>
             {services.map((service: IService, idx: number) => {
-
               return (
                 <TableRow key={service.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
-                  <TableCell>
-                    {service.title ?? "-"}
-                  </TableCell>
+                  <TableCell>{service.title ?? "-"}</TableCell>
                   <TableCell>{service.category.name ?? "-"}</TableCell>
-                  <TableCell>{formatServiceDate(service.servicingDate)}</TableCell>
+                  <TableCell>
+                    {formatServiceDate(service.servicingDate)}
+                  </TableCell>
                   <TableCell>{formatDuration(service.duration)}</TableCell>
                   <TableCell>
                     <Badge variant={statusVarient(service.priority)}>
@@ -67,18 +65,16 @@ const ServiceTable = ({ services }: Props) => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 items-center justify-end">
-                      
-                        <Button
-                          size={"sm"}
-                          onClick={() => {
-                            router.push(`${pathname}/${service.id}`);
-                          }}
-                          type="button"
-                          variant="outline"
-                        >
-                          Details
-                        </Button>
-                      
+                      <Button
+                        size={"sm"}
+                        onClick={() => {
+                          router.push(`${pathname}/${service.id}`);
+                        }}
+                        type="button"
+                        variant="outline"
+                      >
+                        Details
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

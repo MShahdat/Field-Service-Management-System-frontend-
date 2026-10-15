@@ -30,12 +30,19 @@ import { getDashboardUrl } from "@/utils";
 import { ModeToggle } from "./theme";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import GlobalLoading from "@/loading/loading";
 
 export function Navbar() {
-  const { data } = useGetMe();
+  const queryClient = useQueryClient();
+  const { data, isPending } = useGetMe();
+  const { mutate } = useLogout();
+
+  const router = useRouter();
   console.log("user", data);
-  const router = useRouter()
-  const queryClient = useQueryClient()
+
+  if (isPending) {
+    return <GlobalLoading />;
+  }
 
   const user = data?.data as ILoggedUser | undefined;
   const dashboardUrl = getDashboardUrl(user?.role);
@@ -61,17 +68,15 @@ export function Navbar() {
     ];
   }
 
-  const { mutate } = useLogout();
-
   const handleLogout = () => {
     mutate(undefined, {
       onSuccess: (res) => {
         queryClient.removeQueries({
-          queryKey: ["user"]
-        })
+          queryKey: ["user"],
+        });
         toast.success(res.message);
-        router.push('/login');
-        router.refresh()
+        router.push("/login");
+        router.refresh();
       },
       onError: (err) => {
         toast.error(err.message);
@@ -80,7 +85,7 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-[#1e0801] text-white">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-[#150804] dark:bg-[#120603] text-white">
       <div className="mx-auto flex h-16 max-w-11/12 items-center justify-between gap-4">
         <div>
           <Logo />
@@ -207,7 +212,7 @@ export function Navbar() {
           )}
         </div>
       </div>
-      <div className=" h-[2px] w-full bg-primary/40" />
+      <div className=" h-[2px] w-full bg-primary/20" />
     </header>
   );
 }

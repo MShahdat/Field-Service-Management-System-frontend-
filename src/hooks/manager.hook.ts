@@ -2,6 +2,7 @@ import {
   getManagerList,
   managerApply,
   managerEmailVerify,
+  managerResendOtp,
   managerReview,
 } from "@/api";
 import { QueryParams } from "@/types";
@@ -21,6 +22,12 @@ export const useManagerApply = () => {
 export const useMangerEmailVerify = () => {
   return useMutation({
     mutationFn: managerEmailVerify,
+  });
+};
+
+export const useManagerResendOtp = () => {
+  return useMutation({
+    mutationFn: managerResendOtp,
   });
 };
 

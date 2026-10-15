@@ -25,6 +25,8 @@ export interface ILoggedUser {
   customer: ICustomer;
   technician: ITechnician;
   manager: IManager;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IForgotPasswordPayload {

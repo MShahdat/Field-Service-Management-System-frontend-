@@ -15,10 +15,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { AttachmentCreateModal } from "@/components/module/attachment/attachment-create-modal";
+import AttachmentDeleteModal from "@/components/module/attachment/attachment-delete-modal";
+import { AttachmentEditModal } from "@/components/module/attachment/attachment-edit-modal";
+import FeedbackDeleteModal from "@/components/module/feedback/feedback-delete-modal";
+import { FeedbackModal } from "@/components/module/feedback/feedback-modal";
+import ReportDeleteModal from "@/components/module/report/report-delete-modal";
+import { ReportModal } from "@/components/module/report/report-modal";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { useGetMe } from "@/hooks";
 import ProfileAvater from "@/shared/avater";
-import type { IWorkOrder } from "@/types";
+import PaymentBtn from "@/shared/payment.btn";
+import type { IAttachment, IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import {
   CopyId,
@@ -32,16 +41,6 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import PaymentBtn from "@/shared/payment.btn";
-import { FeedbackModal } from "@/components/module/feedback/feedback-modal";
-import FeedbackDeleteModal from "@/components/module/feedback/feedback-delete-modal";
-import { ReportModal } from "@/components/module/report/report-modal";
-import ReportDeleteModal from "@/components/module/report/report-delete-modal";
-import { AttachmentCreateModal } from "@/components/module/attachment/attachment-create-modal";
-import { AttachmentEditModal } from "@/components/module/attachment/attachment-edit-modal";
-import AttachmentDeleteModal from "@/components/module/attachment/attachment-delete-modal";
-import { useGetMe } from "@/hooks";
-import type { IAttachment } from "@/types";
 
 type Props = {
   order: IWorkOrder;
@@ -96,9 +95,9 @@ const OrderDetailsView = ({
     () => [
       { key: "created", label: "Order created", at: order.createdAt },
       {
-        key: "scheduled",
-        label: "Servicing scheduled",
-        at: order.servicingDate,
+        key: "reviewed",
+        label: "Technician Assigned",
+        at: service.reviewedAt,
       },
       {
         key: "started",
@@ -135,6 +134,8 @@ const OrderDetailsView = ({
     order.status === "COMPLETED" &&
     service?.status === "COMPLETED";
 
+  // const attachmentBtn = order.status === ""
+
   return (
     <div className="space-y-4">
       <nav
@@ -152,15 +153,15 @@ const OrderDetailsView = ({
         <span className="font-medium text-foreground">Order details</span>
       </nav>
 
-      <Card className="shadow-none">
-        <CardContent className="flex flex-col gap-4 p-4 sm:p-5">
+      <Card className="overflow-hidden py-0 shadow-none">
+        <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent px-4 pt-4 pb-3.5 sm:px-5">
           <div className="flex items-start gap-3">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-muted">
-              <Wrench className="size-5 text-muted-foreground" aria-hidden />
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+              <Wrench className="size-5" aria-hidden />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg font-bold leading-tight sm:text-xl">
+                <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-xl">
                   {service?.title ?? "Service order"}
                 </h1>
                 <Badge variant={statusVarient(order.status)}>
@@ -176,7 +177,7 @@ const OrderDetailsView = ({
               </div>
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -233,7 +234,7 @@ const OrderDetailsView = ({
               {service?.description ?? "No description provided."}
             </p>
             {order.note && (
-              <p className="mt-3 rounded-xl bg-muted px-3 py-2.5 text-sm">
+              <p className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5 text-sm">
                 <span className="font-semibold">Order note: </span>
                 {order.note}
               </p>
@@ -279,7 +280,7 @@ const OrderDetailsView = ({
                   return (
                     <li
                       key={a.id}
-                      className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-sm"
+                      className="flex items-center justify-between gap-3 rounded-xl border bg-card px-3 py-2 text-sm transition-colors hover:border-primary/25"
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">
@@ -324,13 +325,10 @@ const OrderDetailsView = ({
           >
             {serviceReport ? (
               <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5">
                   <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted">
-                      <FileText
-                        className="size-5 text-muted-foreground"
-                        aria-hidden
-                      />
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+                      <FileText className="size-5" aria-hidden />
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold">

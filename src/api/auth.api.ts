@@ -45,6 +45,13 @@ export const userEmailVerify = (payload: { email: string; otp: string }) => {
   });
 };
 
+export const userResendOtp = (payload: { email: string }) => {
+  return apiClient("/auth/resend-otp", {
+    method: "POST",
+    body: payload,
+  });
+};
+
 export const forgotPassword = (payload: IForgotPasswordPayload) => {
   return apiClient("/auth/forgot-password", {
     method: "POST",

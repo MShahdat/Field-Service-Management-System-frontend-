@@ -61,13 +61,17 @@ export function SummaryCard({
   badge?: React.ReactNode;
 }) {
   return (
-    <Card className="gap-0 px-4 py-3.5 shadow-none">
-      <p className="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Icon className="size-3.5" aria-hidden />
+    <Card className="gap-0 px-4 py-3.5 shadow-none transition-colors hover:border-primary/25">
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <Icon className="size-3.5" aria-hidden />
+        </span>
         {label}
       </p>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <p className="text-sm font-semibold sm:text-base">{value}</p>
+        <p className="text-sm font-semibold tracking-tight sm:text-base">
+          {value}
+        </p>
         {badge}
       </div>
       {sub && (
@@ -254,8 +258,8 @@ export function Fact({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-        <Icon className="h-4 w-4 text-muted-foreground" />
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+        <Icon className="h-4 w-4 text-primary" />
       </div>
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>

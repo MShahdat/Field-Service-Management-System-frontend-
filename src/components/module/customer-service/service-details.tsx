@@ -22,7 +22,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +32,7 @@ import ProfileAvater from "@/shared/avater";
 import PaymentBtn from "@/shared/payment.btn";
 import type { IService } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
+import DeleteModal from "./delete-modal";
 import {
   CopyId,
   formatClock,
@@ -45,7 +45,7 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import Image from "next/image";
+import { MyServiceModal } from "./service-modal";
 
 type Photo = { url: string; type: string; description?: string };
 
@@ -56,7 +56,7 @@ const IMAGE_URL_RE = /\.(png|jpe?g|webp)(\?|#|$)/i;
 type Props = {
   service: IService;
   backHref: string;
-  label?: string
+  label?: string;
 };
 
 const ServiceDetailsView = ({ service, backHref, label }: Props) => {
@@ -186,6 +186,14 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
     (wo?.status === "STARTED" || wo?.status === "COMPLETED") &&
     wo?.payment?.status === "UNPAID";
 
+  const isEdit = service.status === "PENDING" || service.status === "REJECTED";
+
+  const isDelete =
+    service.status === "PENDING" ||
+    service.status === "CANCELLED" ||
+    service.status === "REJECTED" ||
+    service.status === "COMPLETED";
+
   return (
     <div className="w-full mx-auto">
       <nav
@@ -194,33 +202,40 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
       >
         <Link
           href={backHref}
-          className="inline-flex items-center gap-1 rounded-sm hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+          className="inline-flex items-center gap-1 rounded-sm font-medium transition-colors hover:text-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
         >
           <ArrowLeft className="size-4" aria-hidden />
           {label ?? "My Services"}
         </Link>
         <ChevronRight className="size-3.5" aria-hidden />
-        <span className="text-foreground">Service details</span>
+        <span className="font-medium text-foreground">Service details</span>
       </nav>
 
       <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border bg-muted text-xl sm:size-12">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-xl text-primary-foreground shadow-md shadow-primary/25 ring-1 ring-primary/20 sm:size-12">
             {service.category?.icon ? (
               <span aria-hidden>{service.category.icon}</span>
             ) : (
-              <Wrench className="size-5 text-muted-foreground" aria-hidden />
+              <Wrench className="size-5" aria-hidden />
             )}
           </div>
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-              <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+              <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">
                 {service.title === "" ? "Service title" : service.title}
               </h1>
-              <Badge variant={statusVarient(service.status)}>
+              <Badge
+                variant={statusVarient(service.status)}
+                className="rounded-full ring-1 ring-border"
+              >
+                <span className="size-1.5 rounded-full bg-current" />
                 {badgeText(service.status)}
               </Badge>
-              <Badge variant={statusVarient(service.priority)}>
+              <Badge
+                variant={statusVarient(service.priority)}
+                className="rounded-full ring-1 ring-border"
+              >
                 {badgeText(service.priority)} priority
               </Badge>
             </div>
@@ -241,25 +256,28 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
               rel="noreferrer"
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "flex-1 md:flex-none",
+                "flex-1 rounded-xl font-semibold shadow-sm md:flex-none",
               )}
             >
               <Download className="size-4" />
               Download report
             </a>
           )}
+          {isEdit && <MyServiceModal service={service} mode="edit" />}
+          {isDelete && (
+            <DeleteModal service={service} redirectOnDelete={backHref} />
+          )}
         </div>
       </header>
 
       {/* description */}
-      <Card className="mb-4">
-        <CardHeader className="font-semibold">Description</CardHeader>
-        <CardContent>
-          <span className="text-muted-foreground">
-            {service.description ?? ""}
-          </span>
-        </CardContent>
-      </Card>
+      <Section title="Description" className="mb-4 rounded-2xl">
+        <p className="text-sm leading-relaxed text-foreground/90">
+          {service.description?.trim()
+            ? service.description
+            : "No description provided."}
+        </p>
+      </Section>
 
       {/* Summary cards */}
       <section
@@ -295,9 +313,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
             payment ? (
               formatMoney(payment.amount)
             ) : (
-              <div className="flex items-center text-red-500 gap-1">
+              <div className="flex items-center gap-1.5 text-destructive">
                 <AlertCircle className="size-4" />
-                <p className="text-sm">No payment yet</p>
+                <p className="text-sm font-medium">No payment yet</p>
               </div>
             )
           }
@@ -317,11 +335,12 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:items-start">
         {/* LEFT */}
         <div className="flex min-w-0 flex-col gap-4">
-          <Section title="Service progress">
+          <Section title="Service progress" className="rounded-2xl">
             <Timeline events={events} />
           </Section>
 
           <Section
+            className="rounded-2xl"
             title={
               <>
                 Attachments{" "}
@@ -331,7 +350,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
               </>
             }
             action={
-              <div className="flex gap-1.5">
+              <div className="flex flex-wrap gap-1.5">
                 {(
                   ["ALL", "BEFORE_PHOTO", "AFTER_PHOTO", "SIGNATURE"] as const
                 ).map((t) => (
@@ -340,8 +359,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     size="sm"
                     variant={tab === t ? "secondary" : "outline"}
                     className={cn(
+                      "rounded-xl font-semibold",
                       tab === t &&
-                        "bg-primary text-primary-foreground hover:bg-primary/90",
+                        "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
                     )}
                     onClick={() => handleTabChange(t)}
                   >
@@ -355,9 +375,11 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
             }
           >
             {filtered.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                No {tab.toLowerCase()} photos yet.
-              </p>
+              <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-8 text-center">
+                <p className="text-sm text-muted-foreground">
+                  No {tab.toLowerCase()} photos yet.
+                </p>
+              </div>
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {preview.map((p, i) => (
@@ -366,7 +388,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     type="button"
                     onClick={() => setLightboxIndex(i)}
                     aria-label={`Open image ${i + 1} of ${filtered.length}`}
-                    className="group relative aspect-square overflow-hidden rounded-xl border bg-muted"
+                    className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted transition-all hover:border-primary/40 hover:shadow-md hover:ring-2 hover:ring-primary/20"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -375,7 +397,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                       className="size-full object-cover transition-transform group-hover:scale-105"
                       loading="lazy"
                     />
-                    <span className="absolute bottom-2 left-2 rounded-full border bg-background/90 px-2 py-0.5 text-[11px] font-medium capitalize">
+                    <span className="absolute bottom-2 left-2 rounded-full bg-primary/90 px-2 py-0.5 text-[11px] font-semibold text-primary-foreground capitalize shadow-sm">
                       {p.type.toLowerCase()}
                     </span>
                   </button>
@@ -384,9 +406,11 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                   <button
                     type="button"
                     onClick={() => setLightboxIndex(3)}
-                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border bg-muted/40 text-sm hover:bg-muted"
+                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-primary/30 bg-primary/[0.04] text-sm transition-colors hover:bg-primary/[0.08]"
                   >
-                    <span className="text-2xl font-bold">+{overflowCount}</span>
+                    <span className="text-2xl font-extrabold text-primary tabular-nums">
+                      +{overflowCount}
+                    </span>
                     <span className="inline-flex items-center gap-1 text-muted-foreground">
                       <Eye className="size-4" /> View all
                     </span>
@@ -417,10 +441,10 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                       alt={`${activePhoto.type} ${(lightboxIndex ?? 0) + 1} of ${filtered.length}`}
                       className="h-[90vh] w-full object-contain"
                     />
-                    <span className="absolute top-3 left-3 rounded-full bg-background/90 px-2.5 py-1 text-xs font-medium">
+                    <span className="absolute top-3 left-3 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground tabular-nums shadow-sm">
                       {(lightboxIndex ?? 0) + 1} / {filtered.length}
                     </span>
-                    <span className="absolute top-3 right-14 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium capitalize">
+                    <span className="absolute top-3 right-14 rounded-full bg-primary/90 px-2.5 py-1 text-[11px] font-semibold text-primary-foreground capitalize shadow-sm">
                       {activePhoto.type.toLowerCase()}
                     </span>
                     {filtered.length > 1 && (
@@ -459,6 +483,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                       download
                       className={cn(
                         buttonVariants({ variant: "outline", size: "sm" }),
+                        "rounded-xl font-semibold shadow-sm",
                       )}
                     >
                       <Download className="size-4" aria-hidden />
@@ -470,13 +495,10 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
             </Dialog>
 
             {serviceReport?.reportUrl && (
-              <div className="mt-4 flex items-center justify-between gap-3 border-t pt-4">
+              <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 p-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-xl border bg-muted">
-                    <FileText
-                      className="size-5 text-muted-foreground"
-                      aria-hidden
-                    />
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
+                    <FileText className="size-5" aria-hidden />
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">
@@ -493,6 +515,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                   rel="noreferrer"
                   className={cn(
                     buttonVariants({ variant: "outline", size: "sm" }),
+                    "shrink-0 rounded-xl font-semibold shadow-sm",
                   )}
                 >
                   <Eye className="size-4" /> View
@@ -502,9 +525,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
           </Section>
 
           {feedback && (
-            <Section>
+            <Section className="rounded-2xl border-amber-500/25 bg-amber-500/[0.04] ring-1 ring-amber-500/20">
               <div className="flex items-center gap-4">
-                <p className="text-4xl font-bold">
+                <p className="text-4xl font-extrabold tracking-tight text-foreground tabular-nums">
                   {feedback.rating?.toFixed(1)}
                 </p>
                 <div>
@@ -523,10 +546,11 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
           {payment && (
             <Section
               title="Payment"
+              className="rounded-2xl"
               action={isPayBtn && <PaymentBtn workOrderId={wo?.id} />}
             >
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-2xl font-bold">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <p className="truncate text-2xl font-extrabold tracking-tight tabular-nums">
                   {formatMoney(payment?.amount)}
                 </p>
                 {payment && (
@@ -534,7 +558,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     variant={
                       payment.status === "PAID" ? "accepted" : "requested"
                     }
+                    className="shrink-0 rounded-full ring-1 ring-border"
                   >
+                    <span className="size-1.5 rounded-full bg-current" />
                     {badgeText(payment.status)}
                   </Badge>
                 )}
@@ -555,9 +581,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
             </Section>
           )}
 
-          <Section title="People">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
+          <Section title="People" className="rounded-2xl">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">
                 <ProfileAvater
                   name={customer.user.name}
                   imageUrl={customer.user.profileImg}
@@ -570,7 +596,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">
                 <ProfileAvater
                   name={technician?.user.name ?? "-"}
                   imageUrl={technician?.user.profileImg ?? ""}
@@ -580,7 +606,12 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     <p className="truncate text-sm font-semibold">
                       {technician?.user?.name ?? "Not assigned"}
                     </p>
-                    {technician && <Badge variant="accepted">Available</Badge>}
+                    {technician && (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-500/25 dark:text-emerald-400">
+                        <span className="size-1.5 rounded-full bg-emerald-500" />
+                        Available
+                      </span>
+                    )}
                   </div>
                   {technician ? (
                     <>
@@ -602,14 +633,14 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
               </div>
 
               {manager && (
-                <div className="flex items-center justify-between gap-3 border-t pt-3">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">
+                  <div className="flex min-w-0 items-center gap-3">
                     <ProfileAvater
                       name={manager.user.name}
                       imageUrl={manager.user.profileImg}
                     />
-                    <div>
-                      <p className="text-sm font-semibold">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">
                         {manager?.user?.name ?? "-"}
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -618,7 +649,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     </div>
                   </div>
                   <ImageIcon
-                    className="size-4 text-muted-foreground"
+                    className="size-4 shrink-0 text-primary"
                     aria-hidden
                   />
                 </div>
@@ -626,7 +657,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
             </div>
           </Section>
 
-          <Section title="Service info">
+          <Section title="Service info" className="rounded-2xl">
             <InfoRow label="Region" value={region.area ?? "-"} />
             <InfoRow
               label="Work order"
@@ -635,7 +666,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                   {wo?.id ? (
                     `#${wo?.id?.slice(0, 8).toUpperCase()}`
                   ) : (
-                    <span className="text-red-500 text-sm">Not orderd</span>
+                    <span className="font-sans text-sm font-medium text-destructive">
+                      Not ordered
+                    </span>
                   )}
                 </span>
               }

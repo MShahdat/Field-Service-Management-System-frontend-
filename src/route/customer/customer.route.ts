@@ -1,4 +1,10 @@
-import { BookOpen, SquareTerminal } from "lucide-react";
+import {
+  ClipboardList,
+  CreditCard,
+  LayoutDashboard,
+  MessageSquare,
+  Wrench,
+} from "lucide-react";
 
 const prefix = `/customer-dashboard`;
 
@@ -6,7 +12,7 @@ export const customerRoutes = [
   {
     title: "Dashboard",
     url: "#",
-    icon: SquareTerminal,
+    icon: LayoutDashboard,
     isActive: true,
     items: [
       {
@@ -22,7 +28,7 @@ export const customerRoutes = [
   {
     title: "Service Management",
     url: "#",
-    icon: BookOpen,
+    icon: Wrench,
     items: [
       {
         title: "Services",
@@ -38,7 +44,7 @@ export const customerRoutes = [
   {
     title: "Order Management",
     url: "#",
-    icon: BookOpen,
+    icon: ClipboardList,
     items: [
       {
         title: "Orders",
@@ -50,7 +56,7 @@ export const customerRoutes = [
   {
     title: "Payment",
     url: "#",
-    icon: BookOpen,
+    icon: CreditCard,
     items: [
       {
         title: "My Payments",
@@ -58,4 +64,15 @@ export const customerRoutes = [
       },
     ],
   },
+  // {
+  //   title: "Feedbacks",
+  //   url: "#",
+  //   icon: MessageSquare,
+  //   items: [
+  //     {
+  //       title: "Feedback",
+  //       url: `${prefix}/feedback`,
+  //     },
+  //   ],
+  // },
 ];

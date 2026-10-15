@@ -5,8 +5,8 @@ import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
-import FeedbackTeable from "./feedback-table";
 import { Suspense } from "react";
+import FeedbackTable from "./feedback-table";
 
 const FeedbackLists = () => {
   const searchParams = useSearchParams();
@@ -34,7 +34,7 @@ const FeedbackLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <FeedbackTeable feedbacks={feedbacks} />
+        <FeedbackTable feedbacks={feedbacks} />
       </Suspense>
       <Paginations meta={data?.meta} />
     </div>
