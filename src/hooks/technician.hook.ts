@@ -1,5 +1,6 @@
-import { technicianProfileComplete } from "@/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAllTech, technicianProfileComplete } from "@/api";
+import { QueryParams } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useTechnicianProfileComplete = () => {
   const queryClient = useQueryClient();
@@ -9,6 +10,19 @@ export const useTechnicianProfileComplete = () => {
       queryClient.invalidateQueries({
         queryKey: ["user"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["all-tech"]
+      })
     },
   });
 };
+
+
+
+
+export const useGetAllTech = (params: QueryParams) => {
+  return useQuery({
+    queryKey: ['all-tech'],
+    queryFn: () => getAllTech(params)
+  })
+}

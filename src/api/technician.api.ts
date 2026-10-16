@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import { ITechnicianProfileComplete } from "@/types";
+import { ITechnicianProfileComplete, QueryParams } from "@/types";
 
 export const technicianProfileComplete = (
   payload: ITechnicianProfileComplete,
@@ -9,3 +9,12 @@ export const technicianProfileComplete = (
     body: payload,
   });
 };
+
+
+
+
+export const getAllTech = (params: QueryParams) => {
+  return apiClient('/technician/all-technicians', {
+    params
+  })
+}

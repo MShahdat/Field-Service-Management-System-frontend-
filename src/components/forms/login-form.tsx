@@ -1,27 +1,41 @@
 "use client";
 
+import { useForm } from "@tanstack/react-form";
+import {
+  Eye,
+  EyeClosed,
+  LockIcon,
+  LogInIcon,
+  MousePointerClickIcon,
+  ShieldCheckIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useLogin } from "@/hooks";
+import { getDashboardUrl } from "@/utils";
+import { loginZodSchema } from "@/validation";
+import FacebookAuth from "../auth/facebook-auth";
+import GoogleAuth from "../auth/google-auth";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
 } from "../ui/field";
-import { useForm } from "@tanstack/react-form";
 import { Input } from "../ui/input";
-import { Eye, EyeClosed } from "lucide-react";
-import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
-import Link from "next/link";
-import { useLogin } from "@/hooks";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import GoogleAuth from "../auth/google-auth";
-import FacebookAuth from "../auth/facebook-auth";
-import { loginZodSchema } from "@/validation";
-import { getDashboardUrl } from "@/utils";
 
 const LoginForm = () => {
   const [showPass, setShowPass] = useState(false);
@@ -61,106 +75,122 @@ const LoginForm = () => {
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        form.handleSubmit();
-      }}
-    >
-      <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
-          <p className="text-sm text-balance text-muted-foreground">
-            Enter your email below to login to your account
-          </p>
-        </div>
-        <form.Field name="email">
-          {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
-            const firstError = field.state.meta.errors?.[0] as unknown;
-            const errorMessage =
-              typeof firstError === "string"
-                ? firstError
-                : (firstError as { message?: string } | undefined)?.message;
-            return (
-              <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  aria-invalid={isInvalid}
-                  autoComplete="email"
-                  placeholder="example@gmail.com"
-                  required
-                />
-                {isInvalid && errorMessage && (
-                  <FieldError>{errorMessage}</FieldError>
-                )}
-              </Field>
-            );
-          }}
-        </form.Field>
-        <form.Field name="password">
-          {(field) => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
-            const firstError = field.state.meta.errors?.[0] as unknown;
-            const errorMessage =
-              typeof firstError === "string"
-                ? firstError
-                : (firstError as { message?: string } | undefined)?.message;
-            return (
-              <Field data-invalid={isInvalid}>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="ml-auto text-sm underline-offset-4 hover:underline text-foreground"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <div>
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowPass(!showPass)}
-                      aria-label={showPass ? "Hide password" : "Show password"}
-                      className="absolute top-1/2 right-4 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+    <Card className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border bg-card/95 shadow-xl shadow-primary/[0.06] backdrop-blur">
+      <div
+        aria-hidden
+        className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/50"
+      />
+      <CardHeader className="items-center gap-1 pb-1 text-center">
+        <CardTitle className="text-xl font-semibold tracking-tight">
+          Login to your account
+        </CardTitle>
+        <CardDescription className="mx-auto max-w-xs text-balance text-[13px] leading-relaxed">
+          Enter your email below to login to your account
+        </CardDescription>
+      </CardHeader>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}
+      >
+        <CardContent className="px-6 pt-2 sm:px-8">
+          <FieldGroup className="gap-4">
+            <form.Field name="email">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel
+                      htmlFor="email"
+                      className="text-[13px] font-medium"
                     >
-                      {!showPass ? (
-                        <EyeClosed className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </button>
+                      Email
+                    </FieldLabel>
                     <Input
-                      id="password"
-                      type={!showPass ? "password" : "text"}
+                      id="email"
+                      type="email"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      autoComplete="current-password"
-                      placeholder="Enter your password"
-                      className="pr-10"
+                      autoComplete="email"
+                      placeholder="example@gmail.com"
                       required
+                      className="h-9 rounded-xl bg-background shadow-sm"
                     />
-                  </div>
-                  {isInvalid && errorMessage && (
-                    <FieldError>{errorMessage}</FieldError>
-                  )}
-                </div>
-              </Field>
-            );
-          }}
-        </form.Field>
-        <Field>
-          <Button disabled={isPending} type="submit" className="w-full">
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="password">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <div className="flex items-center">
+                      <FieldLabel
+                        htmlFor="password"
+                        className="text-[13px] font-medium"
+                      >
+                        Password
+                      </FieldLabel>
+                      <Link
+                        href="/forgot-password"
+                        className="ml-auto text-sm font-medium underline-offset-4 hover:underline text-foreground"
+                      >
+                        Forgot your password?
+                      </Link>
+                    </div>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setShowPass(!showPass)}
+                        aria-label={
+                          showPass ? "Hide password" : "Show password"
+                        }
+                        className="absolute top-1/2 right-4 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {!showPass ? (
+                          <EyeClosed className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
+                      </button>
+                      <Input
+                        id="password"
+                        type={!showPass ? "password" : "text"}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                        autoComplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                        className="h-9 rounded-xl bg-background pr-10 shadow-sm"
+                      />
+                    </div>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
+          </FieldGroup>
+        </CardContent>
+        <CardFooter className="flex-col gap-3 border-0 bg-transparent px-6 pb-5 pt-3 sm:px-8">
+          <Button
+            disabled={isPending}
+            type="submit"
+            size="lg"
+            className="w-full rounded-xl bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+          >
             {isPending ? (
               <>
                 <Spinner /> Login
@@ -169,34 +199,43 @@ const LoginForm = () => {
               "Login"
             )}
           </Button>
-        </Field>
-        <FieldSeparator>Or continue with</FieldSeparator>
-
-        <div className="grid grid-cols-2 gap-2">
-          <GoogleAuth disabled={isPending} />
-          <FacebookAuth disabled={isPending} />
-        </div>
-
-        <Field>
-          <FieldDescription className="">
+          <FieldSeparator>Or continue with</FieldSeparator>
+          <div className="grid w-full grid-cols-2 gap-2">
+            <GoogleAuth disabled={isPending} />
+            <FacebookAuth disabled={isPending} />
+          </div>
+          <p className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="underline font-semibold underline-offset-4"
+              className="font-medium text-foreground underline underline-offset-4"
             >
               Sign up
-            </Link>{" "}
+            </Link>{" "} <br />
             Apply as a manager?{" "}
             <Link
               href="/manager-apply"
-              className="underline font-semibold underline-offset-4"
+              className="font-medium text-foreground underline underline-offset-4"
             >
               Apply here
             </Link>
-          </FieldDescription>
-        </Field>
-      </FieldGroup>
-    </form>
+          </p>
+          <div className="flex w-full items-center justify-center gap-4 border-t pt-3 text-[11px] font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheckIcon className="size-3.5" /> Secure
+            </span>
+            <span className="size-1 rounded-full bg-border" aria-hidden />
+            <span className="inline-flex items-center gap-1.5">
+              <LockIcon className="size-3.5" /> Encrypted
+            </span>
+            <span className="size-1 rounded-full bg-border" aria-hidden />
+            <span className="inline-flex items-center gap-1.5">
+              <MousePointerClickIcon className="size-3.5" /> 1-click demo
+            </span>
+          </div>
+        </CardFooter>
+      </form>
+    </Card>
   );
 };
 

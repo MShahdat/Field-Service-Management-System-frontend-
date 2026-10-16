@@ -1,19 +1,23 @@
 "use client";
 
-import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  LayoutDashboard,
+  BarChart3,
+  Bell,
+  Contact,
   FolderKanban,
-  User,
+  LayoutDashboard,
   LifeBuoy,
   LogOut,
   Menu,
-  Contact,
-  Bell,
+  User,
 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Logo } from "@/assets/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,15 +26,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 import { useGetMe, useLogout } from "@/hooks";
-import { Logo } from "@/assets/logo";
-import { ILoggedUser } from "@/types/auth.types";
+import GlobalLoading from "@/loading/loading";
+import type { ILoggedUser } from "@/types/auth.types";
 import { getDashboardUrl } from "@/utils";
 import { ModeToggle } from "./theme";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import GlobalLoading from "@/loading/loading";
 
 export function Navbar() {
   const queryClient = useQueryClient();
@@ -38,6 +38,7 @@ export function Navbar() {
   const { mutate } = useLogout();
 
   const router = useRouter();
+  const pathname = usePathname();
   console.log("user", data);
 
   if (isPending) {
@@ -49,7 +50,7 @@ export function Navbar() {
 
   const navLinks = [
     { label: "Home", href: "/", icon: LayoutDashboard },
-    // { label: "Technicians", href: "/technician", icon: BarChart3 },
+    { label: "Technicians", href: "/technician", icon: BarChart3 },
     ...(dashboardUrl
       ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
       : []),
@@ -59,6 +60,11 @@ export function Navbar() {
   ] as const;
 
   let userMenuItems: { label: string; href: string; icon: typeof User }[] = [];
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   if (user) {
     userMenuItems = [
@@ -93,9 +99,23 @@ export function Navbar() {
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           {navLinks.map((link) => {
             const Icon = link.icon;
+            const isActive = isActiveLink(link.href);
             return (
-              <Button key={link.href} variant="ghost" size="default" asChild>
-                <Link href={link.href}>
+              <Button
+                key={link.href}
+                variant="ghost"
+                size="default"
+                asChild
+                className={
+                  isActive
+                    ? "bg-white/10 text-white hover:bg-white/15 hover:text-white"
+                    : undefined
+                }
+              >
+                <Link
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                >
                   <Icon data-icon="inline-start" />
                   {link.label}
                 </Link>
@@ -121,9 +141,21 @@ export function Navbar() {
               <DropdownMenuGroup>
                 {navLinks.map((link) => {
                   const Icon = link.icon;
+                  const isActive = isActiveLink(link.href);
                   return (
-                    <DropdownMenuItem key={link.href} asChild>
-                      <Link href={link.href}>
+                    <DropdownMenuItem
+                      key={link.href}
+                      asChild
+                      className={
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : undefined
+                      }
+                    >
+                      <Link
+                        href={link.href}
+                        aria-current={isActive ? "page" : undefined}
+                      >
                         <Icon />
                         {link.label}
                       </Link>

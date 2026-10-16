@@ -10,6 +10,10 @@ export interface AdminAnalytics {
   rejectedServices: number;
   totalWorkOrders: number;
   totalStartedWorkOrders: number;
+  totalScheduleWorkOrders: number;
+  totalEnrouteWorkOrders: number;
+  totalCompletedWorkOrders: number;
+  totalCancelledWorkOrders: number;
   totalRevenue: string;
   totalRefunded: string;
   currentMonthRevenue: string;

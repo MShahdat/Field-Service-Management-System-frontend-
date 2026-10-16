@@ -24,17 +24,17 @@ export function StatCard({
   const inner = (
     <Card className="relative gap-2 overflow-hidden rounded-2xl shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-colors hover:border-primary/30 hover:shadow-md">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-primary/30" />
-      <CardHeader className="flex flex-row items-center justify-between pt-3 pb-0">
+      <CardHeader className="flex flex-row items-center justify-between pb-0">
         <CardTitle className="truncate text-[13px] font-semibold text-muted-foreground">
           {title}
         </CardTitle>
         <span
           className={cn(
-            "flex size-4 shrink-0 items-center justify-center rounded-lg ring-1",
+            "flex size-8 shrink-0 items-center justify-center rounded-lg ring-1",
             accent,
           )}
         >
-          <Icon className="size-4" />
+          <Icon />
         </span>
       </CardHeader>
       <CardContent className="pb-3">

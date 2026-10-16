@@ -42,7 +42,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <Providers>
             <TooltipProvider>{children}</TooltipProvider>
-            <Toaster position="top-right" richColors />
+            <Toaster
+              position="top-right"
+              richColors
+              duration={2000}
+            />
           </Providers>
         </ThemeProvider>
       </body>

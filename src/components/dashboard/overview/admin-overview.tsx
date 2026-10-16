@@ -1,22 +1,12 @@
 "use client";
-import {
-  Ban,
-  Briefcase,
-  ClipboardList,
-  Clock,
-  DollarSign,
-  TrendingUp,
-  Undo2,
-  UserCog,
-  Users,
-  Wrench,
-} from "lucide-react";
+import { ClipboardList, Clock, DollarSign, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import {
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
+  Label,
   Legend,
   Pie,
   PieChart,
@@ -29,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetAdminStats } from "@/hooks";
 import type { AdminAnalytics, ApiResponse } from "@/types";
+import { AdminRevenueChart } from "./admin-revenue-chart";
+import { AdminStatusBreakdown } from "./admin-status-breakdown";
 import { ChartCard } from "./chart-card";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
@@ -83,9 +75,9 @@ export function AdminOverview() {
       name: "Others/Active",
       value: Math.max(
         s.totalServices -
-          s.pendingServices -
-          s.cancelledServices -
-          s.rejectedServices,
+        s.pendingServices -
+        s.cancelledServices -
+        s.rejectedServices,
         0,
       ),
     },
@@ -94,6 +86,33 @@ export function AdminOverview() {
     { name: "Customers", total: s.totalCustomers },
     { name: "Managers", total: s.totalManagers },
     { name: "Technicians", total: s.totalTechnicians },
+  ];
+  const workOrderPie = [
+    {
+      name: "Scheduled",
+      value: s.totalScheduleWorkOrders,
+      fill: "var(--chart-1)",
+    },
+    {
+      name: "En Route",
+      value: s.totalEnrouteWorkOrders,
+      fill: "var(--chart-2)",
+    },
+    {
+      name: "Started",
+      value: s.totalStartedWorkOrders,
+      fill: "var(--chart-3)",
+    },
+    {
+      name: "Completed",
+      value: s.totalCompletedWorkOrders,
+      fill: "var(--chart-4)",
+    },
+    {
+      name: "Cancelled",
+      value: s.totalCancelledWorkOrders,
+      fill: "var(--chart-5)",
+    },
   ];
   const completion = s.totalWorkOrders
     ? Math.round((s.totalStartedWorkOrders / s.totalWorkOrders) * 100)
@@ -115,17 +134,10 @@ export function AdminOverview() {
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
         />
         <StatCard
-          title="This Month"
+          title="This Month Revenue"
           value={fmtMoney(s.currentMonthRevenue)}
           icon={TrendingUp}
           description="Current month revenue"
-        />
-        <StatCard
-          title="Refunded"
-          value={fmtMoney(s.totalRefunded)}
-          icon={Undo2}
-          description="Total refunded"
-          accent="bg-red-500/10 text-red-600 ring-red-500/20"
         />
         <StatCard
           title="Work Orders"
@@ -134,79 +146,44 @@ export function AdminOverview() {
           description={`${completion}% started`}
         />
         <StatCard
-          title="Customers"
-          value={s.totalCustomers}
-          icon={Users}
-          href="/admin-dashboard/user"
-        />
-        <StatCard
-          title="Managers"
-          value={s.totalManagers}
-          icon={UserCog}
-          href="/admin-dashboard/user"
-        />
-        <StatCard
-          title="Technicians"
-          value={s.totalTechnicians}
-          icon={Wrench}
-          href="/admin-dashboard/user"
-        />
-        <StatCard
-          title="Pending Managers"
-          value={s.pendingManagers}
-          icon={Clock}
-          description={`${s.rejectedManagers} rejected`}
-          href="/admin-dashboard/approve-manager"
-          accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
-        />
-        <StatCard
-          title="Total Services"
-          value={s.totalServices}
-          icon={Briefcase}
-        />
-        <StatCard
           title="Pending Services"
           value={s.pendingServices}
           icon={Clock}
+          description={`of ${s.totalServices} total services`}
           accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
-        />
-        <StatCard
-          title="Cancelled"
-          value={s.cancelledServices}
-          icon={Ban}
-          accent="bg-red-500/10 text-red-600 ring-red-500/20"
-        />
-        <StatCard
-          title="Rejected"
-          value={s.rejectedServices}
-          icon={Ban}
-          accent="bg-rose-500/10 text-rose-600 ring-rose-500/20"
         />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard
-          title="Service Status Distribution"
-          description="Where all services stand"
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={servicePie}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={100}
-                label
-              >
-                {servicePie.map((_, i) => (
-                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
+        <div className="grid grid-cols-1 gap-6">
+          <AdminRevenueChart />
+          <ChartCard
+            title="Service Status Distribution"
+            description="Where all services stand"
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={servicePie}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={100}
+                  label
+                >
+                  {servicePie.map((_, i) => (
+                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={TOOLTIP_STYLE} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+        <AdminStatusBreakdown stats={s} />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard
           title="Users by Role"
           description="Customer vs manager vs technician"
@@ -233,6 +210,58 @@ export function AdminOverview() {
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar dataKey="total" fill="#BE123C" radius={[8, 8, 0, 0]} />
             </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+        <ChartCard
+          title="Work Order Status"
+          description="All work orders by status"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={workOrderPie}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                innerRadius={60}
+                strokeWidth={5}
+              >
+                {workOrderPie.map((entry) => (
+                  <Cell key={entry.name} fill={entry.fill} />
+                ))}
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      return (
+                        <text
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                        >
+                          <tspan
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            className="fill-foreground text-3xl font-bold"
+                          >
+                            {s.totalWorkOrders.toLocaleString()}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 24}
+                            className="fill-muted-foreground"
+                          >
+                            Work orders
+                          </tspan>
+                        </text>
+                      );
+                    }
+                  }}
+                />
+              </Pie>
+              <Tooltip contentStyle={TOOLTIP_STYLE} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+            </PieChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
