@@ -24,14 +24,18 @@ export interface ManagerAnalytics {
   assignedServices: number;
   rejectedServices: number;
   completedWorkByTechnicians: number;
+  totalStartedWorkOrders: number;
+  totalEnrouteWorkOrders: number;
   totalEarnings: string;
   totalRefunded: string;
   currentMonthRevenue: string;
+
 }
 
 export interface TechnicianAnalytics {
   completedWorkOrders: number;
   startedWorkOrders: number;
+  enrouteWorkOrders: number;
   totalEarnings: string;
   totalRefunded: string;
   currentMonthRevenue: string;

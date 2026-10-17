@@ -16,7 +16,8 @@ import ProfileAvater from "@/shared/avater";
 import PaymentBtn from "@/shared/payment.btn";
 import type { IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
-import { formatClock, formatServiceDate } from "./details-util";
+import { formatClock, formatServiceDate } from "../services/details-util";
+
 
 type Props = {
   order: IWorkOrder;

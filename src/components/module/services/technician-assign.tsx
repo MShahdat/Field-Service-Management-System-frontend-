@@ -28,7 +28,7 @@ import type { ITechnician } from "@/types/technician.types";
 import { badgeText, statusVarient } from "@/utils/badge.style";
 import { formatDate, formatDuration } from "@/utils/time.format";
 import { getFallbackText } from "@/utils/fallback.avater";
-import { formatClock, getTimeRange } from "../customer-service/details-util";
+import { formatClock, getTimeRange } from "../services/details-util";
 
 type Props = {
   service: IService;

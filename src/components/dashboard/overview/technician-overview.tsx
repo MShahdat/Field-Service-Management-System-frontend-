@@ -15,9 +15,10 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   Legend,
-  RadialBar,
-  RadialBarChart,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -31,6 +32,8 @@ import { ChartCard } from "./chart-card";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
 import { fmtMoney, StatCard } from "./stat-card";
+import { TechnicianEarningsChart } from "./technician-earnings-chart";
+import { TechnicianStatusBreakdown } from "./technician-status-breakdown";
 
 const TOOLTIP_STYLE = {
   borderRadius: 12,
@@ -73,7 +76,23 @@ export function TechnicianOverview() {
       started: s.startedWorkOrders,
     },
   ];
-  const radial = [{ name: "Done", value: rate, fill: "#BE123C" }];
+  const workOrderPie = [
+    {
+      name: "Started",
+      value: s.startedWorkOrders,
+      fill: "var(--chart-3)",
+    },
+    {
+      name: "En Route",
+      value: s.enrouteWorkOrders,
+      fill: "var(--chart-2)",
+    },
+    {
+      name: "Completed",
+      value: s.completedWorkOrders,
+      fill: "var(--chart-4)",
+    },
+  ];
   const list: any[] =
     (orders.data as any)?.data?.data ?? (orders.data as any)?.data ?? [];
 
@@ -85,25 +104,7 @@ export function TechnicianOverview() {
       />
 
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 xl:grid-cols-4">
-        <StatCard
-          title="Completed Orders"
-          value={s.completedWorkOrders}
-          icon={CheckCircle2}
-          accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
-          href="/technician-dashboard/workorder/my-order"
-        />
-        <StatCard
-          title="Started Orders"
-          value={s.startedWorkOrders}
-          icon={Play}
-          href="/technician-dashboard/workorder/todays-order"
-        />
-        <StatCard
-          title="Complete Jobs"
-          value={s.completeJobs}
-          icon={Briefcase}
-        />
-        <StatCard title="Cover Regions" value={s.coverRegions} icon={MapPin} />
+
         <StatCard
           title="Avg Rating"
           value={`${s.avgRating}/5`}
@@ -131,22 +132,31 @@ export function TechnicianOverview() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
+        <TechnicianEarningsChart />
+        <TechnicianStatusBreakdown stats={s} />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard
-          title="Completion Rate"
-          description={`${rate}% of ${total} orders`}
+          title="Work Order Status"
+          description="Started vs en route vs completed"
         >
           <ResponsiveContainer width="100%" height="100%">
-            <RadialBarChart
-              innerRadius="60%"
-              outerRadius="100%"
-              data={radial}
-              startAngle={90}
-              endAngle={-270}
-            >
-              <RadialBar dataKey="value" cornerRadius={10} />
+            <PieChart>
+              <Pie
+                data={workOrderPie}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                label
+              >
+                {workOrderPie.map((entry) => (
+                  <Cell key={entry.name} fill={entry.fill} />
+                ))}
+              </Pie>
               <Tooltip contentStyle={TOOLTIP_STYLE} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-            </RadialBarChart>
+            </PieChart>
           </ResponsiveContainer>
         </ChartCard>
         <ChartCard title="Completed vs Started" description="Workload snapshot">

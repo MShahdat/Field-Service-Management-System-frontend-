@@ -4,9 +4,9 @@ import { useCustomerMyService } from "@/hooks";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { ServiceRequest } from "@/types";
 import { useSearchParams } from "next/navigation";
-import MyServiceCard from "./service-card";
 import Paginations from "@/shared/pagination";
 import { CardSkeleton } from "@/loading/card-loading";
+import MyServiceCard from "./cus-service-card";
 
 const MyServiceLists = () => {
   const searchParams = useSearchParams();

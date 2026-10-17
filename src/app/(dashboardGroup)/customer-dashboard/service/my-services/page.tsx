@@ -1,5 +1,6 @@
-import MyServiceLists from "@/components/module/customer-service/service-lists";
-import { MyServiceModal } from "@/components/module/customer-service/service-modal";
+
+import MyServiceLists from "@/components/module/services/cus-service-lists";
+import { MyServiceModal } from "@/components/module/services/cus-service-modal";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
 

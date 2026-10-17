@@ -1,4 +1,5 @@
-import OrderLists from "@/components/module/customer-service/order-lists";
+
+import OrderLists from "@/components/module/workorder/cus-order-lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
 

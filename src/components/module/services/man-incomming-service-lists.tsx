@@ -1,19 +1,24 @@
 "use client";
 
-import { useGetAllServices } from "@/hooks";
+import { useGetMyRegionService } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
-import ServiceTable from "./service.table";
+import IncomingServiceTable from "./man-incomming-service-table";
 
-const ServiceLists = () => {
+
+
+const IncomingServiceLists = () => {
   const searchParams = useSearchParams();
 
-  const params = Object.fromEntries(searchParams.entries());
+  const params = {
+    ...Object.fromEntries(searchParams.entries()),
+    status: "PENDING",
+  };
 
-  const { data, isPending } = useGetAllServices(params);
+  const { data, isPending } = useGetMyRegionService(params);
   console.log("data", data);
 
   if (isPending) {
@@ -27,8 +32,8 @@ const ServiceLists = () => {
   if (data.data.length === 0) {
     return (
       <DataNotFoundCard
-        message="Service Not found"
-        description="There was no services for this region"
+        message="No incoming service found"
+        description="There was no new services in this region"
       />
     );
   }
@@ -40,7 +45,7 @@ const ServiceLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <ServiceTable services={services} />
+        <IncomingServiceTable services={services} />
       </Suspense>
 
       <Paginations meta={data?.meta} />
@@ -48,4 +53,4 @@ const ServiceLists = () => {
   );
 };
 
-export default ServiceLists;
+export default IncomingServiceLists;

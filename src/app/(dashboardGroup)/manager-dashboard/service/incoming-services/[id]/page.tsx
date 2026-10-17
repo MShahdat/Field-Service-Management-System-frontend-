@@ -4,7 +4,7 @@ import { use } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEligibleTechnician } from "@/hooks";
 import DataNotFoundCard from "@/shared/data-not-found";
-import TechnicianAssignPage from "@/components/module/manager-service/technician-assign";
+import TechnicianAssignPage from "@/components/module/services/technician-assign";
 import type { ITechnician } from "@/types/technician.types";
 import DetailsSkeleton from "@/loading/details-loading";
 

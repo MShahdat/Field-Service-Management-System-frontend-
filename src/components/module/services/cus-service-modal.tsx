@@ -96,18 +96,18 @@ export function MyServiceModal({ service, mode = "create" }: Props) {
 
   const categoryOptions: ISelectOption[] = categories
     ? categories.map((category: ICategory) => ({
-        value: category.id,
-        label: category.name,
-      }))
+      value: category.id,
+      label: category.name,
+    }))
     : [];
 
   const regionOptions: ISelectOption[] = regions
     ? regions
-        .filter((region: IRegion) => region.area !== "All")
-        .map((region: IRegion) => ({
-          value: region.id,
-          label: region.area,
-        }))
+      .filter((region: IRegion) => region.area !== "All")
+      .map((region: IRegion) => ({
+        value: region.id,
+        label: region.area,
+      }))
     : [];
 
   const priorityOptions: { label: string; value: Priority }[] = [

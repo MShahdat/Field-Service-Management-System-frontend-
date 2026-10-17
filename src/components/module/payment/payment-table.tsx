@@ -17,7 +17,7 @@ import {
   formatDateTime,
   formatMoney,
   formatServiceDate,
-} from "../customer-service/details-util";
+} from "../services/details-util";
 import { PaymentDetails } from "./payment-modal";
 
 type Props = {

@@ -14,10 +14,7 @@ import {
 import type { Endpoint, ILoggedUser, IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import OrderStatusModal from "./order-status-update";
-import {
-  formatClock,
-  formatServiceDate,
-} from "../customer-service/details-util";
+import { formatClock, formatServiceDate } from "../services/details-util";
 
 type Props = {
   orders: IWorkOrder[];

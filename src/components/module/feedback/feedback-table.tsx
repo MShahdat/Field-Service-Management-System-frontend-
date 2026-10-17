@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { IFeedback } from "@/types";
-import { formatDateTime } from "../customer-service/details-util";
+import { formatDateTime } from "../services/details-util";
 
 type Props = {
   feedbacks: IFeedback[];

@@ -54,7 +54,7 @@ import { cn } from "@/lib/utils";
 import type { IRegion, ISkills } from "@/types";
 import type { IAvailabilityInput, ITechnician } from "@/types/technician.types";
 import { completeProfileZodSchema } from "@/validation";
-import { formatClock } from "../customer-service/details-util";
+import { formatClock } from "../services/details-util";
 import { DAY_NAMES } from "./profile-helpers";
 
 const AVAIL_TYPES = ["RECURRING", "ONE_OFF", "BLOCKED"] as const;

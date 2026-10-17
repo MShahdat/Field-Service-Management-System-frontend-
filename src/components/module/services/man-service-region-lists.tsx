@@ -1,20 +1,19 @@
 "use client";
 
-import { useGetMyRegionService, useSuspenseGetAllManagers } from "@/hooks";
+import { useGetMyRegionService } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
-import ServiceTable from "./service-table";
 import { useSearchParams } from "next/navigation";
+import ServiceTable from "./service-table";
 
 const ServiceLists = () => {
   const searchParams = useSearchParams();
-
   const params = Object.fromEntries(searchParams.entries());
 
   const { data, isPending } = useGetMyRegionService(params);
-  console.log("data", data);
+
 
   if (isPending) {
     return <GenericTableSkeleton rowCount={8} columnCount={6} />;
@@ -40,7 +39,7 @@ const ServiceLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <ServiceTable services={services} />
+        <ServiceTable services={services} role={"MANAGER"} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

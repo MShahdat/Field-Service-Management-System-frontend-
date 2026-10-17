@@ -1,8 +1,7 @@
-import IncomingServiceLists from "@/components/module/manager-service/incoming-service-lists";
-import ServiceLists from "@/components/module/manager-service/service-region-lists";
+
+import IncomingServiceLists from "@/components/module/services/man-incomming-service-lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
-import React from "react";
 
 const IncomingServicePage = () => {
   return (

@@ -9,19 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IService } from "@/types";
+import { IService, UserRole } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Props = {
   services: IService[];
+  role?: "MANAGER" | "ADMIN" | "SUPER_ADMIN"
 };
 
-const IncomingServiceTable = ({ services }: Props) => {
-  const pathname = usePathname();
+const ServiceTable = ({ services, role }: Props) => {
   const router = useRouter();
-  console.log("pathname", pathname);
+  console.log('role ', role)
 
   return (
     <div className="space-y-4">
@@ -35,11 +35,22 @@ const IncomingServiceTable = ({ services }: Props) => {
               <TableHead>Servicing Date</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Priority</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Review</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {services.map((service: IService, idx: number) => {
+              const isView =
+                service.status === "PENDING" ||
+                service.status === "APPROVED" ||
+                service.status === "ASSIGNED" ||
+                service.status === "COMPLETED" ||
+                service.status === "IN_PROGRESS";
+
+              const params = new URLSearchParams({ id: service.id })
+              const href = role === "MANAGER" ? "manager-dashboard" : "admin-dashboard"
+
               return (
                 <TableRow key={service.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
@@ -54,21 +65,24 @@ const IncomingServiceTable = ({ services }: Props) => {
                       {badgeText(service.priority)}
                     </Badge>
                   </TableCell>
+                  <TableCell>
+                    <Badge variant={statusVarient(service.status)}>
+                      {badgeText(service.status)}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 items-center justify-end">
-                      {service.status === "PENDING" && (
+                      {isView && (
                         <Button
+                          size={"sm"}
                           onClick={() => {
-                            router.push(
-                              `${pathname}/${service.workOrders?.id}`,
-                            );
-                            console.log("work id ", service.workOrders?.id);
+                            router.replace(`/${href}/service/details?${params.toString()}`);
+                            router.refresh()
                           }}
                           type="button"
-                          variant="accepted"
-                          size={"sm"}
+                          variant="outline"
                         >
-                          Assign
+                          Details
                         </Button>
                       )}
                     </div>
@@ -83,4 +97,4 @@ const IncomingServiceTable = ({ services }: Props) => {
   );
 };
 
-export default IncomingServiceTable;
+export default ServiceTable;

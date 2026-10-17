@@ -69,13 +69,15 @@ export function SummaryCard({
         {label}
       </p>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <p className="text-sm font-semibold tracking-tight sm:text-base">
+        <div className="text-sm font-semibold tracking-tight sm:text-base">
           {value}
-        </p>
+        </div>
         {badge}
       </div>
       {sub && (
-        <p className="mt-0.5 truncate text-xs text-muted-foreground">{sub}</p>
+        <div className="mt-0.5 truncate text-xs text-muted-foreground">
+          {sub}
+        </div>
       )}
     </Card>
   );

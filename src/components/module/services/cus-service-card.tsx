@@ -24,7 +24,7 @@ type Props = {
 
 const MyServiceCard = ({ service }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const params = new URLSearchParams({ id: service.id })
 
   return (
     <Card className="h-full overflow-hidden py-0 transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
@@ -144,7 +144,8 @@ const MyServiceCard = ({ service }: Props) => {
         <div className="mt-4 pt-1">
           <Button
             onClick={() => {
-              router.push(`${pathname}/${service.id}`);
+              router.replace(`/customer-dashboard/service/details?${params.toString()}`)
+              router.refresh()
             }}
             type="button"
             className="w-full"

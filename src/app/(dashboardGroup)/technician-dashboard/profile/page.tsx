@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { formatClock } from "@/components/module/customer-service/details-util";
+import { formatClock } from "@/components/module/services/details-util";
 import { ProfileAvatarUpload } from "@/components/module/profile/profile-avatar-upload";
 import {
   formatAddress,

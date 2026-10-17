@@ -32,7 +32,6 @@ import ProfileAvater from "@/shared/avater";
 import PaymentBtn from "@/shared/payment.btn";
 import type { IService } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
-import DeleteModal from "./delete-modal";
 import {
   CopyId,
   formatClock,
@@ -45,7 +44,9 @@ import {
   SummaryCard,
   Timeline,
 } from "./details-util";
-import { MyServiceModal } from "./service-modal";
+import { MyServiceModal } from "./cus-service-modal";
+import DeleteModal from "./cus-delete-modal";
+
 
 type Photo = { url: string; type: string; description?: string };
 
@@ -56,10 +57,9 @@ const IMAGE_URL_RE = /\.(png|jpe?g|webp)(\?|#|$)/i;
 type Props = {
   service: IService;
   backHref: string;
-  label?: string;
 };
 
-const ServiceDetailsView = ({ service, backHref, label }: Props) => {
+const ServiceDetailsView = ({ service, backHref }: Props) => {
   const wo = service.workOrders ?? null;
   const payment = wo?.payment ?? null;
   const schedule = wo?.schedule ?? null;
@@ -72,11 +72,9 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
 
   const [tab, setTab] = useState<GalleryTab>("ALL");
 
-  // Lightbox index into `filtered` (null = closed). Replaces old galleryOpen boolean.
+
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Images only: skip soft-deleted attachments, DOCUMENT type, and non-image urls.
-  // Upload still allows pdf/doc — they are just hidden from this gallery.
   const photos: Photo[] = useMemo(() => {
     const list: Photo[] = [];
     wo?.attachment
@@ -196,21 +194,6 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
 
   return (
     <div className="w-full mx-auto">
-      <nav
-        aria-label="Breadcrumb"
-        className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground"
-      >
-        <Link
-          href={backHref}
-          className="inline-flex items-center gap-1 rounded-sm font-medium transition-colors hover:text-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          {label ?? "My Services"}
-        </Link>
-        <ChevronRight className="size-3.5" aria-hidden />
-        <span className="font-medium text-foreground">Service details</span>
-      </nav>
-
       <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-xl text-primary-foreground shadow-md shadow-primary/25 ring-1 ring-primary/20 sm:size-12">
@@ -361,7 +344,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                     className={cn(
                       "rounded-xl font-semibold",
                       tab === t &&
-                        "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+                      "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
                     )}
                     onClick={() => handleTabChange(t)}
                   >
@@ -448,7 +431,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                       {activePhoto.type.toLowerCase()}
                     </span>
                     {filtered.length > 1 && (
-                      <>
+                      <div>
                         <Button
                           type="button"
                           size="icon"
@@ -469,7 +452,7 @@ const ServiceDetailsView = ({ service, backHref, label }: Props) => {
                         >
                           <ChevronRight className="size-5" aria-hidden />
                         </Button>
-                      </>
+                      </div>
                     )}
                   </div>
                 )}

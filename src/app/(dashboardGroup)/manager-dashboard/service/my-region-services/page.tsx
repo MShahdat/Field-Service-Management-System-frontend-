@@ -1,4 +1,5 @@
-import ServiceLists from "@/components/module/manager-service/service-region-lists";
+
+import ServiceLists from "@/components/module/services/man-service-region-lists";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
 

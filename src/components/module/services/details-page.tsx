@@ -1,20 +1,21 @@
 "use client";
 
-import { use } from "react";
+import ServiceDetailsView from "@/components/module/services/service-details";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSingleService } from "@/hooks";
 import DataNotFoundCard from "@/shared/data-not-found";
-import ServiceDetailsView from "@/components/module/customer-service/service-details";
 
-const ServiceDetailsPage = ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
-  const { id } = use(params);
+
+
+type Props = {
+  id: string,
+  backHref?: string
+}
+
+
+const ServiceDetailsPage = ({ id, backHref }: Props) => {
 
   const { data, isPending, isError } = useSingleService(id);
-  console.log("data from region service", data);
 
   if (isPending) {
     return (
@@ -49,8 +50,7 @@ const ServiceDetailsPage = ({
     <div className="w-11/12 mx-auto py-6 ">
       <ServiceDetailsView
         service={data?.data}
-        backHref="/admin-dashboard/service/all-services"
-        label="All Services"
+        backHref={backHref || "/"}
       />
     </div>
   );

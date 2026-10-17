@@ -1,10 +1,10 @@
 "use client";
 
 import { use } from "react";
-import OrderDetailsView from "@/components/module/customer-service/order-details";
 import { useSingleOrder } from "@/hooks";
 import DataNotFoundCard from "@/shared/data-not-found";
 import DetailsSkeleton from "@/loading/details-loading";
+import OrderDetailsView from "@/components/module/workorder/order-details";
 
 const OrderDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);

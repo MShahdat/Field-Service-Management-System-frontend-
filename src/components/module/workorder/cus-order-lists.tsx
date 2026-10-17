@@ -5,8 +5,8 @@ import { CardSkeleton } from "@/loading/card-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
-import OrderCard from "./order-card";
 import { IWorkOrder } from "@/types";
+import OrderCard from "./cus-order-card";
 
 const OrderLists = () => {
   const searchParams = useSearchParams();
@@ -29,7 +29,7 @@ const OrderLists = () => {
   if (!data?.success || data?.data.length === 0) {
     return (
       <DataNotFoundCard
-        message="order not found"
+        message="Order Not Found"
         description="You have not order yet!"
       />
     );

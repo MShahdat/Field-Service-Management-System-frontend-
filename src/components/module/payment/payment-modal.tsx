@@ -19,13 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import type { IPayment } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
-import {
-  CopyId,
-  formatDateTime,
-  formatMoney,
-  formatServiceDate,
-  InfoRow,
-} from "../customer-service/details-util";
+import { CopyId, formatDateTime, formatMoney, formatServiceDate, InfoRow } from "../services/details-util";
 
 export function PaymentDetails({ payment }: { payment: IPayment }) {
   const workOrder = payment.workOrder;

@@ -29,18 +29,8 @@ import ProfileAvater from "@/shared/avater";
 import PaymentBtn from "@/shared/payment.btn";
 import type { IAttachment, IWorkOrder } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
-import {
-  CopyId,
-  formatClock,
-  formatDateTime,
-  formatMoney,
-  formatServiceDate,
-  InfoRow,
-  Section,
-  Stars,
-  SummaryCard,
-  Timeline,
-} from "./details-util";
+import { CopyId, formatClock, formatDateTime, formatMoney, formatServiceDate, InfoRow, Section, Stars, SummaryCard, Timeline } from "../services/details-util";
+
 
 type Props = {
   order: IWorkOrder;
