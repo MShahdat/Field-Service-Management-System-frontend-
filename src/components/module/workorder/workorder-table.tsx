@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Endpoint, ILoggedUser, IWorkOrder } from "@/types";
+import type { Endpoint, ILoggedUser, IWorkOrder, UserRole } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import OrderStatusModal from "./order-status-update";
 import { formatClock, formatServiceDate } from "../services/details-util";
@@ -20,9 +20,10 @@ type Props = {
   orders: IWorkOrder[];
   user: ILoggedUser;
   endpoint: Endpoint;
+  route: string
 };
 
-const WorkorderTable = ({ orders, user, endpoint }: Props) => {
+const WorkorderTable = ({ orders, user, endpoint, route }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -57,6 +58,10 @@ const WorkorderTable = ({ orders, user, endpoint }: Props) => {
                 order.service.address.city +
                 "-" +
                 order.service.address.postalCode;
+
+              const role = user.role
+
+              const params = new URLSearchParams({ id: order.id })
               return (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
@@ -101,7 +106,8 @@ const WorkorderTable = ({ orders, user, endpoint }: Props) => {
                       variant={"outline"}
                       size={"sm"}
                       onClick={() => {
-                        router.push(`${pathname}/${order.id}`);
+                        router.replace(`${route}/details?${params.toString()}`)
+                        router.refresh()
                       }}
                     >
                       Details

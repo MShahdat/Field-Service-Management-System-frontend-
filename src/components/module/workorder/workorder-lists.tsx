@@ -4,14 +4,15 @@ import { useGetMe, useMyOrder } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import WorkorderTable from "./workorder-table";
-import { Endpoint } from "@/types";
+
 
 const WorkorderLists = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
+  const pathname = usePathname()
 
   const { data: me, isPending: mePending } = useGetMe();
   const { data: orderData, isPending: orderPending } = useMyOrder(params);
@@ -40,7 +41,7 @@ const WorkorderLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <WorkorderTable orders={orders} user={user} endpoint="all" />
+        <WorkorderTable orders={orders} user={user} endpoint="all" route={pathname} />
       </Suspense>
 
       <Paginations meta={orderData?.meta} />

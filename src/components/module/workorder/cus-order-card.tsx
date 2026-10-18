@@ -21,12 +21,14 @@ import { formatClock, formatServiceDate } from "../services/details-util";
 
 type Props = {
   order: IWorkOrder;
+  route: string
 };
 
-const OrderCard = ({ order }: Props) => {
+const OrderCard = ({ order, route }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const params = new URLSearchParams({ id: order.id });
   const technician = order.technician;
+
 
   // console.log('order feedback', order.feedback)
 
@@ -148,7 +150,9 @@ const OrderCard = ({ order }: Props) => {
           <Button
             type="button"
             className={"flex-1"}
-            onClick={() => router.push(`${pathname}/${order.id}`)}
+            onClick={() => {
+              router.replace(`${route}/details?${params.toString()}`)
+            }}
           >
             View details
             <ArrowRight className="size-4" aria-hidden />

@@ -12,16 +12,17 @@ import {
 import { IService } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
   services: IService[];
+  route: string
 };
 
-const IncomingServiceTable = ({ services }: Props) => {
-  const pathname = usePathname();
+const IncomingServiceTable = ({ services, route }: Props) => {
   const router = useRouter();
-  console.log("pathname", pathname);
+
+  console.log('incomming services by manager', services)
 
   return (
     <div className="space-y-4">
@@ -40,6 +41,8 @@ const IncomingServiceTable = ({ services }: Props) => {
           </TableHeader>
           <TableBody>
             {services.map((service: IService, idx: number) => {
+              const params = new URLSearchParams({ id: service.workOrders?.id as string })
+
               return (
                 <TableRow key={service.id}>
                   <TableCell className="font-medium">{idx + 1}</TableCell>
@@ -59,10 +62,8 @@ const IncomingServiceTable = ({ services }: Props) => {
                       {service.status === "PENDING" && (
                         <Button
                           onClick={() => {
-                            router.push(
-                              `${pathname}/${service.workOrders?.id}`,
-                            );
-                            console.log("work id ", service.workOrders?.id);
+                            router.replace(`${route}/assign?${params.toString()}`)
+                            router.refresh()
                           }}
                           type="button"
                           variant="accepted"

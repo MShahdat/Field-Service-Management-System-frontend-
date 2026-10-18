@@ -4,13 +4,14 @@ import { useGetMe, useMyOrder, useTodaysOrder } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import WorkorderTable from "./workorder-table";
 
 const TodayOrderLists = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
+  const pathname = usePathname()
 
   const { data, isPending } = useTodaysOrder(params);
   const { data: me, isPending: mePending } = useGetMe();
@@ -39,7 +40,11 @@ const TodayOrderLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <WorkorderTable orders={orders} endpoint="today" user={user} />
+        <WorkorderTable
+          orders={orders}
+          endpoint="today"
+          user={user}
+          route={pathname} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

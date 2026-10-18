@@ -4,13 +4,14 @@ import { useMyOrder } from "@/hooks";
 import { CardSkeleton } from "@/loading/card-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { IWorkOrder } from "@/types";
 import OrderCard from "./cus-order-card";
 
 const OrderLists = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
+  const pathname = usePathname()
 
   const { data, isPending } = useMyOrder(params);
 
@@ -42,7 +43,7 @@ const OrderLists = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {orders.map((order: IWorkOrder) => (
           <div key={order.id}>
-            <OrderCard order={order} />
+            <OrderCard order={order} route={pathname} />
           </div>
         ))}
       </div>

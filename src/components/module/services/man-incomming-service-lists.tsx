@@ -5,13 +5,14 @@ import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import IncomingServiceTable from "./man-incomming-service-table";
 
 
 
 const IncomingServiceLists = () => {
   const searchParams = useSearchParams();
+  const pathname = usePathname()
 
   const params = {
     ...Object.fromEntries(searchParams.entries()),
@@ -19,7 +20,6 @@ const IncomingServiceLists = () => {
   };
 
   const { data, isPending } = useGetMyRegionService(params);
-  console.log("data", data);
 
   if (isPending) {
     return <GenericTableSkeleton rowCount={8} columnCount={6} />;
@@ -45,7 +45,7 @@ const IncomingServiceLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <IncomingServiceTable services={services} />
+        <IncomingServiceTable services={services} route={pathname} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

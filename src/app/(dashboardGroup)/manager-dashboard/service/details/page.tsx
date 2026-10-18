@@ -3,7 +3,7 @@
 
 import ServiceDetailsView from "@/components/module/services/service-details";
 import { useSingleService } from "@/hooks";
-import DetailsLoading from "@/loading/details-lodading";
+import DetailsSkeleton from "@/loading/details-loading";
 import Breadcrumb from "@/shared/breadcrumb";
 import DataNotFoundCard from "@/shared/data-not-found";
 import { useSearchParams } from "next/navigation";
@@ -18,7 +18,7 @@ const DetailsPage = () => {
   const backHref = `/manager-dashboard/service/my-region-services`;
 
   if (isPending) {
-    return <DetailsLoading />
+    return <DetailsSkeleton />
   }
 
   if (!data.success) {

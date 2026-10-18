@@ -34,15 +34,11 @@ import { CopyId, formatClock, formatDateTime, formatMoney, formatServiceDate, In
 
 type Props = {
   order: IWorkOrder;
-  backHref: string;
-  label: string;
   showFeedbackActions?: boolean;
 };
 
 const OrderDetailsView = ({
   order,
-  backHref,
-  label,
   showFeedbackActions = false,
 }: Props) => {
   const service = order.service;
@@ -64,16 +60,14 @@ const OrderDetailsView = ({
     order.status === "COMPLETED" && service?.status === "COMPLETED";
   const canManageReport = isTechnician && isCompleted;
 
-  // CREATE needs workOrder authorization: own customer / own technician of this order.
+
   const isOwnCustomer =
     myRole === "CUSTOMER" && !!myId && customer?.userId === myId;
   const isOwnTechnician =
     myRole === "TECHNICIAN" && !!myId && technician?.userId === myId;
   const canAddAttachment = Boolean(myId) && (isOwnCustomer || isOwnTechnician);
 
-  // UPDATE/DELETE needs attachment-own authorization.
-  // If backend returns an owner field (uploadedById/customerId/technicianId),
-  // only the uploader can manage. Otherwise falls back to workOrder ownership.
+
   const canManageAttachment = (a: IAttachment) => {
     if (!canAddAttachment || !myId) return false;
     const ownerId = a.uploadedById ?? a.customerId ?? a.technicianId ?? null;
@@ -124,25 +118,9 @@ const OrderDetailsView = ({
     order.status === "COMPLETED" &&
     service?.status === "COMPLETED";
 
-  // const attachmentBtn = order.status === ""
 
   return (
     <div className="space-y-4">
-      <nav
-        aria-label="Breadcrumb"
-        className="flex items-center gap-1.5 text-sm text-muted-foreground"
-      >
-        <Link
-          href={backHref}
-          className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="size-3.5" aria-hidden />
-          {label}
-        </Link>
-        <ChevronRight className="size-3.5" aria-hidden />
-        <span className="font-medium text-foreground">Order details</span>
-      </nav>
-
       <Card className="overflow-hidden py-0 shadow-none">
         <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent px-4 pt-4 pb-3.5 sm:px-5">
           <div className="flex items-start gap-3">

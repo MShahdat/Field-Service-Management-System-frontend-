@@ -1,46 +1,49 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, Zap } from "lucide-react";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { useAssignTechnician } from "@/hooks";
-import type { IService } from "@/types/service.type";
-import type { ITechnician } from "@/types/technician.types";
-import { badgeText, statusVarient } from "@/utils/badge.style";
-import { formatDate, formatDuration } from "@/utils/time.format";
-import { getFallbackText } from "@/utils/fallback.avater";
-import { formatClock, getTimeRange } from "../services/details-util";
+import { badgeText } from "@/utils/badge.style";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  service: IService;
-  eligibleTech: ITechnician[];
   workOrderId: string;
 };
 
-export default function TechnicianAssignPage({
-  service,
-  eligibleTech,
-  workOrderId,
-}: Props) {
+export default function TechnicianAssignPage({ workOrderId }: Props) {
+
+  const { data, isPending, isError } = useEligibleTechnician(id);
+  console.log('assign data', data)
+
+  if (isPending) {
+    return <DetailsSkeleton />;
+  }
+
+  if (isError || !data?.data) {
+    return (
+      <div className="w-11/12 mx-auto py-6">
+        <DataNotFoundCard
+          message="Service not found"
+          description="This service may have been deleted or you don't have access."
+        />
+      </div>
+    );
+  }
+
+  const raw = (data?.data as { eligibleTech?: unknown })?.eligibleTech;
+  const eligibleTech = (Array.isArray(raw) ? raw : []) as ITechnician[];
+
+  if (Array.isArray(data?.data) || !data?.data.service) {
+    return (
+      <div className="w-11/12 mx-auto py-6">
+        <DataNotFoundCard
+          message="No eligible technicians"
+          description="No technicians match this work order right now."
+        />
+      </div>
+    );
+  }
+
+
   const router = useRouter();
   const techs = Array.isArray(eligibleTech) ? eligibleTech : [];
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -50,7 +53,6 @@ export default function TechnicianAssignPage({
   const { mutateAsync, isPending } = useAssignTechnician();
 
   const selected = techs.find((t) => t.id === selectedId) ?? null;
-  const shortId = service.id.slice(0, 8).toUpperCase();
 
   async function onAssign() {
     if (!selectedId) {
@@ -107,68 +109,6 @@ export default function TechnicianAssignPage({
 
   return (
     <div className="space-y-5">
-      <Link
-        href="/manager-dashboard/service/incoming-services"
-        className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-      >
-        <ArrowLeft className="size-4" />
-        Back to service requests
-      </Link>
-
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-xl font-bold sm:text-2xl">
-          Service request #{shortId}
-        </h1>
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <span>Created {formatDate(service.createdAt)}</span>
-          <Badge variant={statusVarient(service.status)}>
-            <span className="size-1 rounded-full bg-current" />
-            {badgeText(service.status)}
-          </Badge>
-        </div>
-      </div>
-
-      <Card>
-        <CardContent className="space-y-3 p-4 sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Service request
-          </p>
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-muted">
-                <Zap className="size-4 text-primary" />
-              </span>
-              <h2 className="text-lg font-semibold">
-                {service.category?.name ?? service.title}
-              </h2>
-            </div>
-            <Badge variant={statusVarient(service.priority)}>
-              {badgeText(service.priority)} priority
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">{service.description}</p>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {[
-              ["Date", formatDate(service.servicingDate)],
-              ["Duration", formatDuration(service.duration)],
-              [
-                "Time",
-                `${formatClock(service.preferredStartTime)} - ${formatClock(service.preferredEndTime)}`,
-              ],
-              [
-                "Location",
-                `${service.address?.street ?? "-"}, ${service.address?.city ?? ""} ${service.address?.postalCode ?? ""}`,
-              ],
-            ].map(([l, v]) => (
-              <div key={l} className="rounded-lg bg-muted p-3">
-                <p className="text-xs uppercase text-muted-foreground">{l}</p>
-                <p className="truncate text-sm font-semibold">{v}</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="flex items-end justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
