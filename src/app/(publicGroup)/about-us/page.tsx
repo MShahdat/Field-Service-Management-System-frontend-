@@ -1,16 +1,22 @@
-import { BadgeCheck, MapPin, ShieldCheck } from "lucide-react";
+"use client";
+
+import {
+  ArrowRight,
+  BadgeCheck,
+  Home,
+  MapPin,
+  ShieldCheck,
+  UsersRound,
+  Wrench,
+} from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useGetPublicStats } from "@/hooks";
+import GlobalLoading from "@/loading/loading";
 import HowWhy from "@/shared/how-why";
-
-const stats = [
-  { label: "Vetted technicians", value: "1,200+" },
-  { label: "Service categories", value: "40+" },
-  { label: "Cities covered", value: "18" },
-  { label: "Avg. rating", value: "4.8/5" },
-];
+import type { PublicAnalytics } from "@/types";
 
 const pillars = [
   {
@@ -32,16 +38,19 @@ const pillars = [
 
 const audiences = [
   {
+    icon: Home,
     title: "Homeowners",
     body: "Book in minutes, track in real time, and pay securely once the job is done — with job-linked reviews you can trust.",
     cta: { label: "Find a technician", href: "/technician" },
   },
   {
+    icon: Wrench,
     title: "Technicians",
     body: "A steady stream of local jobs, clear weekly availability, and payouts released when customers mark work complete.",
     cta: { label: "Join as a pro", href: "/register" },
   },
   {
+    icon: UsersRound,
     title: "Managers",
     body: "Region oversight, technician assignment, and service quality control — with a verification pipeline for every new manager.",
     cta: { label: "Apply as manager", href: "/manager-apply" },
@@ -60,6 +69,26 @@ function Eyebrow({ children }: { children: ReactNode }) {
 }
 
 export default function AboutPage() {
+  const { data, isPending } = useGetPublicStats();
+
+  if (isPending) {
+    return <GlobalLoading />;
+  }
+
+  const analytics: PublicAnalytics = data?.data;
+
+  const avgRating = Number(analytics.totalAvgRating);
+
+  const stats = [
+    {
+      label: "Verified technicians",
+      value: `${analytics.totalCompletedServices ?? 0}`,
+    },
+    { label: "Service categories", value: `${analytics.totalCategory ?? 0}` },
+    { label: "Cities covered", value: `${analytics.totalRegion ?? 0}` },
+    { label: "Avg. rating", value: `${avgRating.toFixed(2) ?? "0.00"}/5` },
+  ];
+
   return (
     <div className="bg-background text-foreground">
       {/* Hero */}
@@ -120,17 +149,30 @@ export default function AboutPage() {
           {pillars.map((p) => (
             <li
               key={p.title}
-              className="rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-md sm:p-7"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg sm:p-7"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+              <span
+                aria-hidden
+                className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+              />
+              <p.icon
+                aria-hidden
+                strokeWidth={1.25}
+                className="pointer-events-none absolute -right-5 -bottom-5 h-28 w-28 text-primary/5 dark:text-primary/20 transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-colors duration-300 group-hover:bg-primary">
                 <p.icon
-                  className="h-5 w-5 text-primary"
+                  className="h-5 w-5 text-primary transition-colors duration-300 group-hover:text-primary-foreground"
                   strokeWidth={2}
                   aria-hidden
                 />
               </div>
-              <h3 className="mt-5 font-semibold">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <h3 className="relative mt-5 font-semibold">{p.title}</h3>
+              <span
+                aria-hidden
+                className="relative mt-3 block h-px w-8 bg-primary/30 transition-all duration-300 group-hover:w-14 group-hover:bg-primary/60"
+              />
+              <p className="relative mt-3 text-sm leading-relaxed text-muted-foreground">
                 {p.body}
               </p>
             </li>
@@ -152,19 +194,29 @@ export default function AboutPage() {
           {audiences.map((a) => (
             <div
               key={a.title}
-              className="flex flex-col rounded-2xl border border-border bg-card p-6 sm:p-7"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
             >
-              <h3 className="font-semibold">{a.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                {a.body}
-              </p>
-              <Button
-                variant="link"
-                className="mt-4 h-auto p-0 justify-start text-primary"
-                asChild
-              >
-                <Link href={a.cta.href}>{a.cta.label} →</Link>
-              </Button>
+              <div className="flex items-center gap-3 border-b border-border bg-secondary/50 px-6 py-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary dark:bg-primary/20">
+                  <a.icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                </span>
+                <h3 className="font-semibold">{a.title}</h3>
+              </div>
+              <div className="flex flex-1 flex-col px-6 py-5">
+                <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {a.body}
+                </p>
+                <Link
+                  href={a.cta.href}
+                  className="mt-5 inline-flex w-fit items-center gap-1.5 rounded-sm text-sm font-medium text-primary outline-none transition-colors hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  {a.cta.label}
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
+                </Link>
+              </div>
             </div>
           ))}
         </div>

@@ -14,7 +14,13 @@ export interface TimelineEvent {
   detail?: string;
 }
 
-export function CopyId({ value }: { value: string }) {
+export function CopyId({
+  value,
+  label = "Copy service ID",
+}: {
+  value: string;
+  label?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -34,7 +40,7 @@ export function CopyId({ value }: { value: string }) {
       <button
         type="button"
         onClick={copy}
-        aria-label="Copy service ID"
+        aria-label={label}
         className="inline-flex items-center rounded-sm transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
       >
         {copied ? (

@@ -18,7 +18,6 @@ import {
   Wallet,
   Wrench,
 } from "lucide-react";
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -30,7 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import ProfileAvater from "@/shared/avater";
 import PaymentBtn from "@/shared/payment.btn";
-import type { IService } from "@/types";
+import type { ILoggedUser, IService, UserRole } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import {
   CopyId,
@@ -57,9 +56,10 @@ const IMAGE_URL_RE = /\.(png|jpe?g|webp)(\?|#|$)/i;
 type Props = {
   service: IService;
   backHref: string;
+  role?: UserRole
 };
 
-const ServiceDetailsView = ({ service, backHref }: Props) => {
+const ServiceDetailsView = ({ service, backHref, role }: Props) => {
   const wo = service.workOrders ?? null;
   const payment = wo?.payment ?? null;
   const schedule = wo?.schedule ?? null;
@@ -72,6 +72,7 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
 
   const [tab, setTab] = useState<GalleryTab>("ALL");
 
+  console.log('role......', role)
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -118,7 +119,6 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
     setLightboxIndex(null);
   };
 
-  // Keyboard navigation while lightbox is open.
   useEffect(() => {
     if (lightboxIndex === null) return;
     const onKey = (e: KeyboardEvent) => {
@@ -246,8 +246,8 @@ const ServiceDetailsView = ({ service, backHref }: Props) => {
               Download report
             </a>
           )}
-          {isEdit && <MyServiceModal service={service} mode="edit" />}
-          {isDelete && (
+          {(isEdit && role === "CUSTOMER") && <MyServiceModal service={service} mode="edit" />}
+          {(isDelete && role === "CUSTOMER") && (
             <DeleteModal service={service} redirectOnDelete={backHref} />
           )}
         </div>

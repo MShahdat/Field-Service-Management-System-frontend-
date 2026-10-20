@@ -20,9 +20,10 @@ import { formatClock, formatServiceDate } from "./details-util";
 
 type Props = {
   service: ServiceRequest;
+  route: string
 };
 
-const MyServiceCard = ({ service }: Props) => {
+const MyServiceCard = ({ service, route }: Props) => {
   const router = useRouter();
   const params = new URLSearchParams({ id: service.id })
 
@@ -144,7 +145,7 @@ const MyServiceCard = ({ service }: Props) => {
         <div className="mt-4 pt-1">
           <Button
             onClick={() => {
-              router.replace(`/customer-dashboard/service/details?${params.toString()}`)
+              router.replace(`${route}/details?${params.toString()}`)
               router.refresh()
             }}
             type="button"

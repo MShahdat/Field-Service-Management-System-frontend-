@@ -4,53 +4,44 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { badgeText } from "@/utils/badge.style";
 import { useRouter } from "next/navigation";
+import { useAssignTechnician, useEligibleTechnician } from "@/hooks";
+import { ITechnician } from "@/types";
+import DataNotFoundCard from "@/shared/data-not-found";
+import { useState } from "react";
+import { toast } from "sonner";
+import DetailsSkeleton from "@/loading/details-loading";
+import { cn } from "cn";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getFallbackText } from "@/utils";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   workOrderId: string;
 };
 
 export default function TechnicianAssignPage({ workOrderId }: Props) {
-
-  const { data, isPending, isError } = useEligibleTechnician(id);
-  console.log('assign data', data)
-
-  if (isPending) {
-    return <DetailsSkeleton />;
-  }
-
-  if (isError || !data?.data) {
-    return (
-      <div className="w-11/12 mx-auto py-6">
-        <DataNotFoundCard
-          message="Service not found"
-          description="This service may have been deleted or you don't have access."
-        />
-      </div>
-    );
-  }
-
-  const raw = (data?.data as { eligibleTech?: unknown })?.eligibleTech;
-  const eligibleTech = (Array.isArray(raw) ? raw : []) as ITechnician[];
-
-  if (Array.isArray(data?.data) || !data?.data.service) {
-    return (
-      <div className="w-11/12 mx-auto py-6">
-        <DataNotFoundCard
-          message="No eligible technicians"
-          description="No technicians match this work order right now."
-        />
-      </div>
-    );
-  }
-
-
   const router = useRouter();
-  const techs = Array.isArray(eligibleTech) ? eligibleTech : [];
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
   const [reason, setReason] = useState("");
+
+
+  const { data, isPending: eligiblePending } = useEligibleTechnician(workOrderId);
+  console.log('assign data', data)
   const { mutateAsync, isPending } = useAssignTechnician();
+
+  if (eligiblePending) {
+    return <DetailsSkeleton />
+  }
+
+  const techs: ITechnician[] = data?.data?.eligibleTech ?? []
 
   const selected = techs.find((t) => t.id === selectedId) ?? null;
 
@@ -87,7 +78,6 @@ export default function TechnicianAssignPage({ workOrderId }: Props) {
       return;
     }
     try {
-      // REJECTED branch ignores technicianId/amount on backend, placeholders satisfy TS
       const res = await mutateAsync({
         workOrderId,
         technicianId: selectedId ?? techs[0]?.id ?? "",

@@ -2,11 +2,11 @@
 
 
 import ServiceDetailsView from "@/components/module/services/service-details";
-import { useSingleService } from "@/hooks";
+import { useGetMe, useSingleService } from "@/hooks";
 import DetailsSkeleton from "@/loading/details-loading";
 import Breadcrumb from "@/shared/breadcrumb";
 import DataNotFoundCard from "@/shared/data-not-found";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 
 const DetailsPage = () => {
@@ -14,8 +14,9 @@ const DetailsPage = () => {
   const id = params.get('id')
 
   const { data, isPending } = useSingleService(id as string)
+  const { data: me } = useGetMe()
 
-  const backHref = `/customer-dashboard/service/my-services`;
+  const backHref = `/customer-dashboard/service/todays-services`;
 
   if (isPending) {
     return <DetailsSkeleton />
@@ -38,12 +39,13 @@ const DetailsPage = () => {
     <div className="w-11/12 mx-auto py-6">
       <Breadcrumb
         backHref={backHref}
-        back="My Services"
+        back="Todays Services"
         current="Service Details"
       />
       <ServiceDetailsView
         service={data?.data}
         backHref={backHref}
+        role={me?.data.role}
       />
     </div>
   );

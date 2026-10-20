@@ -77,10 +77,14 @@ const OrderDetailsView = ({
 
   const events = useMemo(
     () => [
-      { key: "created", label: "Order created", at: order.createdAt },
+      {
+        key: "created",
+        label: "Order created",
+        at: order.createdAt
+      },
       {
         key: "reviewed",
-        label: "Technician Assigned",
+        label: (order.status === "CANCELLED" && service.status === "REJECTED") ? "Order Cancelled" : "Technician Assigned",
         at: service.reviewedAt,
       },
       {

@@ -1,20 +1,24 @@
 import apiClient from "@/lib/apiClient";
-import { ITechnicianProfileComplete, QueryParams } from "@/types";
+import type {
+  ApiResponse,
+  ITechnicianDetail,
+  ITechnicianProfileComplete,
+  ITechnicianPublic,
+  QueryParams,
+} from "@/types";
 
 export const technicianProfileComplete = (
   payload: ITechnicianProfileComplete,
-) => {
-  return apiClient("/technician/me/profile", {
+) =>
+  apiClient("/technician/me/profile", {
     method: "PUT",
     body: payload,
   });
-};
 
+export const getAllTech = (params: QueryParams) =>
+  apiClient<ApiResponse<ITechnicianPublic[]>>("/technician/all-technicians", {
+    params,
+  });
 
-
-
-export const getAllTech = (params: QueryParams) => {
-  return apiClient('/technician/all-technicians', {
-    params
-  })
-}
+export const getTechnicianById = (id: string) =>
+  apiClient<ApiResponse<ITechnicianDetail>>(`/technician/${id}`);

@@ -1,12 +1,12 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useGetAllRegions } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import RegionTable from "./region-table";
 import Paginations from "@/shared/pagination";
+import RegionTable from "./region-table";
 
 const RegionLists = () => {
   const searchParams = useSearchParams();
@@ -40,7 +40,7 @@ const RegionLists = () => {
         <RegionTable regions={regions} />
       </Suspense>
 
-      <Paginations meta={data?.meta} />
+      {data.meta && <Paginations meta={data.meta} />}
     </div>
   );
 };

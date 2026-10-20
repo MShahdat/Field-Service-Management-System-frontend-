@@ -1,18 +1,27 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createRegion,
   getAllRegions,
   getRegions,
+  getSingleRegion,
   statusUpdate,
   updateRegion,
 } from "@/api";
-import { QueryParams } from "@/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { QueryParams } from "@/types";
 
 //& public
 export const useGetRegions = (params?: QueryParams) => {
   return useQuery({
     queryKey: ["regions", params],
     queryFn: () => getRegions(params),
+  });
+};
+
+export const useGetSingleRegion = (id?: string | null) => {
+  return useQuery({
+    queryKey: ["single-region", id],
+    queryFn: () => getSingleRegion(id as string),
+    enabled: Boolean(id),
   });
 };
 
@@ -35,6 +44,9 @@ export const useRegionCreate = () => {
       queryClient.invalidateQueries({
         queryKey: ["regions"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["single-region"],
+      });
     },
   });
 };
@@ -56,6 +68,9 @@ export const useUpdateRegion = () => {
       queryClient.invalidateQueries({
         queryKey: ["regions"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["single-region"],
+      });
     },
   });
 };
@@ -71,6 +86,9 @@ export const useStatusUpdate = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["regions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-region"],
       });
     },
   });

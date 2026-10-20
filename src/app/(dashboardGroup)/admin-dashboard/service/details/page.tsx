@@ -2,7 +2,7 @@
 
 
 import ServiceDetailsView from "@/components/module/services/service-details";
-import { useSingleService } from "@/hooks";
+import { useGetMe, useSingleService } from "@/hooks";
 import DetailsSkeleton from "@/loading/details-loading";
 import Breadcrumb from "@/shared/breadcrumb";
 import DataNotFoundCard from "@/shared/data-not-found";

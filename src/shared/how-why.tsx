@@ -72,7 +72,10 @@ const HowWhy = () => {
   return (
     <div>
       {/* How it works */}
-      <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+      <section
+        id="how-it-works"
+        className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
+      >
         <div className="mb-12 flex flex-col items-center text-center sm:mb-14">
           <Eyebrow>How it works</Eyebrow>
           <h2 className="mt-4 max-w-xl text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -86,27 +89,39 @@ const HowWhy = () => {
         <ol className="relative grid gap-5 sm:grid-cols-3">
           <span
             aria-hidden
-            className="absolute left-0 right-0 top-12 hidden border-t border-dashed border-border sm:block"
+            className="absolute left-0 right-0 top-11 hidden border-t border-dashed border-border sm:block"
           />
-          {steps.map((step) => (
+          {steps.map((step, i) => (
             <li
               key={step.n}
-              className="relative rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/30 hover:shadow-sm"
+              className="group relative rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/40 hover:bg-primary/5"
             >
-              <div className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                  {step.n}
-                </span>
-                <step.icon
-                  className="h-5 w-5 text-primary"
-                  strokeWidth={2}
-                  aria-hidden
-                />
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-4 top-1 select-none text-6xl font-bold tabular-nums text-primary/5 dark:text-primary/20"
+              >
+                {step.n}
+              </span>
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-primary/10">
+                <step.icon className="h-5 w-5" strokeWidth={2} aria-hidden />
               </div>
-              <h3 className="mt-5 text-base font-semibold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="relative mt-5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+                Step {step.n}
+              </p>
+              <h3 className="relative mt-1 text-base font-semibold">
+                {step.title}
+              </h3>
+              <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
                 {step.body}
               </p>
+              {i < steps.length - 1 && (
+                <span
+                  aria-hidden
+                  className="absolute -right-3.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-primary shadow-sm sm:flex"
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              )}
             </li>
           ))}
         </ol>
@@ -116,7 +131,7 @@ const HowWhy = () => {
       <section className="border-y border-border bg-secondary/40 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           <div className="mb-12 flex flex-col items-center text-center sm:mb-14">
-            <Eyebrow>Why FixItNow</Eyebrow>
+            <Eyebrow>Why FieldDesk</Eyebrow>
             <h2 className="mt-4 max-w-xl text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
               We take reliability personally.
             </h2>
@@ -128,20 +143,27 @@ const HowWhy = () => {
             {values.map((v) => (
               <li
                 key={v.title}
-                className="rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-md sm:p-7"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border border-t-2 border-t-primary/70 bg-card p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-7"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
-                  <v.icon
-                    className="h-5 w-5 text-primary"
-                    strokeWidth={2}
-                    aria-hidden
-                  />
+                <v.icon
+                  aria-hidden
+                  strokeWidth={1}
+                  className="pointer-events-none absolute -right-6 -bottom-7 h-32 w-32 text-primary/5 dark:text-primary/20 transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="relative flex justify-end">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-primary shadow-sm">
+                    <v.icon
+                      className="h-5 w-5"
+                      strokeWidth={1.75}
+                      aria-hidden
+                    />
+                  </span>
                 </div>
-                <h3 className="mt-5 font-semibold">{v.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <h3 className="relative mt-5 font-semibold">{v.title}</h3>
+                <p className="relative mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {v.body}
                 </p>
-                <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-primary">
+                <p className="relative mt-5 flex items-center gap-1.5 border-t border-dashed border-border pt-4 text-xs font-medium text-primary">
                   <Check className="h-3.5 w-3.5" aria-hidden />
                   {v.proof}
                 </p>

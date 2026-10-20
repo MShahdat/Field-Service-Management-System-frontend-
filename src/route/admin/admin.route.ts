@@ -1,4 +1,5 @@
 import {
+  ClipboardList,
   CreditCard,
   LayoutDashboard,
   MapPin,
@@ -54,6 +55,21 @@ export const adminRoutes = [
       {
         title: "Todays Services",
         url: `${prefix}/service/todays-services`,
+      },
+    ],
+  },
+  {
+    title: "WorkOrder Manage",
+    url: "#",
+    icon: ClipboardList,
+    items: [
+      {
+        title: "All Work Order",
+        url: `${prefix}/workorder/all-workorder`,
+      },
+      {
+        title: "Todays Order",
+        url: `${prefix}/workorder/todays-order`,
       },
     ],
   },

@@ -55,3 +55,12 @@ export interface CustomerAnalytics {
   totalSpend: string;
   totalRefund: string;
 }
+
+
+export interface PublicAnalytics {
+  totalCompletedServices: number
+  totalTechnician: number
+  totalCategory: number
+  totalRegion: number
+  totalAvgRating: number,
+}

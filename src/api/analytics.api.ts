@@ -15,3 +15,8 @@ export const getManagerStats = () => {
 export const getTechnicianStats = () => {
   return apiClient("/analytics/technician");
 };
+
+
+export const getPublicStats = () => {
+  return apiClient("/analytics/public");
+}

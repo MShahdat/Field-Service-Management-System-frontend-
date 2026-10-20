@@ -1,6 +1,7 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: Pagination items are static positional controls. */
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -10,8 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Meta } from "@/types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { Meta } from "@/types";
 
 const getPageArray = (totalPage: number, currentPage: number) => {
   if (totalPage <= 4) {
@@ -54,17 +54,14 @@ const Paginations = ({ meta }: IProps) => {
   const pathname = usePathname();
   const params = new URLSearchParams(searchParams.toString());
 
-  // console.log(params)
   const page = searchParams.get("page") ?? 1;
-
-  console.log(page);
 
   const totalPage = meta.totalPages;
   // const totalPage = 20
 
   const goToPage = (page: number) => {
     params.set("page", String(page));
-    router.replace(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   if (totalPage <= 1) return null;

@@ -32,13 +32,8 @@ const AssignPage = () => {
     />
   }
 
-
-
   const service = data?.data.service
   const shortId = service.id.slice(0, 8).toUpperCase();
-
-  console.log('service', service)
-
 
   return (
     <div className="w-11/12 mx-auto py-6">
@@ -104,11 +99,11 @@ const AssignPage = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      <TechnicianAssignPage
-        workOrderId={id}
-      />
+        <TechnicianAssignPage
+          workOrderId={id}
+        />
+      </div>
     </div>
   );
 };

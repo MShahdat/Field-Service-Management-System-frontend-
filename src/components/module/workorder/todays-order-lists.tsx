@@ -10,28 +10,31 @@ import WorkorderTable from "./workorder-table";
 
 const TodayOrderLists = () => {
   const searchParams = useSearchParams();
-  const params = Object.fromEntries(searchParams.entries());
+  const params = {
+    ...Object.fromEntries(searchParams.entries()),
+    today: true
+  }
   const pathname = usePathname()
 
-  const { data, isPending } = useTodaysOrder(params);
   const { data: me, isPending: mePending } = useGetMe();
+  const { data: orderData, isPending: orderPending } = useMyOrder(params);
 
-  if (isPending || mePending) {
+  if (mePending || orderPending) {
     return <GenericTableSkeleton rowCount={8} columnCount={6} />;
   }
 
-  if (!data?.success || !me?.data) {
+  if (!me?.success || !orderData?.success) {
     return <DataNotFoundCard />;
   }
 
-  const orders = data?.data ?? [];
+  const orders = orderData?.data ?? [];
   const user = me?.data ?? null;
 
   if (orders.length === 0) {
     return (
       <DataNotFoundCard
-        message="No New Order Found"
-        description="There was no new order have been created yet!"
+        message="No todays work order found"
+        description="There was no order have been created yet!"
       />
     );
   }
@@ -40,14 +43,10 @@ const TodayOrderLists = () => {
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <WorkorderTable
-          orders={orders}
-          endpoint="today"
-          user={user}
-          route={pathname} />
+        <WorkorderTable orders={orders} user={user} endpoint="all" route={pathname} />
       </Suspense>
 
-      <Paginations meta={data?.meta} />
+      <Paginations meta={orderData?.meta} />
     </div>
   );
 };

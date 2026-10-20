@@ -2,7 +2,6 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  BarChart3,
   Bell,
   Contact,
   FolderKanban,
@@ -11,6 +10,7 @@ import {
   LogOut,
   Menu,
   User,
+  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -50,10 +50,12 @@ export function Navbar() {
 
   const navLinks = [
     { label: "Home", href: "/", icon: LayoutDashboard },
-    { label: "Technicians", href: "/technician", icon: BarChart3 },
+    { label: "Technicians", href: "/technician", icon: Wrench },
     ...(dashboardUrl
       ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
       : []),
+    // { label: "Category", href: "/category", icon: LifeBuoy },
+    { label: "Region", href: "/region", icon: LifeBuoy },
     { label: "Support", href: "/support", icon: LifeBuoy },
     { label: "About", href: "/about-us", icon: FolderKanban },
     { label: "Contact", href: "/contact", icon: Contact },
@@ -96,7 +98,7 @@ export function Navbar() {
         <div>
           <Logo />
         </div>
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = isActiveLink(link.href);
@@ -131,7 +133,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="lg:hidden"
                 aria-label="Open menu"
               >
                 <Menu className="size-5" />

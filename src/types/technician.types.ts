@@ -1,4 +1,9 @@
-import type { Address } from "./common.types";
+import type {
+  Address,
+  AuthProvider,
+  UserRole,
+  UserStatus,
+} from "./common.types";
 import type { IRegion } from "./region.type";
 import type { IUser } from "./service.type";
 import type { ISkills } from "./skills.types";
@@ -61,4 +66,68 @@ export interface ITechnicianProfileComplete {
   skills?: string[];
   availability?: IAvailabilityInput[];
   region?: string[];
+}
+
+export interface ITechnicianPublicUser {
+  id: string;
+  name: string;
+  email: string;
+  profileImg?: string | null;
+  status?: UserStatus;
+  emailVerified?: boolean;
+  role?: UserRole;
+  authProvider?: AuthProvider;
+  isDeleted?: boolean;
+}
+
+export interface ITechnicianPublicSkill {
+  id: string;
+  name: string;
+  icon?: string | null;
+}
+
+export interface ITechnicianPublicRegion {
+  id: string;
+  area: string;
+}
+
+export interface ITechnicianPublicAvailability {
+  id: string;
+  type: AvailabilityType;
+  dayOfWeek: number | null;
+  date?: string | null;
+  startTime: string | null;
+  endTime: string | null;
+}
+
+export interface ITechnicianPublic {
+  id: string;
+  phone: string | null;
+  address: Address | null;
+  bio: string | null;
+  nid: string | null;
+  isProfileCompleted: boolean;
+  isDeleted: boolean;
+  deletedAt: string | null;
+  status: ITechStatus;
+  rating: number | null;
+  jobsCompleted: number;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  user: ITechnicianPublicUser;
+  skills: ITechnicianPublicSkill[];
+  regions: ITechnicianPublicRegion[];
+  availability: ITechnicianPublicAvailability[];
+}
+
+export interface ITechnicianDetail extends ITechnicianPublic {
+  user: ITechnicianPublicUser & {
+    profileImg: string | null;
+    status: UserStatus;
+    emailVerified: boolean;
+    role: UserRole;
+    authProvider: AuthProvider;
+    isDeleted: boolean;
+  };
 }

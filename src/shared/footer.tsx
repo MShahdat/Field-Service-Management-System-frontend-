@@ -11,7 +11,7 @@ const FOOTER_LINKS = {
     { label: "About us", href: "/about-us" },
     { label: "How it works", href: "/#how-it-works" },
     { label: "Careers", href: "/about-us" },
-    { label: "Press", href: "/about-us" },
+    { label: "Support", href: "/support" },
   ],
   customers: [
     { label: "Browse services", href: "/technician" },
