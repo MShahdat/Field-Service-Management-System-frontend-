@@ -8,6 +8,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Logo } from "@/assets/logo";
 import { NavMain } from "./nav-main";
@@ -18,6 +19,7 @@ import { adminRoutes } from "@/route/admin/admin.route";
 import { customerRoutes } from "@/route/customer/customer.route";
 import { technicianRoutes } from "@/route/technician/technician.route";
 import { managerRoutes } from "@/route/manager/manager.route";
+import { Columns } from "lucide-react";
 
 const sidebarRoutes: Partial<Record<UserRole, SidebarRoutes>> = {
   SUPER_ADMIN: adminRoutes,
@@ -47,7 +49,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Logo />
+        <div className="flex items-center justify-between">
+          <div className="group-data-[collapsible=icon]:hidden">
+            <Logo />
+          </div>
+          <SidebarTrigger />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={routes} />

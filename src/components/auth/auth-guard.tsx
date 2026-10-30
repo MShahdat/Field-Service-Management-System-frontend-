@@ -18,11 +18,10 @@ const AuthGuards = ({ children }: { children: ReactNode }) => {
     if (isError || !user) {
       router.replace("/login");
     }
-  }, [isError, user, isPending]);
+  }, [isError, user, isPending, router]);
 
   if (isPending) {
-    // return <GlobalLoading />;
-    return;
+    return <GlobalLoading />;
   }
 
   return <>{children}</>;

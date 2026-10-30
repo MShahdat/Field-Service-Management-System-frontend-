@@ -32,7 +32,7 @@ export const useGetAllTech = (params: QueryParams) => {
   });
 };
 
-export const useGetTechById = (id?: string | null) => {
+export const useGetTechById = (id?: string) => {
   return useQuery({
     queryKey: ["single-tech", id],
     queryFn: () => getTechnicianById(id as string),

@@ -10,7 +10,7 @@ export default function DashboardPage({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarTrigger className="-ml-1" />
+      {/* <SidebarTrigger className="-ml-1" /> */}
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );

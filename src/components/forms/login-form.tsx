@@ -59,7 +59,7 @@ const LoginForm = () => {
         onSuccess: (res) => {
           toast.success(res.message);
           form.reset();
-          const dashboardUrl = getDashboardUrl(res?.data?.user.role);
+          const dashboardUrl = getDashboardUrl(res?.data?.user?.role);
           if (dashboardUrl) {
             router.push(dashboardUrl);
           } else {

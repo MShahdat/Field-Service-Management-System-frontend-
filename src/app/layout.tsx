@@ -38,7 +38,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable,
       )}
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+      <body
+        className="min-h-full flex flex-col">
         <ThemeProvider>
           <Providers>
             <TooltipProvider>{children}</TooltipProvider>

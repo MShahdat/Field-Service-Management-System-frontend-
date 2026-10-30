@@ -12,6 +12,6 @@ export const getDashboardUrl = (role?: UserRole | string | null) => {
     case "CUSTOMER":
       return "/customer-dashboard";
     default:
-      return undefined;
+      return "/login";
   }
 };

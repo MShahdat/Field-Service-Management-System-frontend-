@@ -19,7 +19,7 @@ export const useSingleOrder = (id: string) => {
 export const useTodaysOrder = (params: QueryParams) => {
   return useQuery({
     queryKey: ["todays-order", params],
-    queryFn: todaysOrder,
+    queryFn: () => todaysOrder(params),
   });
 };
 

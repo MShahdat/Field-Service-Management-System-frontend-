@@ -28,7 +28,7 @@ const RoleGuard = ({ children, roles }: IProps) => {
     if (isError || !user) {
       router.replace("/login");
     }
-  }, [data, isPending, isError]);
+  }, [isPending, isError, user, router]);
 
   if (isPending) {
     return <GlobalLoading />;

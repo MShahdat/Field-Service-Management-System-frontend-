@@ -10,7 +10,7 @@ const TechnicianDetailsPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  const { data, isPending, isError } = useGetTechById(id);
+  const { data, isPending, isError } = useGetTechById(id as string);
 
   if (!id) {
     return (

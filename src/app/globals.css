@@ -135,32 +135,36 @@
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 20px;
+  width: 50px;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-primary);
-  box-shadow: 0 0 0 0 var(--color-chart-1);
-  animation: l2 1.5s infinite linear;
-  position: relative;
+  display: grid;
+  -webkit-mask: conic-gradient(from 15deg, #0000, #000);
+  animation: l26 1s infinite steps(12);
+}
+
+.loader,
+.loader:before,
+.loader:after {
+  background:
+    radial-gradient(closest-side at 50% 12.5%,
+      #f03355 96%, #0000) 50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%,
+      #f03355 96%, #0000) 0 50%/80% 20% repeat-x;
 }
 
 .loader:before,
 .loader:after {
   content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 0 0 var(--color-destructive);
-  animation: inherit;
-  animation-delay: -0.5s;
+  grid-area: 1/1;
+  transform: rotate(30deg);
 }
 
 .loader:after {
-  animation-delay: -1s;
+  transform: rotate(60deg);
 }
 
-@keyframes l2 {
+@keyframes l26 {
   100% {
-    box-shadow: 0 0 0 40px #0000
+    transform: rotate(1turn)
   }
 }

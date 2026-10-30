@@ -9,7 +9,7 @@ const OrderDetails = () => {
   const params = useSearchParams()
   const id = params.get('id')
 
-  const backHref = '/customer-dashboard/workorder/order'
+  const backHref = '/customer-dashboard/order'
   return (
     <div className="w-11/12 mx-auto py-6">
       <Breadcrumb
