@@ -11,7 +11,7 @@ import {
   LockIcon,
   TimerIcon,
 } from "lucide-react";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useForgotPassword, useResetPassword } from "@/hooks";
@@ -99,14 +99,17 @@ export function ResetPasswordForm() {
   const OTP_VALIDITY_SECONDS = 5 * 60;
   const [timeLeft, setTimeLeft] = useState(0);
 
-  if (!email) {
-    redirect("/forgot-password");
-  }
+  useEffect(() => {
+    if (!email) {
+      router.replace("/forgot-password");
+      return;
+    }
+  }, [email, router]);
 
-  const storageKey = `otp-expiry-reset-${email}`;
+  const storageKey = email ? `otp-expiry-reset-${email}` : "";
 
   useEffect(() => {
-    if (!email) return;
+    if (!email || !storageKey) return;
     const savedExpiry = localStorage.getItem(storageKey);
     if (!savedExpiry) {
       setTimeLeft(0);
@@ -131,6 +134,11 @@ export function ResetPasswordForm() {
   }, [email, storageKey]);
 
   const handleResend = () => {
+    if (!email) {
+      router.replace("/forgot-password");
+      return;
+    }
+
     resend(
       { email },
       {
@@ -155,6 +163,11 @@ export function ResetPasswordForm() {
       onSubmit: resetPasswordZodSchema,
     },
     onSubmit: ({ value }) => {
+      if (!email) {
+        router.replace("/forgot-password");
+        return;
+      }
+
       mutate(
         {
           email,
@@ -182,13 +195,13 @@ export function ResetPasswordForm() {
   );
 
   return (
-    <Card className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border bg-card/95 shadow-xl shadow-primary/[0.06] backdrop-blur">
+    <Card className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border bg-card/95 shadow-xl shadow-primary/10 backdrop-blur">
       <div
         aria-hidden
-        className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/50"
+        className="h-1 w-full bg-linear-to-r from-primary/60 via-primary to-primary/50"
       />
       <CardHeader className="items-center gap-1 pb-1 text-center">
-        <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/[0.08] text-primary ring-1 ring-primary/20 shadow-sm">
+        <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20 shadow-sm">
           <LockKeyholeIcon className="size-6" strokeWidth={1.8} />
         </span>
         <p className=" text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -278,7 +291,7 @@ export function ResetPasswordForm() {
                         className="mt-2 h-1 overflow-hidden rounded-full bg-muted"
                       >
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary transition-[width] duration-1000"
+                          className="h-full rounded-full bg-linear-to-r from-primary/70 to-primary transition-[width] duration-1000"
                           style={{ width: `${progress}%` }}
                         />
                       </div>

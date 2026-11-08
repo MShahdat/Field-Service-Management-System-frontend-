@@ -9,19 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IService, UserRole } from "@/types";
+import { IService, Meta, UserRole } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import DeleteModal from "./cus-delete-modal";
+import { BookOpenTextIcon } from "lucide-react";
+import { useGetMe } from "@/hooks";
 
 type Props = {
   services: IService[];
-  role?: "MANAGER" | "ADMIN" | "SUPER_ADMIN"
+  meta?: Meta
 };
 
-const ServiceTable = ({ services, role }: Props) => {
+const ServiceTable = ({ services, meta }: Props) => {
   const router = useRouter();
-  console.log('role ', role)
+
+  const { data } = useGetMe()
+
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? services.length) || 1) + 1
+
+  const role = data?.data?.role as UserRole
 
   return (
     <div className="space-y-4">
@@ -43,17 +51,18 @@ const ServiceTable = ({ services, role }: Props) => {
             {services.map((service: IService, idx: number) => {
               const isView =
                 service.status === "PENDING" ||
-                service.status === "APPROVED" ||
                 service.status === "ASSIGNED" ||
                 service.status === "COMPLETED" ||
                 service.status === "IN_PROGRESS";
+
+              const deleteBtn = service.status === "CANCELLED" || service.status === "REJECTED"
 
               const params = new URLSearchParams({ id: service.id })
               const href = role === "MANAGER" ? "manager-dashboard" : "admin-dashboard"
 
               return (
                 <TableRow key={service.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{startIndex + idx}</TableCell>
                   <TableCell>
                     {service.title === "" ? "-" : service.title}
                   </TableCell>
@@ -72,7 +81,7 @@ const ServiceTable = ({ services, role }: Props) => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 items-center justify-end">
-                      {isView && (
+                      {isView ? (
                         <Button
                           size={"sm"}
                           onClick={() => {
@@ -81,10 +90,14 @@ const ServiceTable = ({ services, role }: Props) => {
                           }}
                           type="button"
                           variant="outline"
+                          className="rounded-xl"
                         >
+                          <BookOpenTextIcon />
                           Details
                         </Button>
-                      )}
+                      ) : <DeleteModal service={service} flag={role} />
+                      }
+
                     </div>
                   </TableCell>
                 </TableRow>

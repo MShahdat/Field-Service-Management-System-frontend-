@@ -6,14 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IFeedback } from "@/types";
+import { IFeedback, Meta } from "@/types";
 import { formatDateTime } from "../services/details-util";
 
 type Props = {
   feedbacks: IFeedback[];
+  meta?: Meta
 };
 
-const FeedbackTable = ({ feedbacks }: Props) => {
+const FeedbackTable = ({ feedbacks, meta }: Props) => {
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? feedbacks.length) || 1) + 1
+
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -33,7 +36,7 @@ const FeedbackTable = ({ feedbacks }: Props) => {
             {feedbacks.map((feedback: IFeedback, idx: number) => {
               return (
                 <TableRow key={feedback.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>
                     {feedback.workOrder.service.title ?? "-"}
                   </TableCell>

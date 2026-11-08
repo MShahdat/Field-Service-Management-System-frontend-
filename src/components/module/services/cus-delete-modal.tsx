@@ -16,25 +16,32 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { useDeleteService } from "@/hooks";
+import { useDeleteService, useServiceDelete } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type { IService, ServiceRequest } from "@/types";
+import type { IService, ServiceRequest, UserRole } from "@/types";
 
 type Props = {
   service: ServiceRequest | IService;
   redirectOnDelete?: string;
+  flag?: UserRole
 };
 
-const DeleteModal = ({ service, redirectOnDelete }: Props) => {
+const DeleteModal = ({ service, redirectOnDelete, flag }: Props) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const isDelete =
-    service.status === "APPROVED" ||
-    service.status === "IN_PROGRESS" ||
-    service.status === "ASSIGNED";
+  console.log('flag', flag)
 
-  const { mutate, isPending } = useDeleteService();
+  const isDelete =
+    service.status === "IN_PROGRESS" ||
+    service.status === "ASSIGNED" ||
+    service.status === "COMPLETED"
+
+  const { mutate: cusMutate, isPending: cusPending } = useDeleteService();
+  const { mutate: admMutate, isPending: admIsPending } = useServiceDelete()
+
+  const mutate = flag === "SUPER_ADMIN" ? admMutate : cusMutate
+  const isPending = admIsPending ?? cusPending
 
   const handleConfirm = () => {
     mutate(service.id, {
@@ -58,7 +65,7 @@ const DeleteModal = ({ service, redirectOnDelete }: Props) => {
           type="button"
           size="sm"
           variant="destructive"
-          disabled={isDelete}
+          disabled={isDelete || flag !== "SUPER_ADMIN"}
           className="gap-1.5 rounded-xl font-semibold shadow-sm"
         >
           <Trash2 aria-hidden />
@@ -67,7 +74,7 @@ const DeleteModal = ({ service, redirectOnDelete }: Props) => {
       </DialogTrigger>
       <DialogContent className="gap-0 overflow-hidden rounded-2xl border-border p-0 sm:max-w-sm">
         <div
-          className={cn("h-1.5 bg-gradient-to-r from-red-500 to-red-500/30")}
+          className={cn("h-1.5 bg-linear-to-r from-red-500 to-red-500/30")}
         />
         <div className="px-5 pt-5 sm:px-6">
           <DialogHeader>

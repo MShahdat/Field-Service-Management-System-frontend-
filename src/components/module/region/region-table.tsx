@@ -9,16 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IRegion } from "@/types";
+import { IRegion, Meta } from "@/types";
 import { RegionModal } from "./region-modal";
 import { StatusUpdateModal } from "./status-update";
 
 type Props = {
   regions: IRegion[];
+  meta?: Meta
 };
 
-const RegionTable = ({ regions }: Props) => {
-  console.log("regions ", regions);
+const RegionTable = ({ regions, meta }: Props) => {
+  // console.log("regions ", regions);
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? regions.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -38,7 +41,7 @@ const RegionTable = ({ regions }: Props) => {
               const status = region.isActive ? "True" : "False";
               return (
                 <TableRow key={region.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>{region.area}</TableCell>
                   <TableCell>{region.description}</TableCell>
                   <TableCell>

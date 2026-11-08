@@ -10,15 +10,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataNotFoundCard from "@/shared/data-not-found";
-import type { IUser } from "@/types";
+import type { IUser, Meta } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import { UserStatusModal } from "./user-status-modal";
 
 type Props = {
   users: IUser[];
+  meta?: Meta
 };
 
-const UserTable = ({ users }: Props) => {
+const UserTable = ({ users, meta }: Props) => {
   if (users.length === 0) {
     return (
       <DataNotFoundCard
@@ -27,6 +28,9 @@ const UserTable = ({ users }: Props) => {
       />
     );
   }
+
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? users.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -38,36 +42,25 @@ const UserTable = ({ users }: Props) => {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>AuthProvider</TableHead>
-              <TableHead>Verified</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Deleted</TableHead>
               <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user: IUser, idx: number) => {
-              const verified = user.emailVerified ? "True" : "False";
-              const deleted = user.isDeleted ? "True" : "False";
-
               return (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{startIndex + idx}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{badgeText(user.authProvider)}</TableCell>
-                  <TableCell>
-                    <Badge variant={statusVarient(verified)}>{verified}</Badge>
-                  </TableCell>
                   <TableCell>
                     <Badge variant={statusVarient(user.status)}>
                       {badgeText(user.status)}
                     </Badge>
                   </TableCell>
                   <TableCell>{user.role}</TableCell>
-                  <TableCell>
-                    <Badge variant={statusVarient(deleted)}>{deleted}</Badge>
-                  </TableCell>
                   <TableCell className="flex items-center justify-end gap-2">
                     {user.status === "ACTIVE" ? (
                       <>

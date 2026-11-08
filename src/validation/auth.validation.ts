@@ -50,7 +50,6 @@ export const forgotPasswordZodSchema = z.object({
 
 export const resetPasswordZodSchema = z
   .object({
-    email: z.email(),
     otp: z.string().length(6, { message: "OTP must be 6 digits long." }),
     newPassword: z
       .string()

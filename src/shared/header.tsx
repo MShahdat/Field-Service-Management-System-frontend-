@@ -1,7 +1,14 @@
+import React from "react";
 import { ItemShow } from "./items-show";
 import SearchBar from "./search-bar";
 
-const Header = ({ label }: { label: string }) => {
+
+type Props = {
+  label: string;
+  controls?: React.ReactNode
+}
+
+const Header = ({ label, controls }: Props) => {
   return (
     <div className="rounded-2xl border border-border bg-card px-4 sm:px-5 py-4 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -15,10 +22,14 @@ const Header = ({ label }: { label: string }) => {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="whitespace-nowrap">Show</span>
-            <ItemShow />
-          </div>
+          {/* <ItemShow /> */}
+          {
+            controls && (
+              <div className="flex flex-wrap items-center gap-3">
+                {controls}
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

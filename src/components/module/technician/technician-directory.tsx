@@ -10,15 +10,20 @@ import type { QueryParams } from "@/types";
 import TechnicianFilters from "./technician-filters";
 import TechnicianLists from "./technician-lists";
 import { TechnicianGridSkeleton } from "./technician-skeleton";
-import TechnicianToolbar from "./technician-toolbar";
+import ShowCount from "@/shared/show.count";
+import Header from "@/shared/header";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { SlidersHorizontal } from "lucide-react";
+import { SortTech } from "./sort";
+import { ItemShow } from "@/shared/items-show";
+import FilterBtn from "@/utils/filter.btn";
 
 const TechnicianDirectory = () => {
   const searchParams = useSearchParams();
 
   const params = useMemo(() => {
     const raw = Object.fromEntries(searchParams.entries());
-    const sort = raw.sort;
-
     delete raw.sort;
 
     const query: QueryParams = {
@@ -39,24 +44,15 @@ const TechnicianDirectory = () => {
       if (!query[key] || query[key] === "all") delete query[key];
     }
 
-    if (sort === "rating") {
-      query.sortBy = "rating";
-      query.sortOrder = "desc";
-    } else if (sort === "jobs") {
-      query.sortBy = "jobsCompleted";
-      query.sortOrder = "desc";
-    } else {
-      query.sortBy = "createdAt";
-      query.sortOrder = "desc";
-    }
-
     return query;
+
   }, [searchParams]);
 
   const { data, isPending, isError, isFetching } = useGetAllTech(params);
 
   const technicians = data?.data ?? [];
   const meta = data?.meta;
+
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
@@ -67,7 +63,40 @@ const TechnicianDirectory = () => {
       </aside>
 
       <div className="min-w-0 flex-1 space-y-5">
-        <TechnicianToolbar total={meta?.total} />
+        <Header
+          label="Technicians"
+          controls={
+            <>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 lg:hidden"
+                  >
+                    <SlidersHorizontal className="size-4" />
+                    Filters
+                  </Button>
+                </SheetTrigger>
+
+                <SheetContent
+                  side="left"
+                  className="w-[320px] overflow-y-auto p-0 sm:max-w-sm"
+                >
+                  <SheetHeader className="border-b border-border p-4">
+                    <SheetTitle>Filter technicians</SheetTitle>
+                  </SheetHeader>
+                  <div className="p-4">
+                    <TechnicianFilters />
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <SortTech />
+              <ItemShow />
+            </>
+          }
+        />
 
         {isPending ? (
           <TechnicianGridSkeleton />
@@ -88,25 +117,7 @@ const TechnicianDirectory = () => {
               isFetching && "opacity-60",
             )}
           >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm text-muted-foreground">
-                Showing{" "}
-                <span className="font-semibold text-foreground">
-                  {technicians.length}
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-foreground">
-                  {meta?.total ?? technicians.length}
-                </span>{" "}
-                technicians
-              </p>
-
-              {meta && (
-                <p className="text-xs text-muted-foreground">
-                  Page {meta.page} of {meta.totalPages}
-                </p>
-              )}
-            </div>
+            <ShowCount length={technicians?.length} meta={meta} title="technicians" />
 
             <TechnicianLists technicians={technicians} />
 

@@ -1,31 +1,39 @@
+import { sort } from "@/app/(publicGroup)/region/page";
 import WorkorderLists from "@/components/module/workorder/workorder-lists";
+import WorkOrderFilter from "@/components/module/workorder/workOrder.filter";
+import Header from "@/shared/header";
 import { ItemShow } from "@/shared/items-show";
-import SearchBar from "@/shared/search-bar";
+import FilterBtn from "@/utils/filter.btn";
 
+
+export const STATUS_OPTIONS = [
+  { label: "Schedule", value: "SCHEDULED" },
+  { label: "En_Route", value: "EN_ROUTE" },
+  { label: "Started", value: "STARTED" },
+  { label: "Completed", value: "COMPLETED" },
+  { label: "Cancelled", value: "CANCELLED" },
+];
 
 const AllWorkOrderpage = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flex flex-col space-y-6">
-        <div className="rounded-2xl border border-border bg-card px-4 sm:px-5 py-4 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex items-center gap-4">
-                <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  All Work Orders
-                </p>
-                <SearchBar />
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="whitespace-nowrap">Show</span>
-                <ItemShow />
-              </div>
-            </div>
-          </div>
-        </div>
+        <Header
+          label="All Work Orders"
+          controls={
+            <>
+              <FilterBtn
+                label="Work Order Filter"
+                component={
+                  <>
+                    <WorkOrderFilter STATUS_OPTIONS={STATUS_OPTIONS} />
+                  </>
+                }
+              />
+              <ItemShow />
+            </>
+          }
+        />
         <WorkorderLists />
       </div>
     </div>

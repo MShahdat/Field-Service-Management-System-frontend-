@@ -17,7 +17,6 @@ import type { IRegion } from "@/types";
 import { CopyId, Section, SummaryCard } from "../services/details-util";
 import PubRegionManagerCard from "./pub-region-manager-card";
 import PubRegionTechnicianCard from "./pub-region-technician-card";
-import TechnicianCard from "../technician/technician-card";
 
 type Props = {
   region: IRegion;

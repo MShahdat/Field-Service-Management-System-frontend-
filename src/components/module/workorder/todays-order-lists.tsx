@@ -7,6 +7,7 @@ import Paginations from "@/shared/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import WorkorderTable from "./workorder-table";
+import ShowCount from "@/shared/show.count";
 
 const TodayOrderLists = () => {
   const searchParams = useSearchParams();
@@ -40,10 +41,11 @@ const TodayOrderLists = () => {
   }
   return (
     <div className="space-y-4">
+      <ShowCount length={orders?.length} meta={orderData?.meta} title="orders" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <WorkorderTable orders={orders} user={user} endpoint="all" route={pathname} />
+        <WorkorderTable orders={orders} user={user} endpoint="all" route={pathname} meta={orderData?.meta} />
       </Suspense>
 
       <Paginations meta={orderData?.meta} />

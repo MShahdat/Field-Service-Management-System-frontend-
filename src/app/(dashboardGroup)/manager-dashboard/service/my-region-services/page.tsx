@@ -1,31 +1,46 @@
 
+import { sort } from "@/app/(publicGroup)/region/page";
 import ServiceLists from "@/components/module/services/man-service-region-lists";
+import ServiceFilter from "@/components/module/services/service.filter";
+
+import Header from "@/shared/header";
 import { ItemShow } from "@/shared/items-show";
-import SearchBar from "@/shared/search-bar";
+import { SortShow } from "@/shared/sort.show";
+import FilterBtn from "@/utils/filter.btn";
+
+
+export const STATUS_OPTIONS = [
+  { label: "Pending", value: "PENDING" },
+  { label: "Rejected", value: "REJECTED" },
+  { label: "Assigned", value: "ASSIGNED" },
+  { label: "In_Progress", value: "IN_PROGRESS" },
+  { label: "Completed", value: "COMPLETED" },
+]
 
 const MyRegionServices = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
       <div className="flex flex-col space-y-6">
-        <div className="rounded-2xl border border-border bg-card px-4 sm:px-5 py-4 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex items-center gap-4">
-                <p className="whitespace-nowrap text-lg sm:text-xl font-semibold">
-                  My Region Services
-                </p>
-                <SearchBar />
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="whitespace-nowrap">Show</span>
-                <ItemShow />
-              </div>
-            </div>
-          </div>
-        </div>
+        <Header
+          label="My Region Services"
+          controls={
+            <>
+              <FilterBtn
+                label="Service Filter"
+                component={
+                  <>
+                    <ServiceFilter obj={STATUS_OPTIONS} />
+                  </>
+                }
+              />
+              <SortShow
+                sortKey="title"
+                obj={sort}
+              />
+              <ItemShow />
+            </>
+          }
+        />
         <ServiceLists />
       </div>
     </div>

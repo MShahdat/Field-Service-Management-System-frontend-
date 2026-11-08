@@ -1,5 +1,5 @@
 "use client";
-import { ClipboardList, Clock, DollarSign, TrendingUp } from "lucide-react";
+import { BangladeshiTaka, ClipboardList, Clock, DollarSign, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import {
   Bar,
@@ -24,7 +24,7 @@ import { AdminStatusBreakdown } from "./admin-status-breakdown";
 import { ChartCard } from "./chart-card";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
-import { fmtMoney, StatCard } from "./stat-card";
+import { StatCard } from "./stat-card";
 
 const PIE_COLORS = ["#D97706", "#DC2626", "#E11D48", "#BE123C"];
 const TOOLTIP_STYLE = {
@@ -128,22 +128,27 @@ export function AdminOverview() {
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 xl:grid-cols-4">
         <StatCard
           title="Total Revenue"
-          value={fmtMoney(s.totalRevenue)}
-          icon={DollarSign}
+          value={`৳ ${s.totalRevenue}`}
+          icon={BangladeshiTaka}
           description="Lifetime collected"
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
+          href="/admin-dashboard/payment"
+
         />
         <StatCard
           title="This Month Revenue"
-          value={fmtMoney(s.currentMonthRevenue)}
+          value={`৳ ${s.currentMonthRevenue}`}
           icon={TrendingUp}
           description="Current month revenue"
+          href="/admin-dashboard/payment"
         />
         <StatCard
-          title="Work Orders"
-          value={`${s.totalStartedWorkOrders}/${s.totalWorkOrders}`}
+          title="Total Service"
+          value={`${s.totalServices}`}
           icon={ClipboardList}
-          description={`${completion}% started`}
+          description={`Total requested services`}
+          href="/admin-dashboard/service/all-services"
+
         />
         <StatCard
           title="Pending Services"
@@ -151,6 +156,7 @@ export function AdminOverview() {
           icon={Clock}
           description={`of ${s.totalServices} total services`}
           accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
+          href="/admin-dashboard/service/all-services"
         />
       </div>
 

@@ -60,7 +60,7 @@ export function StatCard({
 
 export const fmtMoney = (v?: string | number) => {
   const n = typeof v === "string" ? parseFloat(v) : (v ?? 0);
-  if (isNaN(n)) return "$0";
+  if (isNaN(n)) return "0";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

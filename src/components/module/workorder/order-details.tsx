@@ -34,12 +34,10 @@ import { CopyId, formatClock, formatDateTime, formatMoney, formatServiceDate, In
 
 type Props = {
   order: IWorkOrder;
-  showFeedbackActions?: boolean;
 };
 
 const OrderDetailsView = ({
   order,
-  showFeedbackActions = false,
 }: Props) => {
   const service = order.service;
   const payment = order.payment;
@@ -51,22 +49,24 @@ const OrderDetailsView = ({
   const serviceReport = order.serviceReport ?? null;
 
   const { data: me } = useGetMe();
-  const meUser = (me as { data?: { id?: string; role?: string } } | undefined)
-    ?.data;
-  const myId = meUser?.id;
+  const meUser = me?.data ?? undefined;
   const myRole = meUser?.role;
+  const myId = meUser?.id ?? undefined
   const isTechnician = myRole === "TECHNICIAN";
   const isCompleted =
     order.status === "COMPLETED" && service?.status === "COMPLETED";
   const canManageReport = isTechnician && isCompleted;
 
-
   const isOwnCustomer =
-    myRole === "CUSTOMER" && !!myId && customer?.userId === myId;
+    myRole === "CUSTOMER" && customer.userId === myId;
+
   const isOwnTechnician =
-    myRole === "TECHNICIAN" && !!myId && technician?.userId === myId;
+    myRole === "TECHNICIAN" && technician?.userId === myId;
+
   const canAddAttachment = Boolean(myId) && (isOwnCustomer || isOwnTechnician);
 
+  console.log('is own tech', isOwnTechnician)
+  console.log('is own cus', isOwnCustomer)
 
   const canManageAttachment = (a: IAttachment) => {
     if (!canAddAttachment || !myId) return false;
@@ -115,10 +115,9 @@ const OrderDetailsView = ({
 
   const isPayBtn =
     (order.status === "STARTED" || order.status === "COMPLETED") &&
-    order.payment?.status === "UNPAID";
+    order.payment?.status === "UNPAID" && myRole === "CUSTOMER";
 
   const canGiveFeedback =
-    showFeedbackActions &&
     order.status === "COMPLETED" &&
     service?.status === "COMPLETED";
 
@@ -126,7 +125,7 @@ const OrderDetailsView = ({
   return (
     <div className="space-y-4">
       <Card className="overflow-hidden py-0 shadow-none">
-        <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent px-4 pt-4 pb-3.5 sm:px-5">
+        <div className="bg-linear-to-r from-primary/15 via-primary/5 to-transparent px-4 pt-4 pb-3.5 sm:px-5">
           <div className="flex items-start gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30">
               <Wrench className="size-5" aria-hidden />
@@ -290,12 +289,12 @@ const OrderDetailsView = ({
           <Section
             title="Service Report"
             action={
-              canManageReport && !serviceReport ? (
+              isOwnTechnician && !serviceReport ? (
                 <ReportModal mode="create" workOrderId={order.id} />
               ) : undefined
             }
           >
-            {serviceReport ? (
+            {serviceReport && isOwnTechnician ? (
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5">
                   <div className="flex min-w-0 items-center gap-3">
@@ -364,7 +363,7 @@ const OrderDetailsView = ({
           <Section
             title="Feedback"
             action={
-              canGiveFeedback && !feedback ? (
+              isOwnCustomer && canGiveFeedback && !feedback ? (
                 <FeedbackModal mode="create" workOrderId={order.id} />
               ) : undefined
             }
@@ -378,7 +377,7 @@ const OrderDetailsView = ({
                 <p className="text-xs text-muted-foreground">
                   {formatDateTime(feedback.createdAt)}
                 </p>
-                {canGiveFeedback && (
+                {canGiveFeedback && isOwnCustomer && (
                   <div className="flex flex-wrap gap-2 pt-1">
                     <FeedbackModal
                       mode="edit"
@@ -389,7 +388,7 @@ const OrderDetailsView = ({
                   </div>
                 )}
               </div>
-            ) : canGiveFeedback ? (
+            ) : canGiveFeedback && isOwnCustomer ? (
               <p className="py-2 text-sm text-muted-foreground">
                 Service completed. Share your experience — submit your feedback
                 for this order.
@@ -405,7 +404,7 @@ const OrderDetailsView = ({
         <div className="space-y-4">
           <Section
             title="Payment"
-            action={isPayBtn && <PaymentBtn workOrderId={order.id} />}
+            action={isPayBtn && <PaymentBtn workOrderId={order.id} className="w-fit" />}
           >
             {payment ? (
               <div>
@@ -457,7 +456,9 @@ const OrderDetailsView = ({
                 </div>
               )}
               {technician ? (
-                <div className="flex items-center gap-2.5">
+                <Link
+                  href={`/technician/details?id=${technician.id}`}
+                  className="flex items-center gap-2.5">
                   <ProfileAvater
                     name={technician.user.name}
                     imageUrl={technician.user.profileImg}
@@ -470,7 +471,7 @@ const OrderDetailsView = ({
                       Technician · ★ {technician.rating.toFixed(1)}
                     </p>
                   </div>
-                </div>
+                </Link>
               ) : (
                 <p className="text-sm text-muted-foreground">
                   Technician not assigned yet.

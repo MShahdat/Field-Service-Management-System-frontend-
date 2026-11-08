@@ -58,3 +58,12 @@ export const assignTechnician = (payload: IAssignTechnician) => {
     body: payload,
   });
 };
+
+
+export const serviceDelete = (id: string) => {
+  return apiClient(`/service/delete/${id}`, {
+    method: "DELETE"
+  })
+}
+
+

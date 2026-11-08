@@ -121,10 +121,10 @@ type StatProps = {
 
 const Stat = ({ icon: Icon, label, count, warn, pending, people }: StatProps) => (
   <div className="min-w-0 flex-1 rounded-[10px] bg-muted px-3 py-1">
-    <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
       <Icon className="size-3.5" aria-hidden />
       <AvatarStack people={people} total={count} pending={pending} />
-    </p>
+    </div>
   </div>
 );
 

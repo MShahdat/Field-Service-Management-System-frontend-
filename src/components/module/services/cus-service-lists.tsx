@@ -7,6 +7,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Paginations from "@/shared/pagination";
 import { CardSkeleton } from "@/loading/card-loading";
 import MyServiceCard from "./cus-service-card";
+import ShowCount from "@/shared/show.count";
 
 const MyServiceLists = () => {
   const searchParams = useSearchParams();
@@ -19,15 +20,7 @@ const MyServiceLists = () => {
   // console.log("my services ", data);
 
   if (isPending) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {[...Array(6)].map((_, index) => (
-          <div key={index as number}>
-            <CardSkeleton />
-          </div>
-        ))}
-      </div>
-    );
+    return <CardSkeleton />
   }
 
   if (!data?.success || data?.data.length === 0) {
@@ -43,6 +36,7 @@ const MyServiceLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={services?.length} meta={data?.meta} title="services" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {services.map((service: ServiceRequest) => (
           <div key={service.id}>

@@ -8,9 +8,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
   Cell,
   Label,
   Legend,
@@ -18,18 +15,16 @@ import {
   PieChart,
   ResponsiveContainer,
   Tooltip,
-  XAxis,
-  YAxis,
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetManagerStats, useGetMyRegionService } from "@/hooks";
-import type { ApiResponse, ManagerAnalytics } from "@/types";
+import type { ApiResponse, IService, ManagerAnalytics } from "@/types";
 import { ChartCard } from "./chart-card";
 import { ManagerStatusBreakdown } from "./manager-status-breakdown";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
-import { fmtMoney, StatCard } from "./stat-card";
+import { StatCard } from "./stat-card";
 
 const TOOLTIP_STYLE = {
   borderRadius: 12,
@@ -38,21 +33,12 @@ const TOOLTIP_STYLE = {
 };
 
 export function ManagerOverview() {
-  const stats = useGetManagerStats();
-  const recents = useGetMyRegionService({ limit: "5", page: "1" });
+  const { data: statsData, isPending } = useGetManagerStats();
+  const { data: serviceData } = useGetMyRegionService({ limit: "5", page: "1" });
 
-  if (stats.isPending) return <OverviewSkeleton />;
-  if (stats.isError)
-    return (
-      <div className="p-4 md:p-6">
-        <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
-          <p className="text-sm font-medium">Failed to load manager stats.</p>
-        </div>
-      </div>
-    );
+  if (isPending) return <OverviewSkeleton />;
 
-  const s = (stats.data as unknown as ApiResponse<ManagerAnalytics>)?.data;
-  if (!s)
+  if (!statsData?.success)
     return (
       <div className="p-4 md:p-6">
         <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
@@ -61,40 +47,33 @@ export function ManagerOverview() {
       </div>
     );
 
+  const stats: ManagerAnalytics = statsData?.data ?? undefined;
+  const services = serviceData?.data ?? []
+
+
   const pie = [
-    { name: "Assigned", value: s.assignedServices },
-    { name: "Rejected", value: s.rejectedServices },
+    { name: "Assigned", value: stats?.assignedServices },
+    { name: "Rejected", value: stats?.rejectedServices },
   ];
-  const bar = [
-    {
-      name: "Work",
-      assigned: s.assignedServices,
-      completed: s.completedWorkByTechnicians,
-    },
-  ];
+
   const workOrderPie = [
     {
       name: "Started",
-      value: s.totalStartedWorkOrders,
+      value: stats.totalStartedWorkOrders,
       fill: "var(--chart-2)",
     },
     {
       name: "En Route",
-      value: s.totalEnrouteWorkOrders,
+      value: stats.totalEnrouteWorkOrders,
       fill: "var(--chart-1)",
     },
     {
       name: "Completed",
-      value: s.completedWorkByTechnicians,
+      value: stats.completedWorkByTechnicians,
       fill: "var(--chart-5)",
     },
   ];
-  const workOrderTotal =
-    s.totalStartedWorkOrders +
-    s.totalEnrouteWorkOrders +
-    s.completedWorkByTechnicians;
-  const list: any[] =
-    (recents.data as any)?.data?.data ?? (recents.data as any)?.data ?? [];
+  const workOrderTotal = stats?.totalWorkOrders
 
   return (
     <div className="space-y-4 p-4 sm:space-y-5 md:p-6">
@@ -106,34 +85,38 @@ export function ManagerOverview() {
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 xl:grid-cols-4">
         <StatCard
           title="Total Earnings"
-          value={fmtMoney(s.totalEarnings)}
+          value={`৳ ${stats.totalEarnings}`}
           icon={DollarSign}
           description="Lifetime earnings"
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
+          href="/manager-dashboard/payment?status=PAID"
         />
         <StatCard
           title="This Month Earnings"
-          value={fmtMoney(s.currentMonthRevenue)}
+          value={`৳ ${stats.currentMonthRevenue}`}
           icon={TrendingUp}
           description="Current month earnings"
+        // href="/manager-dashboard/payment?status=PAID"
         />
         <StatCard
           title="Assigned Services"
-          value={s.assignedServices}
+          value={stats.assignedServices}
           icon={Briefcase}
           description="Assigned to your region"
           href="/manager-dashboard/service/my-region-services"
         />
         <StatCard
           title="Completed by Technicians"
-          value={s.completedWorkByTechnicians}
+          value={stats.completedWorkByTechnicians}
           icon={CheckCircle2}
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
+          href="/manager-dashboard/service/my-region-services?status=COMPLETED"
         />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <ManagerStatusBreakdown stats={s} />
+        <ManagerStatusBreakdown stats={stats} />
+
         <ChartCard
           title="Work Order Status"
           description="Started vs en route vs completed"
@@ -229,20 +212,21 @@ export function ManagerOverview() {
             </div>
           </CardHeader>
           <CardContent className="space-y-2 pt-2 text-sm">
-            {list.slice(0, 5).map((it: any, i: number) => (
-              <div
-                key={it._id ?? it.id ?? i}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/[0.04]"
+            {services.slice(0, 5).map((service: IService, i: number) => (
+              <Link
+                href={`/manager-dashboard/service/details?id=${service.id}`}
+                key={service.id}
+                className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/5"
               >
                 <span className="min-w-0 truncate font-semibold text-foreground">
-                  {it.title ?? it.serviceName ?? "Service"}
+                  {service.title ?? "Service"}
                 </span>
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-primary ring-1 ring-primary/20">
-                  {it.status ?? ""}
+                  {service.status ?? ""}
                 </span>
-              </div>
+              </Link>
             ))}
-            {!list.length && (
+            {!services.length && (
               <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center">
                 <p className="text-muted-foreground">No recent services.</p>
               </div>
@@ -250,8 +234,6 @@ export function ManagerOverview() {
           </CardContent>
         </Card>
       </div>
-
-
     </div>
   );
 }

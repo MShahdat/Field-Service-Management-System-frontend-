@@ -29,6 +29,7 @@ export interface ManagerAnalytics {
   totalEarnings: string;
   totalRefunded: string;
   currentMonthRevenue: string;
+  totalWorkOrders: number
 
 }
 
@@ -49,6 +50,7 @@ export interface CustomerAnalytics {
   cancelledServices: number;
   pendingServices: number;
   rejectedServices: number;
+  inProgressServices: number;
   completedServices: number;
   completedWorkOrders: number;
   totalStartedWorkOrders: number;

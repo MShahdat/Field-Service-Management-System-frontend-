@@ -2,6 +2,7 @@
 import {
   ArrowRight,
   Ban,
+  BangladeshiTaka,
   Briefcase,
   CheckCircle2,
   ClipboardList,
@@ -30,12 +31,13 @@ import {
   useGetCustomerStats,
   useGetPaymentInfo,
 } from "@/hooks";
-import type { ApiResponse, CustomerAnalytics } from "@/types";
+import type { ApiResponse, CustomerAnalytics, IPayment, IService } from "@/types";
 import { ChartCard } from "./chart-card";
 import { CustomerStatusBreakdown } from "./customer-status-breakdown";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
 import { fmtMoney, StatCard } from "./stat-card";
+import { formatDate } from "@/utils";
 
 const COLORS = ["#059669", "#D97706", "#DC2626", "#BE123C"];
 const TOOLTIP_STYLE = {
@@ -47,7 +49,7 @@ const TOOLTIP_STYLE = {
 export function CustomerOverview() {
   const stats = useGetCustomerStats();
   const services = useCustomerMyService({ limit: "5", page: "1" });
-  const payments = useGetPaymentInfo({ limit: "5", page: "1" });
+  const payments = useGetPaymentInfo({ limit: "5", page: "1", status: "PAID" });
 
   if (stats.isPending) return <OverviewSkeleton />;
   if (stats.isError)
@@ -97,10 +99,10 @@ export function CustomerOverview() {
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 xl:grid-cols-4">
         <StatCard
           title="Total Spend"
-          value={fmtMoney(s.totalSpend)}
-          icon={DollarSign}
+          value={`৳ ${s.totalSpend}`}
+          icon={BangladeshiTaka}
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
-          href="/customer-dashboard/payment/my-payment"
+          href="/customer-dashboard/payment/my-payment?status=PAID"
         />
         <StatCard
           title="Total Services"
@@ -113,13 +115,14 @@ export function CustomerOverview() {
           value={s.completedServices}
           icon={CheckCircle2}
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
+          href="/customer-dashboard/service/my-services?status=COMPLETED"
         />
         <StatCard
           title="Pending"
           value={s.pendingServices}
           icon={Clock}
           accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
-          href="/customer-dashboard/service/todays-service"
+          href="/customer-dashboard/service/todays-service?status=PENDING"
         />
 
       </div>
@@ -186,10 +189,11 @@ export function CustomerOverview() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 pt-2 text-sm">
-              {svcList.slice(0, 5).map((x: any, i: number) => (
-                <div
-                  key={x._id ?? x.id ?? i}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/[0.04]"
+              {svcList.slice(0, 5).map((x: IService, i: number) => (
+                <Link
+                  href={`/customer-dashboard/service/my-services/details?id=${x.id}`}
+                  key={x.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/5"
                 >
                   <span className="min-w-0 truncate font-semibold text-foreground">
                     {x.title ?? "Service"}
@@ -197,7 +201,7 @@ export function CustomerOverview() {
                   <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-primary ring-1 ring-primary/20">
                     {x.status ?? ""}
                   </span>
-                </div>
+                </Link>
               ))}
               {!svcList.length && (
                 <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center">
@@ -223,18 +227,21 @@ export function CustomerOverview() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 pt-2 text-sm">
-              {payList.slice(0, 5).map((p: any, i: number) => (
-                <div
-                  key={p._id ?? p.id ?? i}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/[0.04]"
+              {payList.slice(0, 5).map((p: IPayment, i: number) => (
+                <Link href={'customer-dashboard/payment/my-payment'}
+                  key={p.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/5"
                 >
-                  <span className="font-semibold text-foreground tabular-nums">
-                    {p.amount ?? p.total ?? "—"}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-foreground tabular-nums">
+                      {p.amount ?? "—"}
+                    </span>
+                    <span className="font-medium">({p.paidAt ? formatDate(p.paidAt) : "-"})</span>
+                  </div>
                   <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium whitespace-nowrap text-muted-foreground ring-1 ring-border">
                     {p.status ?? ""}
                   </span>
-                </div>
+                </Link>
               ))}
               {!payList.length && (
                 <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center">

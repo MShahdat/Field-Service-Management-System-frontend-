@@ -2,7 +2,6 @@
 
 import { useForm } from "@tanstack/react-form";
 import {
-  BriefcaseBusinessIcon,
   ClipboardCheckIcon,
   LockIcon,
   ShieldCheckIcon,

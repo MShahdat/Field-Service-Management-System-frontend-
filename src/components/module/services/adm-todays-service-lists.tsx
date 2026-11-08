@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
 import ServiceTable from "./service-table";
+import ShowCount from "@/shared/show.count";
 
 const TodaysServiceLists = () => {
   const searchParams = useSearchParams();
@@ -29,7 +30,7 @@ const TodaysServiceLists = () => {
   if (data.data.length === 0) {
     return (
       <DataNotFoundCard
-        message="Service Not found"
+        message="Todays service Not found"
         description="There was no services for this region"
       />
     );
@@ -39,10 +40,11 @@ const TodaysServiceLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={services?.length} meta={data?.meta} title="services" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <ServiceTable services={services} role="ADMIN" />
+        <ServiceTable services={services} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

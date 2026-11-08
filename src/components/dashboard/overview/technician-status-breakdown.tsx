@@ -75,7 +75,7 @@ const buildGroups = (s: TechnicianAnalytics): StatusGroup[] => {
         },
         {
           label: "Avg rating",
-          display: `${s.avgRating}/5`,
+          display: `${s.avgRating.toFixed(1)}/5`,
           percent: ratingPercent,
           barClass: "bg-amber-500",
           dotClass: "bg-amber-500",

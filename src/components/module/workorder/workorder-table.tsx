@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Endpoint, ILoggedUser, IWorkOrder, UserRole } from "@/types";
+import type { Endpoint, ILoggedUser, IWorkOrder, Meta, UserRole } from "@/types";
 import { badgeText, statusVarient } from "@/utils";
 import OrderStatusModal from "./order-status-update";
 import { formatClock, formatServiceDate } from "../services/details-util";
@@ -20,16 +20,20 @@ type Props = {
   orders: IWorkOrder[];
   user: ILoggedUser;
   endpoint: Endpoint;
-  route: string
+  route: string;
+  meta?: Meta
 };
 
-const WorkorderTable = ({ orders, user, endpoint, route }: Props) => {
+const WorkorderTable = ({ orders, user, endpoint, route, meta }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
   const today = endpoint === "today";
   const all = endpoint === "all";
   const incoming = endpoint === "incoming";
+
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? orders.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -64,7 +68,7 @@ const WorkorderTable = ({ orders, user, endpoint, route }: Props) => {
               const params = new URLSearchParams({ id: order.id })
               return (
                 <TableRow key={order.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{startIndex + idx}</TableCell>
                   {incoming && (
                     <TableHead>
                       {order.service.title === "" ? "-" : order.service.title}

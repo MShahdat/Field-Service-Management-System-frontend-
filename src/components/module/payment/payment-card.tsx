@@ -49,21 +49,71 @@ function formatAmount(amount: number | string) {
   return n.toLocaleString("en-US");
 }
 
-function headerTint(status: IPayment["status"]) {
-  switch (status) {
-    case "PAID":
-      return "from-emerald-500/15 via-emerald-500/5 to-transparent";
-    case "UNPAID":
-      return "from-amber-500/15 via-amber-500/5 to-transparent";
-    case "FAILED":
-    case "CANCELLED":
-      return "from-destructive/15 via-destructive/5 to-transparent";
-    case "REFUNDED":
-      return "from-muted via-muted/50 to-transparent";
-    default:
-      return "from-primary/15 via-primary/5 to-transparent";
-  }
-}
+const PaymentPattern = () => {
+  const faint = "rgba(255,255,255,0.12)";
+  const soft = "rgba(255,255,255,0.2)";
+  const mid = "rgba(255,255,255,0.15)";
+  const strong = "rgba(255,255,255,0.3)";
+  const coin = "rgba(255,255,255,0.25)";
+
+  return (
+    <svg
+      viewBox="0 0 300 96"
+      preserveAspectRatio="xMidYMax slice"
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
+    >
+      <title>Payment pattern</title>
+
+      {/* Credit cards */}
+      <rect x="40" y="20" width="52" height="32" rx="4" fill={faint} />
+      <rect x="48" y="26" width="14" height="4" rx="1" fill={soft} />
+      <rect x="70" y="26" width="18" height="4" rx="1" fill={soft} />
+      <rect x="40" y="34" width="20" height="2" rx="1" fill={soft} />
+
+      <rect x="130" y="44" width="52" height="32" rx="4" fill={faint} />
+      <rect x="138" y="50" width="14" height="4" rx="1" fill={soft} />
+      <rect x="160" y="50" width="18" height="4" rx="1" fill={soft} />
+      <rect x="130" y="58" width="20" height="2" rx="1" fill={soft} />
+
+      <rect x="220" y="24" width="52" height="32" rx="4" fill={faint} />
+      <rect x="228" y="30" width="14" height="4" rx="1" fill={soft} />
+      <rect x="250" y="30" width="18" height="4" rx="1" fill={soft} />
+      <rect x="220" y="38" width="20" height="2" rx="1" fill={soft} />
+
+      {/* Currency symbols */}
+      <path
+        d="M70 62 Q80 56 90 62 T110 62 Q100 68 90 68 M85 70 Q85 74 90 74 Q95 74 95 70"
+        fill={faint}
+      />
+      <path
+        d="M160 72 Q170 66 180 72 T200 72 Q190 78 180 78 M190 80 Q190 84 195 84 Q200 84 200 80"
+        fill={faint}
+      />
+      <path
+        d="M250 66 Q260 60 270 66 T290 66 Q280 72 270 72 M265 74 Q265 78 270 78 Q275 78 275 74"
+        fill={faint}
+      />
+
+      {/* Wallet / bill shapes */}
+      <path d="M20 68 H52 V84 H20 Z" fill={mid} />
+      <rect x="28" y="72" width="12" height="4" rx="1" fill={strong} />
+      <rect x="28" y="78" width="8" height="2" rx="1" fill={strong} />
+      <path d="M110 68 H142 V84 H110 Z" fill={mid} />
+      <rect x="118" y="72" width="12" height="4" rx="1" fill={strong} />
+      <rect x="118" y="78" width="8" height="2" rx="1" fill={strong} />
+      <path d="M200 68 H232 V84 H200 Z" fill={mid} />
+      <rect x="208" y="72" width="12" height="4" rx="1" fill={strong} />
+      <rect x="208" y="78" width="8" height="2" rx="1" fill={strong} />
+
+      {/* Coins */}
+      <circle cx="180" cy="34" r="10" fill={mid} />
+      <circle cx="180" cy="34" r="6" fill={coin} />
+      <circle cx="260" cy="80" r="12" fill={mid} />
+      <circle cx="260" cy="80" r="7" fill={coin} />
+    </svg>
+  );
+};
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -94,31 +144,30 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
           : "hover:border-primary/30 hover:shadow-primary/5",
       )}
     >
-      {/* Amount banner */}
-      <div
-        className={cn(
-          "bg-gradient-to-r px-5 pt-4 pb-4 sm:px-6",
-          headerTint(payment.status),
-        )}
-      >
-        <div className="flex items-center justify-between gap-2">
-          <Badge variant={statusVarient(payment.status)}>
-            {badgeText(payment.status)}
-          </Badge>
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <Wallet className="size-3.5" aria-hidden />
+      {/* Amount banner — isolate makes -z-10 stay inside this banner */}
+      <div className="relative isolate overflow-hidden bg-primary px-5 pt-4 pb-4 sm:px-6 text-white">
+        <PaymentPattern />
+        <div className="relative mb-3 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-foreground">
+            <Wallet className="size-3.5 text-primary-foreground" aria-hidden />
             {payment.method || "bKash"}
           </span>
+          <Badge
+            variant={statusVarient(payment.status)}
+            className="text-primary-foreground"
+          >
+            {badgeText(payment.status)}
+          </Badge>
         </div>
 
-        <h3 className="mt-3 line-clamp-1 text-[15px] font-semibold leading-snug tracking-tight text-foreground">
+        <h3 className="relative mt-3 line-clamp-1 text-[15px] font-semibold leading-snug tracking-tight">
           {serviceTitle}
         </h3>
-        <div className="mt-1 flex items-baseline gap-1.5">
-          <span className="text-xs font-semibold tracking-wide text-muted-foreground">
+        <div className="relative mt-1 flex items-baseline gap-1.5">
+          <span className="text-xs font-semibold tracking-wide opacity-90">
             {payment.currency || "BDT"}
           </span>
-          <span className="text-2xl font-bold tracking-tight text-foreground">
+          <span className="text-2xl font-bold tracking-tight">
             ৳{formatAmount(payment.amount)}
           </span>
         </div>
@@ -151,7 +200,7 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
 
         <div className="mt-auto pt-3">
           {isPaid ? (
-            <p className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2.5 text-sm font-medium text-emerald-700 dark:text-emerald-400">
+            <p className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400">
               <Mail className="size-4 shrink-0" aria-hidden />
               Invoice sent to your email
             </p>
@@ -160,7 +209,7 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
               <PaymentBtn
                 workOrderId={workOrder?.id ?? payment.workOrderId}
                 disabled={!canPay}
-                className="h-10 w-full text-[15px] font-semibold"
+                className="h-9 w-full text-[15px] font-semibold"
               >
                 Pay now
               </PaymentBtn>

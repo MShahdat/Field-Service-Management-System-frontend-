@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ServiceTable from "./service-table";
 import Paginations from "@/shared/pagination";
+import ShowCount from "@/shared/show.count";
 
 
 const TodaysServiceLists = () => {
@@ -40,10 +41,11 @@ const TodaysServiceLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={services?.length} meta={data?.meta} title="services" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <ServiceTable services={services} role={"MANAGER"} />
+        <ServiceTable services={services} meta={data?.meta} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

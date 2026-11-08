@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ManagerTable from "./manager-table";
 import Paginations from "@/shared/pagination";
+import ShowCount from "@/shared/show.count";
 
 const PendingManagerLists = () => {
   const searchParams = useSearchParams();
@@ -27,7 +28,7 @@ const PendingManagerLists = () => {
     return;
   }
 
-  if (data.data.length === 0) {
+  if (data?.data?.length === 0) {
     return (
       <DataNotFoundCard
         message="Pending Manger Not Found"
@@ -36,9 +37,13 @@ const PendingManagerLists = () => {
     );
   }
 
-  const managers = data.data || [];
+  const managers = data?.data || [];
+  const meta = data?.meta
+
+
   return (
     <div className="space-y-4">
+      <ShowCount length={managers?.length} meta={meta} title="managers" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >

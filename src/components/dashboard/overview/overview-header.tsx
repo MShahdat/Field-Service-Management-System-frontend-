@@ -12,7 +12,7 @@ export function OverviewHeader({
 }) {
   const { data } = useGetMe();
   const user = (data as any)?.data;
-  const firstName = user?.name?.split(" ")[0];
+  const name = user?.name ?? ""
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
@@ -31,7 +31,7 @@ export function OverviewHeader({
             {title}
           </span>
           <h1 className="mt-2 truncate text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
-            {firstName ? `Welcome back, ${firstName}` : title}
+            {name ? `Welcome back, ${name}` : title}
           </h1>
           <p className="mt-0.5 truncate text-sm text-muted-foreground">
             {subtitle}

@@ -7,6 +7,7 @@ import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
 import RegionTable from "./region-table";
+import ShowCount from "@/shared/show.count";
 
 const RegionLists = () => {
   const searchParams = useSearchParams();
@@ -34,10 +35,11 @@ const RegionLists = () => {
   }
   return (
     <div className="space-y-4">
+      <ShowCount length={regions?.length} meta={data?.meta} title="regions" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <RegionTable regions={regions} />
+        <RegionTable regions={regions} meta={data?.meta} />
       </Suspense>
 
       {data.meta && <Paginations meta={data.meta} />}

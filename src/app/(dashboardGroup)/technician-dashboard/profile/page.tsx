@@ -83,7 +83,7 @@ const TechnicianProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-6xl space-y-4 px-3 py-4 sm:space-y-5 sm:px-6 sm:py-6">
+      <div className="mx-auto w-full max-w-7xl space-y-4 px-3 py-4 sm:space-y-5 sm:px-6 sm:py-6">
         {/* Top bar */}
         <div className="flex items-center justify-between px-1 text-sm">
           <Link
@@ -212,7 +212,7 @@ const TechnicianProfile = () => {
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
             <Stat
               icon={<Star className="size-4.5" />}
-              value={tech?.rating != null ? String(tech.rating) : "—"}
+              value={tech?.rating ? tech?.rating.toFixed(1) : "—"}
               label="Rating"
               hint="Avg. customer score"
             />
@@ -464,7 +464,7 @@ function Stat({
 }) {
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/30 sm:p-5">
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-primary/30" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary to-primary/30" />
       <div className="flex items-center justify-between gap-2">
         <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
           {icon}

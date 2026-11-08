@@ -7,6 +7,7 @@ import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import FeedbackTable from "./feedback-table";
+import ShowCount from "@/shared/show.count";
 
 const FeedbackLists = () => {
   const searchParams = useSearchParams();
@@ -31,10 +32,11 @@ const FeedbackLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={feedbacks?.length} meta={data?.meta} title="feedbacks" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <FeedbackTable feedbacks={feedbacks} />
+        <FeedbackTable feedbacks={feedbacks} meta={data?.meta} />
       </Suspense>
       <Paginations meta={data?.meta} />
     </div>

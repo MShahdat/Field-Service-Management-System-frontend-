@@ -9,20 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IService } from "@/types";
+import { IService, Meta } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
   services: IService[];
-  route: string
+  route: string;
+  meta?: Meta
 };
 
-const IncomingServiceTable = ({ services, route }: Props) => {
+const IncomingServiceTable = ({ services, route, meta }: Props) => {
   const router = useRouter();
 
-  console.log('incomming services by manager', services)
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? services.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -45,7 +47,7 @@ const IncomingServiceTable = ({ services, route }: Props) => {
 
               return (
                 <TableRow key={service.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>
                     {service.title ?? "-"}
                   </TableCell>

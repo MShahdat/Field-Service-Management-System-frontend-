@@ -13,9 +13,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const items = [
   { label: "Default", value: "default" },
-  { label: "2", value: "2" },
-  { label: "4", value: "4" },
+  { label: "3", value: "3" },
   { label: "6", value: "6" },
+  { label: "12", value: "12" },
 ];
 
 export function ItemShow() {
@@ -39,20 +39,23 @@ export function ItemShow() {
   };
 
   return (
-    <Select value={limit} onValueChange={handleChange}>
-      <SelectTrigger className="w-full max-w-48">
-        <SelectValue placeholder="Default" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Item Show</SelectLabel>
-          {items.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div className="flex items-center gap-2 text-sm">
+      <span className="text-muted-foreground whitespace-nowrap">Show</span>
+      <Select value={limit} onValueChange={handleChange}>
+        <SelectTrigger className="w-full max-w-48">
+          <SelectValue placeholder="Default" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Item Show</SelectLabel>
+            {items.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

@@ -7,6 +7,7 @@ import Paginations from "@/shared/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
 import { IWorkOrder } from "@/types";
 import OrderCard from "./cus-order-card";
+import ShowCount from "@/shared/show.count";
 
 const OrderLists = () => {
   const searchParams = useSearchParams();
@@ -16,15 +17,7 @@ const OrderLists = () => {
   const { data, isPending } = useMyOrder(params);
 
   if (isPending) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {[...Array(6)].map((_, index) => (
-          <div key={index as number}>
-            <CardSkeleton />
-          </div>
-        ))}
-      </div>
-    );
+    return <CardSkeleton />
   }
 
   if (!data?.success || data?.data.length === 0) {
@@ -40,6 +33,7 @@ const OrderLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={orders?.length} meta={data?.meta} title="orders" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {orders.map((order: IWorkOrder) => (
           <div key={order.id}>

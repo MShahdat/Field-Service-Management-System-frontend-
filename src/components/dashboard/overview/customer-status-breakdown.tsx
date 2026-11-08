@@ -56,14 +56,7 @@ const buildGroups = (s: CustomerAnalytics): StatusGroup[] => [
       },
       {
         label: "In progress",
-        value: Math.max(
-          s.totalServices -
-          s.completedServices -
-          s.pendingServices -
-          s.cancelledServices -
-          s.rejectedServices,
-          0,
-        ),
+        value: s.inProgressServices,
         barClass: "bg-sky-500",
         dotClass: "bg-sky-500",
       },
@@ -71,19 +64,19 @@ const buildGroups = (s: CustomerAnalytics): StatusGroup[] => [
   },
   {
     title: "Work Orders",
-    total: s.totalStartedWorkOrders,
+    total: s.totalServices,
     rows: [
+      {
+        label: "Started",
+        value: s.totalStartedWorkOrders,
+        barClass: "bg-amber-500",
+        dotClass: "bg-amber-500",
+      },
       {
         label: "Completed",
         value: s.completedWorkOrders,
         barClass: "bg-emerald-500",
         dotClass: "bg-emerald-500",
-      },
-      {
-        label: "In progress",
-        value: Math.max(s.totalStartedWorkOrders - s.completedWorkOrders, 0),
-        barClass: "bg-amber-500",
-        dotClass: "bg-amber-500",
       },
     ],
   },

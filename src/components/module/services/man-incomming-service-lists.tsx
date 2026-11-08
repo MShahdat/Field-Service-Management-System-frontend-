@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
 import IncomingServiceTable from "./man-incomming-service-table";
+import ShowCount from "@/shared/show.count";
 
 
 
@@ -42,10 +43,11 @@ const IncomingServiceLists = () => {
 
   return (
     <div className="space-y-4">
+      <ShowCount length={services?.length} meta={data?.meta} title="services" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <IncomingServiceTable services={services} route={pathname} />
+        <IncomingServiceTable services={services} route={pathname} meta={data?.meta} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

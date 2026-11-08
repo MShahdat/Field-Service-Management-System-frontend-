@@ -37,7 +37,7 @@ const PaymentBtn = ({
     <Button
       disabled={disabled}
       variant={"accepted"}
-      className={cn("flex-1", className)}
+      className={cn(className)}
       onClick={() => {
         handlePay();
         console.log("clicked");

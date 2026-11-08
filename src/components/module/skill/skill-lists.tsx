@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import SkillsTable from "./skill-table";
 import Paginations from "@/shared/pagination";
+import ShowCount from "@/shared/show.count";
 
 const SkillLists = () => {
   const searchParams = useSearchParams();
@@ -26,12 +27,16 @@ const SkillLists = () => {
       />
     );
   }
+
+  const skills = data?.data ?? []
+
   return (
     <div className="space-y-4">
+      <ShowCount length={skills?.length} meta={data?.meta} title="skills" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={6} columnCount={8} />}
       >
-        <SkillsTable skills={data?.data} />
+        <SkillsTable skills={data?.data} meta={data?.meta} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

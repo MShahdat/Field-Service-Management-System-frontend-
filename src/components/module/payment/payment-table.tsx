@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IPayment, IService } from "@/types";
+import { IPayment, IService, Meta } from "@/types";
 import { badgeText, formatDuration, statusVarient } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
@@ -22,9 +22,12 @@ import { PaymentDetails } from "./payment-modal";
 
 type Props = {
   payments: IPayment[];
+  meta?: Meta
 };
 
-const PaymentTable = ({ payments }: Props) => {
+const PaymentTable = ({ payments, meta }: Props) => {
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? payments.length) || 1) + 1
+
   return (
     <div className="space-y-4">
       <div className="border rounded-lg">
@@ -45,7 +48,7 @@ const PaymentTable = ({ payments }: Props) => {
             {payments.map((payment: IPayment, idx: number) => {
               return (
                 <TableRow key={payment.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>
                     {payment.workOrder.service.category.name ?? "Service"}
                   </TableCell>

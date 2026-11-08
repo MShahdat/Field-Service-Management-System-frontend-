@@ -14,12 +14,14 @@ import { ISkills } from "@/types/skills.types";
 import { SkillModal } from "./skill-modal";
 import { StatusUpdateModal } from "./status-update";
 import { DeleteStatusModal } from "./delete-sataus-update";
+import { Meta } from "@/types";
 
 type Props = {
   skills: ISkills[];
+  meta?: Meta
 };
 
-const SkillsTable = ({ skills }: Props) => {
+const SkillsTable = ({ skills, meta }: Props) => {
   if (skills.length === 0) {
     return (
       <DataNotFoundCard
@@ -28,6 +30,9 @@ const SkillsTable = ({ skills }: Props) => {
       />
     );
   }
+
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? skills.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -38,7 +43,6 @@ const SkillsTable = ({ skills }: Props) => {
               <TableHead className="">No</TableHead>
               <TableHead>Skill Name</TableHead>
               <TableHead>Category Name</TableHead>
-              <TableHead>Description</TableHead>
               <TableHead>Active Status</TableHead>
               <TableHead>Deleted</TableHead>
               <TableHead className="text-right">Action</TableHead>
@@ -50,10 +54,10 @@ const SkillsTable = ({ skills }: Props) => {
               const deleted = skill.isDelete ? "True" : "False";
               return (
                 <TableRow key={skill.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>{skill.name}</TableCell>
                   <TableCell>{skill.category.name}</TableCell>
-                  <TableCell>{skill.description ?? " - "}</TableCell>
+
                   <TableCell>
                     <Badge variant={"secondary"}>{status}</Badge>
                   </TableCell>

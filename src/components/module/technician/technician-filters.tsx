@@ -5,7 +5,6 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   ChevronDownIcon,
-  CircleDot,
   MapPin,
   SlidersHorizontal,
   Star,
@@ -36,17 +35,18 @@ const AVAILABLE_DAYS = [
   { label: "Sunday", value: "0" },
 ] as const;
 
-const STATUS_OPTIONS = [
-  { label: "Available", value: "AVAILABLE" },
-  { label: "Busy", value: "BUSY" },
-  { label: "Off duty", value: "OFF_DUTY" },
-] as const;
+// const STATUS_OPTIONS = [
+//   { label: "Available", value: "AVAILABLE" },
+//   { label: "Busy", value: "BUSY" },
+//   { label: "Off duty", value: "OFF_DUTY" },
+// ] as const;
 
 const RATING_OPTIONS = [
   { label: "4.5+", value: "4.5" },
   { label: "4.0+", value: "4" },
   { label: "3.0+", value: "3" },
 ] as const;
+
 
 const FILTER_KEYS = [
   "dayOfWeek",
@@ -74,7 +74,7 @@ function FilterSection({
     <Collapsible defaultOpen className="border-b border-border last:border-b-0">
       <CollapsibleTrigger className="group flex w-full items-center justify-between px-4 py-3.5">
         <span className="flex items-center gap-2.5 text-sm font-medium">
-          <Icon className="size-4 text-muted-foreground" />
+          <Icon className="size-4 text-primary" />
           {title}
         </span>
         <ChevronDownIcon className="size-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
@@ -139,7 +139,6 @@ const TechnicianFilters = () => {
   const activeDays = toList(searchParams.get("dayOfWeek"));
   const activeRegions = toList(searchParams.get("region"));
   const activeSkills = toList(searchParams.get("skill"));
-  const activeStatus = searchParams.get("status");
   const activeRating = searchParams.get("minRating");
 
   const minJobsUrl = searchParams.get("minJobsCompleted") ?? "";
@@ -274,82 +273,6 @@ const TechnicianFilters = () => {
         )}
       </div>
 
-      <FilterSection title="Availability" icon={CalendarDays}>
-        <div className="space-y-2.5">
-          {AVAILABLE_DAYS.map((day) => (
-            <CheckboxRow
-              key={day.value}
-              id={`${uid}-day-${day.value}`}
-              label={day.label}
-              checked={activeDays.includes(day.value)}
-              onChange={() => toggleCsv("dayOfWeek", day.value)}
-            />
-          ))}
-        </div>
-      </FilterSection>
-
-      <FilterSection title="Region" icon={MapPin}>
-        <div className="max-h-44 space-y-2.5 overflow-y-auto pr-1">
-          {regionsPending ? (
-            <p className="text-xs text-muted-foreground">Loading regions...</p>
-          ) : regions.length > 0 ? (
-            regions.map((region) => (
-              <CheckboxRow
-                key={region.id}
-                id={`${uid}-region-${region.id}`}
-                label={region.area}
-                checked={activeRegions.includes(region.area)}
-                onChange={() => toggleCsv("region", region.area)}
-              />
-            ))
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              No regions available.
-            </p>
-          )}
-        </div>
-      </FilterSection>
-
-      <FilterSection title="Skill" icon={Wrench}>
-        <div className="max-h-48 space-y-2.5 overflow-y-auto pr-1">
-          {skillsPending ? (
-            <p className="text-xs text-muted-foreground">Loading skills...</p>
-          ) : skills.length > 0 ? (
-            skills.map((skill) => (
-              <CheckboxRow
-                key={skill.id}
-                id={`${uid}-skill-${skill.id}`}
-                label={skill.name}
-                checked={activeSkills.includes(skill.name)}
-                onChange={() => toggleCsv("skill", skill.name)}
-              />
-            ))
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              No skills available.
-            </p>
-          )}
-        </div>
-      </FilterSection>
-
-      <FilterSection title="Status" icon={CircleDot}>
-        <div className="flex flex-wrap gap-2">
-          {STATUS_OPTIONS.map((option) => (
-            <Button
-              key={option.value}
-              type="button"
-              size="sm"
-              variant={activeStatus === option.value ? "default" : "outline"}
-              aria-pressed={activeStatus === option.value}
-              onClick={() => setSingle("status", option.value)}
-              className="rounded-full"
-            >
-              {option.label}
-            </Button>
-          ))}
-        </div>
-      </FilterSection>
-
       <FilterSection title="Minimum rating" icon={Star}>
         <div className="flex flex-wrap gap-2">
           {RATING_OPTIONS.map((option) => (
@@ -422,6 +345,83 @@ const TechnicianFilters = () => {
           Apply job range
         </Button>
       </FilterSection>
+
+      <FilterSection title="Availability" icon={CalendarDays}>
+        <div className="space-y-2.5">
+          {AVAILABLE_DAYS.map((day) => (
+            <CheckboxRow
+              key={day.value}
+              id={`${uid}-day-${day.value}`}
+              label={day.label}
+              checked={activeDays.includes(day.value)}
+              onChange={() => toggleCsv("dayOfWeek", day.value)}
+            />
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Region" icon={MapPin}>
+        <div className="max-h-44 space-y-2.5 overflow-y-auto pr-1">
+          {regionsPending ? (
+            <p className="text-xs text-muted-foreground">Loading regions...</p>
+          ) : regions.length > 0 ? (
+            regions.map((region) => (
+              <CheckboxRow
+                key={region.id}
+                id={`${uid}-region-${region.id}`}
+                label={region.area}
+                checked={activeRegions.includes(region.area)}
+                onChange={() => toggleCsv("region", region.area)}
+              />
+            ))
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              No regions available.
+            </p>
+          )}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Skill" icon={Wrench}>
+        <div className="max-h-48 space-y-2.5 overflow-y-auto pr-1">
+          {skillsPending ? (
+            <p className="text-xs text-muted-foreground">Loading skills...</p>
+          ) : skills.length > 0 ? (
+            skills.map((skill) => (
+              <CheckboxRow
+                key={skill.id}
+                id={`${uid}-skill-${skill.id}`}
+                label={skill.name}
+                checked={activeSkills.includes(skill.name)}
+                onChange={() => toggleCsv("skill", skill.name)}
+              />
+            ))
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              No skills available.
+            </p>
+          )}
+        </div>
+      </FilterSection>
+
+      {/* <FilterSection title="Status" icon={CircleDot}>
+        <div className="flex flex-wrap gap-2">
+          {STATUS_OPTIONS.map((option) => (
+            <Button
+              key={option.value}
+              type="button"
+              size="sm"
+              variant={activeStatus === option.value ? "default" : "outline"}
+              aria-pressed={activeStatus === option.value}
+              onClick={() => setSingle("status", option.value)}
+              className="rounded-full"
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      </FilterSection> */}
+
     </div>
   );
 };

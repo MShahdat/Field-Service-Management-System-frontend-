@@ -45,6 +45,7 @@ import {
 } from "./details-util";
 import { MyServiceModal } from "./cus-service-modal";
 import DeleteModal from "./cus-delete-modal";
+import Link from "next/link";
 
 
 type Photo = { url: string; type: string; description?: string };
@@ -182,7 +183,7 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
 
   const isPayBtn =
     (wo?.status === "STARTED" || wo?.status === "COMPLETED") &&
-    wo?.payment?.status === "UNPAID";
+    (wo?.payment?.status === "UNPAID") && (role === "CUSTOMER");
 
   const isEdit = service.status === "PENDING" || service.status === "REJECTED";
 
@@ -196,7 +197,7 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
     <div className="w-full mx-auto">
       <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-xl text-primary-foreground shadow-md shadow-primary/25 ring-1 ring-primary/20 sm:size-12">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-primary to-primary/70 text-xl text-primary-foreground shadow-md shadow-primary/25 ring-1 ring-primary/20 sm:size-12">
             {service.category?.icon ? (
               <span aria-hidden>{service.category.icon}</span>
             ) : (
@@ -389,7 +390,7 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
                   <button
                     type="button"
                     onClick={() => setLightboxIndex(3)}
-                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-primary/30 bg-primary/[0.04] text-sm transition-colors hover:bg-primary/[0.08]"
+                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-primary/30 bg-primary/5 text-sm transition-colors hover:bg-primary/10"
                   >
                     <span className="text-2xl font-extrabold text-primary tabular-nums">
                       +{overflowCount}
@@ -508,7 +509,7 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
           </Section>
 
           {feedback && (
-            <Section className="rounded-2xl border-amber-500/25 bg-amber-500/[0.04] ring-1 ring-amber-500/20">
+            <Section className="rounded-2xl border-amber-500/25 bg-amber-500/15 ring-1 ring-amber-500/20">
               <div className="flex items-center gap-4">
                 <p className="text-4xl font-extrabold tracking-tight text-foreground tabular-nums">
                   {feedback.rating?.toFixed(1)}
@@ -579,7 +580,9 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">
+              <Link
+                href={`/technician/details?id=${technician?.id}`}
+                className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">
                 <ProfileAvater
                   name={technician?.user.name ?? "-"}
                   imageUrl={technician?.user.profileImg ?? ""}
@@ -601,10 +604,10 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
                       <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                         Technician ·{" "}
                         <Star className="size-3 fill-amber-500 text-amber-500" />{" "}
-                        2.95 · 2 jobs
+                        {technician.rating.toFixed(1)} - {technician.jobsCompleted} jobs
                       </p>
                       <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                        <Phone className="size-3" /> 01712345678
+                        <Phone className="size-3" /> {technician.phone}
                       </p>
                     </>
                   ) : (
@@ -613,7 +616,7 @@ const ServiceDetailsView = ({ service, backHref, role }: Props) => {
                     </p>
                   )}
                 </div>
-              </div>
+              </Link>
 
               {manager && (
                 <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 transition-colors hover:border-primary/25">

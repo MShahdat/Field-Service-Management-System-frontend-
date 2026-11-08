@@ -7,6 +7,7 @@ import {
   FolderKanban,
   LayoutDashboard,
   LifeBuoy,
+  LocateIcon,
   LogOut,
   Menu,
   User,
@@ -51,11 +52,11 @@ export function Navbar() {
   const navLinks = [
     { label: "Home", href: "/", icon: LayoutDashboard },
     { label: "Technicians", href: "/technician", icon: Wrench },
-    ...(dashboardUrl
-      ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
-      : []),
+    // ...(dashboardUrl
+    //   ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
+    //   : []),
     // { label: "Category", href: "/category", icon: LifeBuoy },
-    { label: "Region", href: "/region", icon: LifeBuoy },
+    { label: "Region", href: "/region", icon: LocateIcon },
     { label: "Support", href: "/support", icon: LifeBuoy },
     { label: "About", href: "/about-us", icon: FolderKanban },
     { label: "Contact", href: "/contact", icon: Contact },

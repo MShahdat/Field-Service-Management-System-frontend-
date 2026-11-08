@@ -1,11 +1,7 @@
 "use client";
 import {
   ArrowRight,
-  Briefcase,
-  CheckCircle2,
-  DollarSign,
-  MapPin,
-  Play,
+  BangladeshiTaka,
   Star,
   TrendingUp,
   Undo2,
@@ -27,11 +23,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetTechnicianStats, useMyOrder } from "@/hooks";
-import type { ApiResponse, TechnicianAnalytics } from "@/types";
+import type { ApiResponse, IWorkOrder, TechnicianAnalytics } from "@/types";
 import { ChartCard } from "./chart-card";
 import { OverviewHeader } from "./overview-header";
 import { OverviewSkeleton } from "./overview-skeleton";
-import { fmtMoney, StatCard } from "./stat-card";
+import { StatCard } from "./stat-card";
 import { TechnicianEarningsChart } from "./technician-earnings-chart";
 import { TechnicianStatusBreakdown } from "./technician-status-breakdown";
 
@@ -42,11 +38,11 @@ const TOOLTIP_STYLE = {
 };
 
 export function TechnicianOverview() {
-  const stats = useGetTechnicianStats();
-  const orders = useMyOrder({ limit: "5", page: "1" });
+  const { data: stats, isPending: statsPending, isError } = useGetTechnicianStats();
+  const { data: orderData, isPending: orderPending } = useMyOrder({ limit: "5", page: "1" });
 
-  if (stats.isPending) return <OverviewSkeleton />;
-  if (stats.isError)
+  if (statsPending || orderPending) return <OverviewSkeleton />;
+  if (isError)
     return (
       <div className="p-4 md:p-6">
         <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
@@ -57,7 +53,8 @@ export function TechnicianOverview() {
       </div>
     );
 
-  const s = (stats.data as unknown as ApiResponse<TechnicianAnalytics>)?.data;
+  const s = stats?.data ?? undefined
+
   if (!s)
     return (
       <div className="p-4 md:p-6">
@@ -93,8 +90,7 @@ export function TechnicianOverview() {
       fill: "var(--chart-4)",
     },
   ];
-  const list: any[] =
-    (orders.data as any)?.data?.data ?? (orders.data as any)?.data ?? [];
+  const list = orderData?.data ?? []
 
   return (
     <div className="space-y-4 p-4 sm:space-y-5 md:p-6">
@@ -107,25 +103,28 @@ export function TechnicianOverview() {
 
         <StatCard
           title="Avg Rating"
-          value={`${s.avgRating}/5`}
+          value={`${s.avgRating.toFixed(2)}/5`}
           icon={Star}
           description={`${rate}% completion`}
           accent="bg-amber-500/10 text-amber-600 ring-amber-500/20"
         />
         <StatCard
           title="Total Earnings"
-          value={fmtMoney(s.totalEarnings)}
-          icon={DollarSign}
+          value={`৳ ${s.totalEarnings}`}
+          icon={BangladeshiTaka}
           accent="bg-emerald-500/10 text-emerald-600 ring-emerald-500/20"
+          description="Total contribution over the time"
+          href="/technician-dashboard/payment?status=PAID"
         />
         <StatCard
           title="This Month"
-          value={fmtMoney(s.currentMonthRevenue)}
+          value={`৳ ${s.currentMonthRevenue}`}
           icon={TrendingUp}
+          description="Current month contribution"
         />
         <StatCard
           title="Refunded"
-          value={fmtMoney(s.totalRefunded)}
+          value={`৳ ${s.totalRefunded}`}
           icon={Undo2}
           accent="bg-red-500/10 text-red-600 ring-red-500/20"
         />
@@ -206,18 +205,19 @@ export function TechnicianOverview() {
           </div>
         </CardHeader>
         <CardContent className="space-y-2 pt-2 text-sm">
-          {list.slice(0, 5).map((o: any, i: number) => (
-            <div
-              key={o._id ?? o.id ?? i}
+          {list.map((o: IWorkOrder, i: number) => (
+            <Link
+              href={`/technician-dashboard/workorder/my-order/details?id=${o.id}`}
+              key={o.id}
               className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/[0.04]"
             >
               <span className="min-w-0 truncate font-semibold text-foreground">
-                {o.title ?? o.orderId ?? "Order"}
+                {o.service?.title ?? "Order"}
               </span>
               <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-primary ring-1 ring-primary/20">
                 {o.status ?? ""}
               </span>
-            </div>
+            </Link>
           ))}
           {!list.length && (
             <div className="rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center">

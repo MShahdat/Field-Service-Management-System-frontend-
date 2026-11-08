@@ -92,7 +92,7 @@ const PubRegionTechnicianCard = ({ technician }: Props) => {
           </div>
 
           <div className="mt-auto pt-4">
-            <div className="flex items-center justify-center gap-1.5 rounded-lg border border-border py-1 text-sm font-medium transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+            <div className="flex items-center justify-center gap-1.5 rounded-lg border border-border py-1 text-sm font-medium transition-colors group-hover:border-primary bg-primary text-primary-foreground">
               View profile
               <ArrowRight
                 className="size-4 transition-transform group-hover:translate-x-0.5"

@@ -10,15 +10,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataNotFoundCard from "@/shared/data-not-found";
-import { ICategory } from "@/types";
+import { ICategory, Meta } from "@/types";
 import { CategoryModal } from "./category-modal";
 import { StatusUpdateModal } from "./status-update";
 
 type Props = {
   categories: ICategory[];
+  meta?: Meta
 };
 
-const CategoryTable = ({ categories }: Props) => {
+const CategoryTable = ({ categories, meta }: Props) => {
   console.log("categories from table", categories);
 
   if (categories.length === 0) {
@@ -29,6 +30,9 @@ const CategoryTable = ({ categories }: Props) => {
       />
     );
   }
+
+  const startIndex = ((meta?.page ?? 1) - 1) * ((meta?.limit ?? categories.length) || 1) + 1
+
 
   return (
     <div className="space-y-4">
@@ -49,7 +53,7 @@ const CategoryTable = ({ categories }: Props) => {
               const status = category.isActive ? "True" : "False";
               return (
                 <TableRow key={category.id}>
-                  <TableCell className="font-medium">{idx + 1}</TableCell>
+                  <TableCell className="font-medium">{idx + startIndex}</TableCell>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.duration}</TableCell>
                   <TableCell>{category.description}</TableCell>

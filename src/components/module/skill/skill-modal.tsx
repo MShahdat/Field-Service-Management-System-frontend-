@@ -4,7 +4,6 @@ import { useForm } from "@tanstack/react-form";
 import { Edit, Plus, Wrench } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -60,9 +59,9 @@ export function SkillModal({ skill, mode = "create", categories }: Props) {
 
   const categoryOptions: ISelectOption[] = categories
     ? categories.map((category: ICategory) => ({
-        value: category.id,
-        label: category.name,
-      }))
+      value: category.id,
+      label: category.name,
+    }))
     : [];
 
   console.log("select options", categoryOptions);

@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import Paginations from "@/shared/pagination";
 import { useSearchParams } from "next/navigation";
 import ServiceTable from "./service-table";
+import ShowCount from "@/shared/show.count";
 
 const ServiceLists = () => {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ const ServiceLists = () => {
   }
 
   if (!data?.success) {
-    return;
+    return <DataNotFoundCard />;
   }
 
   if (data.data.length === 0) {
@@ -32,14 +33,15 @@ const ServiceLists = () => {
     );
   }
 
-  const services = data.data || [];
+  const services = data?.data || [];
 
   return (
     <div className="space-y-4">
+      <ShowCount length={services?.length} meta={data?.meta} title="services" />
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >
-        <ServiceTable services={services} role={"MANAGER"} />
+        <ServiceTable services={services} meta={data?.meta} />
       </Suspense>
 
       <Paginations meta={data?.meta} />

@@ -6,6 +6,7 @@ import {
   getAllServices,
   getEligibleTechnician,
   getMyRegionService,
+  serviceDelete,
   singleService,
   updateService,
 } from "@/api";
@@ -132,6 +133,28 @@ export const useAssignTechnician = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["all-services"],
+      });
+    },
+  });
+};
+
+
+export const useServiceDelete = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => serviceDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["my-service-customer"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["single-service"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["all-services"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["my-region-service"],
       });
     },
   });

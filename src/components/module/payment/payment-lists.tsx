@@ -9,6 +9,7 @@ import type { IPayment } from "@/types";
 import PaymentCard from "./payment-card";
 import PaymentTable from "./payment-table";
 import GenericTableSkeleton from "@/loading/table-loading";
+import ShowCount from "@/shared/show.count";
 
 const PaymentLists = () => {
   const searchParams = useSearchParams();
@@ -18,7 +19,7 @@ const PaymentLists = () => {
   const { data: me } = useGetMe();
 
   if (isPending) {
-    return <GenericTableSkeleton rowCount={8} columnCount={8} />;
+    return <CardSkeleton />
   }
 
   if (!data?.success || data?.data.length === 0) {
@@ -36,6 +37,7 @@ const PaymentLists = () => {
   const cus = user.role === "CUSTOMER";
   return (
     <div className="space-y-4">
+      <ShowCount length={payments?.length} meta={data?.meta} title="payments" />
       {cus && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {payments.map((payment: IPayment) => (
@@ -45,7 +47,7 @@ const PaymentLists = () => {
           ))}
         </div>
       )}
-      {!cus && <PaymentTable payments={payments} />}
+      {!cus && <PaymentTable payments={payments} meta={data?.meta} />}
       <Paginations meta={data?.meta} />
     </div>
   );
