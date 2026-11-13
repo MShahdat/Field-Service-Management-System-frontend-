@@ -34,3 +34,8 @@ export const deactiveCategory = (id: string) => {
     method: "PATCH",
   });
 };
+
+
+export const getSingleCategory = (id: string) => {
+  return apiClient(`/category/${id}`);
+}

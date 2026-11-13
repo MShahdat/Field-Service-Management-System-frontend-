@@ -6,14 +6,17 @@ import { useGetAllRegions } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Paginations from "@/shared/pagination";
-import RegionTable from "./region-table";
 import ShowCount from "@/shared/show.count";
+import RegionTable from "./region-table";
+
 
 const RegionLists = () => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
 
   const { data, isPending } = useGetAllRegions(params);
+
+
 
   if (isPending) {
     return <GenericTableSkeleton rowCount={8} columnCount={6} />;
@@ -33,9 +36,12 @@ const RegionLists = () => {
       />
     );
   }
+
   return (
     <div className="space-y-4">
+
       <ShowCount length={regions?.length} meta={data?.meta} title="regions" />
+
       <Suspense
         fallback={<GenericTableSkeleton rowCount={8} columnCount={8} />}
       >

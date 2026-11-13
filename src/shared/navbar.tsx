@@ -9,8 +9,11 @@ import {
   LifeBuoy,
   LocateIcon,
   LogOut,
+  MapPinned,
   Menu,
+  NotebookPen,
   User,
+  Webhook,
   Wrench,
 } from "lucide-react";
 import Link from "next/link";
@@ -55,8 +58,8 @@ export function Navbar() {
     // ...(dashboardUrl
     //   ? [{ label: "Dashboard", href: dashboardUrl, icon: LayoutDashboard }]
     //   : []),
-    // { label: "Category", href: "/category", icon: LifeBuoy },
-    { label: "Region", href: "/region", icon: LocateIcon },
+    { label: "Category", href: "/category", icon: NotebookPen },
+    { label: "Region", href: "/region", icon: MapPinned },
     { label: "Support", href: "/support", icon: LifeBuoy },
     { label: "About", href: "/about-us", icon: FolderKanban },
     { label: "Contact", href: "/contact", icon: Contact },

@@ -1,3 +1,6 @@
+
+import { ISkills } from "./skills.types";
+
 export interface ICategory {
   id: string;
   name: string;
@@ -5,6 +8,7 @@ export interface ICategory {
   description?: string;
   duration: number;
   isActive: boolean;
+  skill: ISkills[]
 }
 
 export interface ICategoryCreate {

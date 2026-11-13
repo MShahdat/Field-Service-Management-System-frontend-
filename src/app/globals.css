@@ -135,36 +135,42 @@
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 50px;
+  --R: 30px;
+  --g1: var(--primary) 96%, transparent;
+  --g2: var(--muted) 96%, transparent;
+  width: calc(2*var(--R));
   aspect-ratio: 1;
+  border-radius: 50%;
   display: grid;
-  -webkit-mask: conic-gradient(from 15deg, #0000, #000);
-  animation: l26 1s infinite steps(12);
+  -webkit-mask: linear-gradient(#000 0 0);
+  animation: l30 2s infinite linear;
 }
 
-.loader,
-.loader:before,
-.loader:after {
-  background:
-    radial-gradient(closest-side at 50% 12.5%,
-      #f03355 96%, #0000) 50% 0/20% 80% repeat-y,
-    radial-gradient(closest-side at 12.5% 50%,
-      #f03355 96%, #0000) 0 50%/80% 20% repeat-x;
-}
-
-.loader:before,
-.loader:after {
+.loader::before,
+.loader::after {
   content: "";
   grid-area: 1/1;
-  transform: rotate(30deg);
+  width: 50%;
+  background:
+    radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R) - var(--R)),
+    radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R) - var(--R)),
+    radial-gradient(farthest-side, var(--g2)) calc(var(--R) + 0.5*var(--R) - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+    radial-gradient(farthest-side, var(--g1)) 0 calc(-1*var(--R)),
+    radial-gradient(farthest-side, var(--g2)) calc(var(--R) - 0.5*var(--R) - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+    radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R) - var(--R)),
+    radial-gradient(farthest-side, var(--g2)) calc(-1*var(--R)) 0,
+    radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) + 0.5*var(--R) - var(--R));
+  background-size: calc(2*var(--R)) calc(2*var(--R));
+  background-repeat: no-repeat;
 }
 
-.loader:after {
-  transform: rotate(60deg);
+.loader::after {
+  transform: rotate(180deg);
+  transform-origin: right;
 }
 
-@keyframes l26 {
+@keyframes l30 {
   100% {
-    transform: rotate(1turn)
+    transform: rotate(-1turn)
   }
 }

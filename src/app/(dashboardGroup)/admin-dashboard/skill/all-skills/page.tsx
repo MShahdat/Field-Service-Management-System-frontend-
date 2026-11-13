@@ -4,6 +4,7 @@ import SkillLists from "@/components/module/skill/skill-lists";
 import { SkillModal } from "@/components/module/skill/skill-modal";
 import { useGetCategories } from "@/hooks";
 import GenericTableSkeleton from "@/loading/table-loading";
+import ActiveTab from "@/shared/active.tab";
 import DataNotFoundCard from "@/shared/data-not-found";
 import Header from "@/shared/header";
 import { ItemShow } from "@/shared/items-show";
@@ -36,7 +37,7 @@ const AllSkillPage = () => {
 
   return (
     <div className="max-w-11/12 px-4 py-4">
-      <div className="flxe flex-col space-y-6">
+      <div className="flxe flex-col space-y-4">
 
         <Header
           label="Skill Manage"
@@ -54,6 +55,7 @@ const AllSkillPage = () => {
             </>
           }
         />
+        <ActiveTab />
         <SkillLists />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { sort } from "@/app/(publicGroup)/region/page";
 import CategoryLists from "@/components/module/cetegory/create-category/category-lists";
 import { CategoryModal } from "@/components/module/cetegory/create-category/category-modal";
+import ActiveTab from "@/shared/active.tab";
 import Header from "@/shared/header";
 import { ItemShow } from "@/shared/items-show";
 import SearchBar from "@/shared/search-bar";
@@ -9,7 +10,7 @@ import { SortShow } from "@/shared/sort.show";
 const AllCategoryPage = () => {
   return (
     <div className="max-w-11/12 px-4 py-4">
-      <div className="flxe flex-col space-y-6">
+      <div className="flxe flex-col space-y-4">
         <Header
           label="Category Manage"
           controls={
@@ -23,6 +24,7 @@ const AllCategoryPage = () => {
             </>
           }
         />
+        <ActiveTab />
         <CategoryLists />
       </div>
     </div>

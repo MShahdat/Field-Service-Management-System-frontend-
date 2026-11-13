@@ -1,7 +1,9 @@
+import FeedbackFilters from "@/components/module/feedback/feedback-filter";
 import FeedbackLists from "@/components/module/feedback/feedback-lists";
 import Header from "@/shared/header";
 import { ItemShow } from "@/shared/items-show";
 import { SortShow } from "@/shared/sort.show";
+import FilterBtn from "@/utils/filter.btn";
 
 
 const sort = [
@@ -18,6 +20,14 @@ const FeedbackPage = () => {
           label="Feedbacks"
           controls={
             <>
+              <FilterBtn
+                label="Feedback Filter"
+                component={
+                  <>
+                    <FeedbackFilters />
+                  </>
+                }
+              />
               <SortShow
                 obj={sort}
                 sortKey="rating"

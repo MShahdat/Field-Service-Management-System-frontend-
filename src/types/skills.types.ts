@@ -1,3 +1,5 @@
+import { ITechnician } from "./technician.types";
+
 export interface ISkills {
   id: string;
   name: string;
@@ -11,6 +13,7 @@ export interface ISkills {
     name: string;
     icon?: string;
   };
+  technician: ITechnician[]
 }
 
 export interface ISkillCreated {

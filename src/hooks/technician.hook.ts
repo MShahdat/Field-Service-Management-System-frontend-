@@ -39,3 +39,5 @@ export const useGetTechById = (id?: string) => {
     enabled: Boolean(id),
   });
 };
+
+

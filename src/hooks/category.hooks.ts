@@ -3,6 +3,7 @@ import {
   deactiveCategory,
   getAllCategories,
   getCategories,
+  getSingleCategory,
   updateCategory,
 } from "@/api";
 import { QueryParams } from "@/types";
@@ -56,6 +57,9 @@ export const useUpdateCategory = () => {
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["category"],
+      });
     },
   });
 };
@@ -72,6 +76,17 @@ export const useDeactiveCategory = () => {
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["category"],
+      });
     },
   });
 };
+
+
+export const useGetSingleCategory = (id: string) => {
+  return useQuery({
+    queryKey: ["category", id],
+    queryFn: () => getSingleCategory(id),
+  });
+}

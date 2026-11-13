@@ -17,7 +17,6 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { ITechnicianDetail } from "@/types";
 import { badgeText, getFallbackText, statusVarient } from "@/utils";
 import {
   DAY_NAMES,
@@ -32,9 +31,10 @@ import {
   Section,
   SummaryCard,
 } from "../services/details-util";
+import { ITechnician } from "@/types";
 
 type Props = {
-  technician: ITechnicianDetail;
+  technician: ITechnician;
 };
 
 const TechnicianDetailsView = ({ technician }: Props) => {

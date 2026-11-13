@@ -12,11 +12,11 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { ITechnicianPublic, ITechStatus } from "@/types";
+import type { ITechnician, ITechStatus } from "@/types";
 import { badgeText, getFallbackText, statusVarient } from "@/utils";
 
 type Props = {
-  technician: ITechnicianPublic;
+  technician: ITechnician;
 };
 
 const STATUS_DOT: Record<ITechStatus, string> = {
@@ -25,8 +25,9 @@ const STATUS_DOT: Record<ITechStatus, string> = {
   OFF_DUTY: "bg-muted-foreground",
 };
 
-const getAvailabilityLabel = (technician: ITechnicianPublic) => {
-  const recurring = technician.availability.filter(
+const getAvailabilityLabel = (technician: ITechnician) => {
+  const availability = technician.availability ?? [];
+  const recurring = availability.filter(
     (slot) => slot.type === "RECURRING",
   );
   const days = new Set(
@@ -39,7 +40,7 @@ const getAvailabilityLabel = (technician: ITechnicianPublic) => {
     return `${days.size} ${days.size === 1 ? "day" : "days"}/week`;
   }
 
-  const specialDates = technician.availability.filter(
+  const specialDates = availability.filter(
     (slot) => slot.type === "ONE_OFF" && slot.date,
   ).length;
 
@@ -51,21 +52,20 @@ const getAvailabilityLabel = (technician: ITechnicianPublic) => {
 };
 
 const TechnicianCard = ({ technician }: Props) => {
-  const rating = Number(technician.rating ?? 0);
+  const rating = Number(technician?.rating ?? 0);
+  const skills = technician?.skills ?? [];
+  const regions = technician?.regions ?? [];
   const location =
-    technician.address?.city ||
-    technician.regions[0]?.area ||
-    "Service area on request";
+    technician?.address?.city || regions[0]?.area || "Service area on request";
   const availability = getAvailabilityLabel(technician);
-  const visibleSkills = technician.skills.slice(0, 3);
-  const moreSkills = technician.skills.length - visibleSkills.length;
+  const visibleSkills = skills.slice(0, 3);
 
   return (
     <Link
       href={`/technician/details?id=${technician.id}`}
       className="group block h-full rounded-2xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      <Card className="h-full gap-0 overflow-hidden p-0 shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-black/[0.06]">
+      <Card className="h-full gap-0 overflow-hidden p-0 shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-primary/30 group-hover:shadow-xl group-hover:shadow-black/10">
         <div className="relative h-16 overflow-hidden border-b border-border bg-secondary/70">
           <div className="absolute inset-x-0 top-0 h-[3px] bg-primary" />
           <div
@@ -93,17 +93,17 @@ const TechnicianCard = ({ technician }: Props) => {
           <div className="-mt-10 flex justify-center">
             <Avatar className="size-20 rounded-full shadow-sm ring-4 ring-card">
               <AvatarImage
-                src={technician.user.profileImg ?? ""}
-                alt={technician.user.name}
+                src={technician?.user?.profileImg ?? ""}
+                alt={technician?.user?.name}
               />
               <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
-                {getFallbackText(technician.user.name)}
+                {getFallbackText(technician?.user?.name)}
               </AvatarFallback>
             </Avatar>
           </div>
 
           <h3 className="mt-3 line-clamp-1 text-center text-base font-semibold">
-            {technician.user.name}
+            {technician?.user?.name}
           </h3>
 
           <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
@@ -146,8 +146,8 @@ const TechnicianCard = ({ technician }: Props) => {
                   aria-hidden
                 />
                 <span className="truncate">
-                  {technician.regions.length} service area
-                  {technician.regions.length === 1 ? "" : "s"}
+                  {regions.length} service area
+                  {regions.length === 1 ? "" : "s"}
                 </span>
               </span>
 

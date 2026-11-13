@@ -1,10 +1,14 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function CardSkeleton() {
+type Props = {
+  length?: number
+}
+
+export function CardSkeleton({ length = 6 }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {[...Array(6)].map((_, index) => (
+      {[...Array(length)].map((_, index) => (
         <div key={index as number}>
           <Card className="w-full max-w-sm">
             <CardHeader>

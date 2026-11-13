@@ -1,9 +1,8 @@
 import apiClient from "@/lib/apiClient";
 import type {
   ApiResponse,
-  ITechnicianDetail,
+  ITechnician,
   ITechnicianProfileComplete,
-  ITechnicianPublic,
   QueryParams,
 } from "@/types";
 
@@ -16,9 +15,9 @@ export const technicianProfileComplete = (
   });
 
 export const getAllTech = (params: QueryParams) =>
-  apiClient<ApiResponse<ITechnicianPublic[]>>("/technician/all-technicians", {
+  apiClient<ApiResponse<ITechnician[]>>("/technician/all-technicians", {
     params,
   });
 
 export const getTechnicianById = (id: string) =>
-  apiClient<ApiResponse<ITechnicianDetail>>(`/technician/${id}`);
+  apiClient<ApiResponse<ITechnician>>(`/technician/${id}`);

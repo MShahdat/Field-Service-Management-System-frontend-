@@ -74,7 +74,7 @@ const HowWhy = () => {
       {/* How it works */}
       <section
         id="how-it-works"
-        className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
+        className="mx-auto max-w-5xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
       >
         <div className="mb-12 flex flex-col items-center text-center sm:mb-14">
           <Eyebrow>How it works</Eyebrow>
@@ -129,7 +129,7 @@ const HowWhy = () => {
 
       {/* Values */}
       <section className="border-y border-border bg-secondary/40 py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="mb-12 flex flex-col items-center text-center sm:mb-14">
             <Eyebrow>Why FieldDesk</Eyebrow>
             <h2 className="mt-4 max-w-xl text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
